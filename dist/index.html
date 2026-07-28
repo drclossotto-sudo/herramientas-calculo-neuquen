@@ -1,0 +1,2792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Herramientas de cálculo — Neuquén</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2230; --muted:#5b6676; --line:#e2e7ee;
+    --brand:#1f5fa8; --brand-ink:#fff; --accent:#0d7d5a; --warn-bg:#fff7e6; --warn-ink:#8a5a00; --warn-line:#f0d089;
+    --th:#eef2f7; --zebra:#f8fafc; --danger:#b3261e;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0f141b; --card:#171e28; --ink:#e7ecf3; --muted:#9aa7b8; --line:#28313d;
+      --brand:#4a90d9; --accent:#3fbd8f; --warn-bg:#2c2410; --warn-ink:#e7c66a; --warn-line:#5a4a1e;
+      --th:#1e2732; --zebra:#141b24; --danger:#e5645c; }
+  }
+  :root[data-theme="dark"]{ --bg:#0f141b; --card:#171e28; --ink:#e7ecf3; --muted:#9aa7b8; --line:#28313d;
+      --brand:#4a90d9; --accent:#3fbd8f; --warn-bg:#2c2410; --warn-ink:#e7c66a; --warn-line:#5a4a1e; --th:#1e2732; --zebra:#141b24; --danger:#e5645c; }
+  :root[data-theme="light"]{ --bg:#f4f6f9; --card:#fff; --ink:#1a2230; --muted:#5b6676; --line:#e2e7ee;
+      --brand:#1f5fa8; --accent:#0d7d5a; --warn-bg:#fff7e6; --warn-ink:#8a5a00; --warn-line:#f0d089; --th:#eef2f7; --zebra:#f8fafc; --danger:#b3261e; }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:20px 16px 60px}
+  header.app{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+  header.app h1{font-size:1.5rem;margin:0 0 2px}
+  .author{color:var(--muted);font-size:.9rem}
+  .author b{color:var(--ink)}
+  .chip{display:inline-block;background:var(--accent);color:#fff;font-size:.72rem;padding:2px 8px;border-radius:999px;font-weight:600}
+  .disclaimer{background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--warn-line);border-radius:10px;padding:11px 14px;font-size:.86rem;margin-bottom:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 16px 18px;margin-bottom:16px}
+  .card h2{font-size:1.02rem;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+  .card h2 .n{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-grid;place-items:center;font-size:.8rem;font-weight:700}
+  .hint{color:var(--muted);font-size:.82rem;margin:-4px 0 12px}
+  .fuente{font-size:.76rem;color:var(--muted);font-style:italic;margin-top:6px;line-height:1.45}
+  .fuente b{font-style:normal;color:var(--ink)}
+  label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:3px}
+  input,select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%}
+  input:focus,select:focus{outline:2px solid var(--brand);outline-offset:-1px}
+  .grid{display:grid;gap:12px}
+  .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .row-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;font-weight:600}
+  button.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+  button.ghost{background:transparent}
+  button.mini{padding:4px 9px;font-size:.8rem;font-weight:600}
+  button.del{color:var(--danger);border-color:transparent;background:transparent;padding:4px 8px}
+  table{width:100%;border-collapse:collapse;font-size:.86rem}
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+  th,td{padding:7px 9px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  thead th{background:var(--th);font-size:.78rem;color:var(--muted);position:sticky;top:0}
+  tbody tr:nth-child(even){background:var(--zebra)}
+  td input,td select{padding:5px 6px;min-width:96px}
+  td.num input{text-align:right}
+  .toggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .toggle button{border:0;border-radius:0;background:var(--card);padding:7px 14px}
+  .toggle button.on{background:var(--brand);color:#fff}
+  .switch{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+  .tabs{display:flex;gap:4px;margin-bottom:18px;border-bottom:2px solid var(--line);flex-wrap:wrap}
+  .tabs .tab{border:none;background:transparent;border-bottom:3px solid transparent;border-radius:0;padding:10px 16px;color:var(--muted);font-weight:700;margin-bottom:-2px;font-size:.95rem}
+  .tabs .tab.on{color:var(--brand);border-bottom-color:var(--brand)}
+  .home-title{font-size:1.1rem;margin:6px 0 14px;color:var(--muted);font-weight:600}
+  .home-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:640px){.home-grid{grid-template-columns:1fr}}
+  .home-card{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:border-color .15s,transform .1s,box-shadow .15s}
+  .home-card:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+  .home-ico{width:40px;height:40px;border-radius:11px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:1.25rem;font-weight:700}
+  .home-name{font-size:1.12rem;font-weight:700;color:var(--ink)}
+  .home-desc{font-size:.88rem;color:var(--muted);line-height:1.45}
+  .home-list{margin:8px 0 0;padding-left:20px;font-size:.85rem;color:var(--muted);line-height:1.5}
+  .home-list li{margin-bottom:5px}
+  .home-list b{color:var(--ink);font-weight:600}
+  .home-card:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+  .modhead{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .modhead .modtitle{font-size:1.28rem;margin:0}
+  .backbtn{background:transparent;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-weight:600;color:var(--brand)}
+  .backbtn:hover{border-color:var(--brand)}
+  .datefield,.monthfield{cursor:pointer}
+  .dpop{position:absolute;z-index:1000;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 34px rgba(0,0,0,.22);padding:10px;width:286px}
+  .dp-cols{display:flex;gap:8px;margin-bottom:8px}
+  .dp-col{max-height:160px;overflow-y:auto;border:1px solid var(--line);border-radius:8px;padding:4px}
+  .dp-months{flex:0 0 86px} .dp-years{flex:1}
+  .dp-mo,.dp-yr{display:block;width:100%;text-align:left;background:transparent;border:none;border-radius:6px;padding:5px 9px;font-size:.84rem;cursor:pointer;color:var(--ink)}
+  .dp-mo:hover,.dp-yr:hover{background:var(--zebra)}
+  .dp-mo.sel,.dp-yr.sel{background:var(--brand);color:#fff}
+  .dp-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
+  .dp-dow span{text-align:center;font-size:.7rem;color:var(--muted);font-weight:700}
+  .dp-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+  .dp-day{background:transparent;border:1px solid transparent;border-radius:6px;padding:6px 0;font-size:.82rem;cursor:pointer;color:var(--ink)}
+  .dp-day:hover{border-color:var(--brand)}
+  .dp-day.sel{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .switch input{width:auto}
+  .opt-body{display:none;padding-top:6px} .opt-body.show{display:block}
+  /* Resultados */
+  #resultado{display:none}
+  .cards-res{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  @media(max-width:640px){.cards-res{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .kpi .l{font-size:.76rem;color:var(--muted)} .kpi .v{font-size:1.15rem;font-weight:700;margin-top:3px}
+  .kpi.total{background:var(--brand);color:#fff;border-color:var(--brand)} .kpi.total .l{color:#dce9f7}
+  .kpi.selectable{cursor:pointer} .kpi.selectable:hover{border-color:var(--brand)}
+  .formula-box{background:var(--zebra);border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:8px;padding:10px 12px;font-size:.87rem;line-height:1.6;margin-bottom:14px}
+  tfoot td{font-weight:700;background:var(--th);border-top:2px solid var(--brand)}
+  .err{background:#fdecea;color:var(--danger);border:1px solid var(--danger);border-radius:8px;padding:10px 12px;margin-bottom:12px}
+  .src{color:var(--muted);font-size:.78rem;margin-top:10px}
+  .themebtn{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 10px;font-size:.8rem}
+  details.detalle{margin-top:14px} details.detalle summary{cursor:pointer;font-weight:600;color:var(--brand)}
+  .printonly{display:none}
+  @media print{
+    body{background:#fff;color:#000} .wrap{max-width:100%} .noprint{display:none!important}
+    .card{border:none;padding:0;margin-bottom:14px} .tbl-wrap{border:none}
+    thead th{position:static;background:#eee} tfoot td{background:#eee}
+    .printonly{display:block!important}
+    #resultado{display:block!important} #resInd{display:block!important} #resLRT{display:block!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="app noprint">
+    <div>
+      <h1>Herramientas de cálculo <span style="color:var(--muted);font-weight:400">— Neuquén</span></h1>
+      <div class="author"><b id="autor">Otto Closs</b> · <span id="rol">Defensor Público Civil de Neuquén</span> · <span class="chip">Aporte abierto a la matrícula</span></div>
+    </div>
+    <button class="themebtn noprint" id="theme">◐ Tema</button>
+  </header>
+
+  <div class="disclaimer noprint">
+    <b>Herramienta auxiliar de cálculo.</b> El resultado es orientativo: cada profesional debe <b>verificar la planilla</b> que presenta y es responsable de ella. No constituye asesoramiento ni liquidación oficial. Método calibrado contra el calculador oficial del Poder Judicial de Neuquén; tasas del Banco de la Provincia del Neuquén (Gabinete Técnico Contable).
+  </div>
+
+  <div class="fuente noprint" style="margin:-10px 0 18px;padding:9px 13px;background:var(--zebra);border-radius:9px">
+    <b>Bases de datos actualizadas:</b> tasas de interés (BPN y Banco Nación) hasta <b>julio 2026</b> · índice <b>RIPTE</b> hasta <b>marzo 2026</b>. Fuente: Gabinete Técnico Contable del Poder Judicial de Neuquén.
+  </div>
+
+  <div id="home" class="noprint">
+    <h2 class="home-title">¿Qué querés calcular?</h2>
+    <div class="home-grid">
+      <div class="home-card" data-go="intereses" role="button" tabindex="0">
+        <div class="home-ico">$</div>
+        <div class="home-name">Calculador de intereses</div>
+        <ul class="home-list">
+          <li>Intereses en <b>alimentos</b> (cuota alimentaria)</li>
+          <li>Intereses en <b>civil / daños y perjuicios</b></li>
+          <li>Intereses en <b>accidentes de trabajo / enfermedad profesional (LRT)</b></li>
+          <li>Presets oficiales de tasas: "Casas" (alimentos y civil) y "Trotelli" (LRT)</li>
+          <li>Pagos parciales (art. 903), capitalización (art. 770) y adicional (art. 552)</li>
+          <li>Planilla desglosada y PDF para adjuntar al expediente</li>
+        </ul>
+      </div>
+      <div class="home-card" data-go="indemnizacion" role="button" tabindex="0">
+        <div class="home-ico">§</div>
+        <div class="home-name">Cálculo de indemnización</div>
+        <ul class="home-list">
+          <li>Indemnización <b>civil por incapacidad</b> (Vuotto, Méndez y Acciarri)</li>
+          <li>Indemnización <b>civil por fallecimiento</b></li>
+          <li>Indemnización <b>LRT por incapacidad</b> (art. 14 — Ley de Riesgos)</li>
+          <li>Indemnización <b>LRT por fallecimiento</b> (art. 18 → 15.2)</li>
+          <li><b>Ingreso base por RIPTE</b> (art. 12) y tabla de <b>agotamiento del capital</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="tabIntereses" style="display:none">
+  <div class="modhead noprint"><button class="backbtn" data-home>← Inicio</button><h2 class="modtitle">Calculador de intereses</h2></div>
+  <div class="switch noprint" style="margin-bottom:14px">
+    <span style="font-weight:600">Materia:</span>
+    <div class="toggle" id="selMateria">
+      <button data-mat="alimentos" class="on">Alimentos</button>
+      <button data-mat="civil">Civil / Daños</button>
+      <button data-mat="lrt">Accidentes (LRT)</button>
+    </div>
+  </div>
+
+  <div id="lrtNota" class="disclaimer noprint" style="display:none;font-size:.82rem">
+    <b>Accidentes de trabajo / enfermedad profesional (LRT) — "Trotelli", Ac. 1/2025 TSJ:</b> tramos <b>TEA Sucursales</b> (hasta 31/03/2024) → <b>TNA Banco Nación</b> (desde 01/04/2024). La serie de TNA BNA proviene de la <b>fuente oficial</b>: Gabinete Técnico Contable del Poder Judicial de Neuquén (ripte.agjusneuquen.gob.ar/tasas). Igual conviene un control puntual antes de presentar.
+  </div>
+
+  <!-- 1. CUOTAS / CAPITAL -->
+  <div class="card noprint">
+    <h2><span class="n">1</span> <span id="sec1titulo">Cuotas devengadas</span></h2>
+    <div class="switch" id="modoCuotaWrap">
+      <span style="font-size:.82rem;color:var(--muted)">Tipo de cuota:</span>
+      <div class="toggle" id="modoCuota">
+        <button data-m="fija" class="on">Suma fija</button>
+        <button data-m="pct">% sobre base neta</button>
+      </div>
+    </div>
+    <div id="genWrap">
+      <div class="hint">Agregá <b>uno o más períodos</b>. Si la cuota fija cambió en el tiempo, cargá un período por cada monto (ej. ene–jun a $50.000, jul–dic a $65.000). El <b>"Hasta" es la fecha de corte exacta</b> (elegís el día, ej. 27/07/2026): genera cuotas hasta ese mes y calcula el interés hasta ese día. En modo porcentaje, después completá la <b>base neta de cada mes</b>.</div>
+      <div class="grid g4">
+        <div id="genMontoWrap"><label>Cuota mensual ($)</label><input id="genMonto" type="number" value="100000"></div>
+        <div id="genBaseWrap" style="display:none"><label>Base neta ($) — editable por mes</label><input id="genBase" type="number" value="0"></div>
+        <div id="genPctWrap" style="display:none"><label>Porcentaje (%)</label><input id="genPct" type="number" value="20"></div>
+        <div><label>Día de vencimiento</label><input id="genDia" type="number" value="11" min="1" max="31"></div>
+        <div><label>Desde (mes)</label><input id="genDesde" type="text" readonly class="monthfield" placeholder="AAAA-MM" value="2023-01"></div>
+        <div><label>Hasta (fecha de corte)</label><input id="genHasta" type="text" readonly class="datefield" placeholder="AAAA-MM-DD" value="2023-06-30"></div>
+      </div>
+      <div class="row-actions"><button class="primary" id="btnGen">Agregar período</button></div>
+    </div>
+    <div class="row-actions">
+      <button class="ghost" id="btnAddCuota">+ Agregar mes suelto</button>
+      <button class="ghost" id="btnClearCuotas">Vaciar todo</button>
+    </div>
+    <div class="tbl-wrap" style="margin-top:12px"><table id="tCuotas"></table></div>
+    <div class="hint" style="margin-top:8px" id="hintMora">Cada cuota devenga intereses desde su <b>mora</b> (día 11 por defecto, editable por fila). Agregar un período que solape meses ya cargados los reemplaza.</div>
+    <div class="fuente" id="fuenteSec1"><b>Criterio:</b> cómputo y mora según el modelo de planilla del Poder Judicial de Neuquén; intereses sobre alimentos = art. 552 CCyC. Imputación de pagos = arts. 900-903 CCyC. Capitalización = art. 770 CCyC.</div>
+  </div>
+
+  <!-- 2. PAGOS -->
+  <div class="card noprint">
+    <h2><span class="n">2</span> <span id="sec2titulo">Pagos del alimentante</span></h2>
+    <div class="hint">Pagos totales o parciales, con su fecha. Se imputan primero a intereses y luego a capital (art. 903 CCyC), a la deuda más antigua primero.</div>
+    <div class="tbl-wrap"><table id="tPagos"></table></div>
+    <div class="row-actions"><button class="ghost" id="btnAddPago">+ Agregar pago</button></div>
+  </div>
+
+  <!-- 3. TASAS -->
+  <div class="card noprint">
+    <h2><span class="n">3</span> Tasas de interés por tramos</h2>
+    <div class="hint">Preset <b>"Casas"</b> (Ac. 15/2025 TSJ Neuquén): TEA Sucursales hasta 31/03/2024, Activa BPN desde 01/04/2024. Podés editar los tramos o agregar una tasa convencional.</div>
+    <div class="tbl-wrap"><table id="tTramos"></table></div>
+    <div class="row-actions">
+      <button class="ghost" id="btnAddTramo">+ Agregar tramo</button>
+      <button class="ghost" id="btnResetTramos">Restaurar preset "Casas" (Ac. 15/2025)</button>
+    </div>
+    <div class="fuente"><b>Fuente de las tasas:</b> Poder Judicial de Neuquén — Gabinete Técnico Contable. Tasas BPN (TEA Sucursales, Activa, etc.): cintereses.agjusneuquen.gob.ar · TNA Banco Nación: ripte.agjusneuquen.gob.ar/tasas. <b>Series actualizadas hasta julio 2026.</b><br><b>Criterio (fallos):</b> alimentos y civil/daños = "Casas" (Ac. 15/2025 TSJ Neuquén) · accidentes de trabajo (LRT) = "Trotelli" (Ac. Plenario 1/2025 TSJ Neuquén).</div>
+  </div>
+
+  <!-- 4. OPCIONES -->
+  <div class="card noprint">
+    <h2><span class="n">4</span> Opciones</h2>
+    <div class="grid g3">
+      <div><label>Fecha de corte</label><input id="corte" type="text" readonly class="datefield" placeholder="AAAA-MM-DD"></div>
+      <div><label>Carátula (opcional)</label><input id="caratula" type="text" placeholder="Autos / partes"></div>
+      <div><label>Expediente (opcional)</label><input id="expte" type="text" placeholder="Nº"></div>
+    </div>
+
+    <div style="margin-top:14px">
+      <div class="switch"><input type="checkbox" id="capOn"><label for="capOn" style="margin:0;color:var(--ink)">Capitalizar intereses (anatocismo, art. 770 CCyC)</label></div>
+      <div class="opt-body" id="capBody">
+        <label>Fechas de capitalización (hitos), separadas por coma — ej. notificación de demanda, liquidación aprobada</label>
+        <input id="capHitos" type="text" placeholder="2023-06-15, 2024-03-01">
+      </div>
+    </div>
+
+    <div style="margin-top:10px" id="adic552Wrap">
+      <div class="switch"><input type="checkbox" id="adicOn"><label for="adicOn" style="margin:0;color:var(--ink)">Adicionar interés reforzado dispuesto judicialmente (art. 552 in fine)</label></div>
+      <div class="opt-body" id="adicBody">
+        <div class="grid g4">
+          <div><label>Tipo</label><select id="adicTipo"><option value="anual">Tasa anual (TNA/TEA)</option><option value="mensual_fija">Tasa mensual</option></select></div>
+          <div><label>Valor (%)</label><input id="adicValor" type="number" value="0"></div>
+          <div><label>Desde (opcional)</label><input id="adicDesde" type="text" readonly class="datefield" placeholder="AAAA-MM-DD"></div>
+          <div><label>Hasta (opcional)</label><input id="adicHasta" type="text" readonly class="datefield" placeholder="AAAA-MM-DD"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row-actions noprint" style="margin-bottom:22px">
+    <button class="primary" id="btnCalcular" style="font-size:1.02rem;padding:11px 22px">Calcular liquidación</button>
+  </div>
+
+  <!-- RESULTADO -->
+  <div id="resultado" class="card">
+    <div id="errBox"></div>
+    <div class="row-actions noprint" style="justify-content:flex-end;margin:0 0 12px">
+      <button class="ghost" id="btnCSV">Exportar CSV</button>
+      <button class="ghost" id="btnPrint">Imprimir / PDF</button>
+    </div>
+    <div id="printTitulo" class="printonly"><h2 style="text-align:center;margin:0 0 8px">Liquidación de intereses sobre cuota alimentaria</h2></div>
+    <div id="cabRes" style="margin-bottom:10px"></div>
+    <div class="cards-res noprint" id="kpis"></div>
+
+    <h2 style="font-size:1rem">Planilla por período</h2>
+    <div class="tbl-wrap"><table id="tSalida"></table></div>
+    <div id="printTotal" class="printonly" style="margin-top:12px;font-size:1rem"></div>
+
+    <details class="detalle noprint">
+      <summary>Ver detalle del cálculo (devengamientos día por día)</summary>
+      <div class="tbl-wrap" style="margin-top:10px"><table id="tDetalle"></table></div>
+    </details>
+
+    <div class="src">
+      Fuente de tasas: Poder Judicial de Neuquén — Gabinete Técnico Contable (cintereses.agjusneuquen.gob.ar), <b>actualizadas hasta julio 2026</b>. Método calibrado al centavo contra el calculador oficial. Fórmula: interés del mes = capital × tasa mensual × (días del segmento ÷ días del mes); interés simple, sin capitalizar salvo hito del art. 770.
+    </div>
+  </div>
+
+  </div><!-- /tabIntereses -->
+
+  <div id="tabIndemnizacion" style="display:none">
+    <div class="modhead noprint"><button class="backbtn" data-home>← Inicio</button><h2 class="modtitle">Cálculo de indemnización</h2></div>
+
+    <div class="switch noprint" style="margin-bottom:14px">
+      <span style="font-weight:600">Régimen:</span>
+      <div class="toggle" id="selRegimen">
+        <button data-r="civil" class="on">Civil (fórmulas)</button>
+        <button data-r="lrt">LRT (Ley de Riesgos)</button>
+      </div>
+    </div>
+
+    <div id="regCivil">
+    <div class="switch noprint" style="margin-bottom:14px">
+      <span style="font-weight:600">Supuesto:</span>
+      <div class="toggle" id="selSupuesto">
+        <button data-s="incapacidad" class="on">Incapacidad</button>
+        <button data-s="fallecimiento">Fallecimiento</button>
+      </div>
+    </div>
+
+    <div class="card noprint">
+      <h2><span class="n">A</span> Datos base</h2>
+      <div class="grid g4">
+        <div><label>Edad inicial</label><input id="iEdad" type="number" value="35" min="0" max="110"></div>
+        <div><label id="lblAfect">Incapacidad (%)</label><input id="iAfect" type="number" value="60"></div>
+        <div><label>Forma de carga</label><select id="iForma"><option value="mensual">Mensual</option><option value="anual">Anual</option></select></div>
+        <div><label>Conversión anual</label><select id="iSac"><option value="13">×13 (con SAC)</option><option value="12">×12 (sin SAC)</option></select></div>
+      </div>
+      <div id="grpIngresoConst" class="grid g3" style="margin-top:10px">
+        <div><label>Ingreso (constante)</label><input id="iIngreso" type="number" value="500000"></div>
+      </div>
+      <div class="hint" style="margin-top:8px">Ingresos en <b>valores reales</b> del momento inicial (sin inflación); la tasa es <b>pura</b>. En modo Acciarri variable, los ingresos se cargan por tramos.</div>
+    </div>
+
+    <div class="card noprint">
+      <h2><span class="n">B</span> Fórmula</h2>
+      <div class="switch">
+        <div class="toggle" id="selFormula">
+          <button data-f="comparativa" class="on">Vuotto / Méndez / Acciarri</button>
+          <button data-f="variable">Acciarri variable</button>
+        </div>
+      </div>
+      <div id="fParamsConst" class="grid g3">
+        <div><label>Tasa Vuotto (%)</label><input id="iTasaV" type="number" value="6"></div>
+        <div><label>Tope Vuotto</label><input id="iTopeV" type="number" value="65"></div>
+        <div><label>Tasa Méndez (%)</label><input id="iTasaM" type="number" value="4"></div>
+        <div><label>Tope Méndez</label><input id="iTopeM" type="number" value="75"></div>
+        <div><label>Tasa Acciarri (%)</label><input id="iTasaA" type="number" value="4"></div>
+        <div><label>Edad límite Acciarri (no incluida)</label><input id="iLimA" type="number" value="75"></div>
+      </div>
+      <div class="fuente"><b>Fuentes (fallos):</b> Vuotto (CNAT, "Vuotto c/ AEG Telefunken", 1978) · Méndez (CNAT Sala III, "Méndez c/ Mylba", 2008) · Acciarri (art. 1746 CCyC; método de la calculadora de Editorial García Alonso).</div>
+      <div id="fParamsVar" style="display:none">
+        <div class="grid g3">
+          <div><label>Tasa pura (%)</label><input id="iTasaVar" type="number" value="4"></div>
+          <div><label>Edad límite (no incluida)</label><input id="iLimVar" type="number" value="75"></div>
+        </div>
+        <div class="hint" style="margin-top:8px">El <b>1º tramo va al 100%</b>. En los siguientes, la probabilidad (0 a 1) se aplica sobre la variación respecto del ingreso esperado anterior.</div>
+        <div class="tbl-wrap"><table id="tTramosVar"></table></div>
+        <div class="row-actions"><button class="ghost" id="btnAddTramoVar">+ Agregar tramo</button></div>
+      </div>
+    </div>
+
+    <div class="row-actions noprint" style="margin-bottom:22px">
+      <button class="primary" id="btnCalcularInd" style="font-size:1.02rem;padding:11px 22px">Calcular indemnización</button>
+    </div>
+
+    <div id="resInd" class="card" style="display:none">
+      <div id="errInd"></div>
+      <div class="row-actions noprint" style="justify-content:flex-end;margin:0 0 12px">
+        <button class="ghost" id="btnPrintInd">Imprimir / PDF</button>
+      </div>
+      <div class="printonly"><h2 id="printTitInd" style="text-align:center;margin:0 0 8px">Cálculo de indemnización</h2></div>
+      <div id="cabInd" style="margin-bottom:10px"></div>
+      <div class="cards-res noprint" id="kpisInd"></div>
+      <div id="selHintInd" class="hint noprint" style="display:none">Tocá una fórmula para ver su planilla, su agotamiento y la fórmula aplicada.</div>
+      <div id="formulaBox" class="formula-box"></div>
+      <div id="printTotalInd" class="printonly" style="font-size:1rem;margin:6px 0"></div>
+      <h2 style="font-size:1rem" id="tituloPlanillaInd">Planilla año a año</h2>
+      <div class="tbl-wrap"><table id="tPlanillaInd"></table></div>
+      <h2 style="font-size:1rem;margin-top:18px">Agotamiento del capital (art. 1746 CCyC)</h2>
+      <div class="hint">El capital, reinvertido a la tasa pura, se consume con las extracciones anuales (renta afectada) hasta agotarse al final del período.</div>
+      <div class="tbl-wrap"><table id="tAgota"></table></div>
+      <div class="src">Fórmulas de rentas futuras (art. 1746 CCyC). No utiliza base de tasas ni índices actualizables (los ingresos van en valores reales y la tasa pura la fija el profesional). Vuotto (i 6%, n = 65−edad) · Méndez (i 4%, n = 75−edad, × 60/edad) · Acciarri (valor presente de renta constante o variable). No incluye intereses, actualización, daño moral ni otros rubros.</div>
+    </div>
+    </div><!-- /regCivil -->
+
+    <div id="regLRT" style="display:none">
+      <div class="card noprint">
+        <h2><span class="n">A</span> Indemnización LRT — datos</h2>
+        <div class="switch">
+          <span style="font-size:.82rem;color:var(--muted)">Supuesto:</span>
+          <div class="toggle" id="selSupuestoLRT">
+            <button data-s="incapacidad" class="on">Incapacidad</button>
+            <button data-s="fallecimiento">Fallecimiento</button>
+          </div>
+        </div>
+        <div class="hint" id="hintLRT">Prestación = <b>53 × Ingreso Base × (65 / edad) × % incapacidad</b>. Criterio <b>"Contreras"</b> (Ac. 16/23 TSJ). El interés posterior (PMI → corte) se calcula en la solapa <b>Intereses</b>, materia <b>LRT</b>.</div>
+        <div class="grid g4">
+          <div><label>Edad a la PMI</label><input id="lEdad" type="number" value="40"></div>
+          <div id="grpIncap"><label>% de incapacidad</label><input id="lIncap" type="number" value="50"></div>
+          <div id="grpPagoUnico" style="display:none"><label>Comp. adic. pago único (art. 11.4) $</label><input id="lPagoUnico" type="number" value="0"></div>
+          <div><label>Piso mínimo SRT ($)</label><input id="lPiso" type="number" value="0"></div>
+          <div><label>Adicional</label><label style="display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--ink);margin-top:6px"><input type="checkbox" id="lAdic" style="width:auto"> +20 % (art. 3 Ley 26773)</label></div>
+        </div>
+        <div class="fuente"><b>Fuentes:</b> art. 14, ap. 2, inc. a, Ley 24557 (LRT); coeficiente 53 (DNU 1694/09); adicional 20 % (art. 3 Ley 26773); piso mínimo por Resoluciones/Notas de la SRT. <b>Criterio (fallo):</b> "Contreras" (Ac. 16/23 TSJ Neuquén).</div>
+      </div>
+
+      <div class="card noprint">
+        <h2><span class="n">B</span> Ingreso base (IB)</h2>
+        <div class="switch">
+          <div class="toggle" id="selIB">
+            <button data-ib="directo" class="on">IB directo</button>
+            <button data-ib="ripte">Calcular por RIPTE</button>
+          </div>
+        </div>
+        <div id="ibDirecto" class="grid g3">
+          <div><label>Ingreso base ($) — ya actualizado</label><input id="lIB" type="number" value="0"></div>
+        </div>
+        <div id="ibRipte" style="display:none">
+          <div class="grid g3"><div><label>Fecha de la PMI (mes)</label><input id="lPMI" type="text" readonly class="monthfield" placeholder="AAAA-MM"></div></div>
+          <div class="hint">Cargá los salarios de los 12 meses previos a la PMI: se actualizan por RIPTE hasta la PMI y se promedian (índice del GTC de Neuquén).</div>
+          <div class="row-actions"><button class="ghost" id="btnGenSalarios">Generar 12 meses previos a la PMI</button><button class="ghost" id="btnAddSalario">+ Agregar mes</button></div>
+          <div class="tbl-wrap" style="margin-top:8px"><table id="tSalarios"></table></div>
+          <div class="fuente"><b>Índice RIPTE:</b> Gabinete Técnico Contable del Poder Judicial de Neuquén (ripte.agjusneuquen.gob.ar/riptes). <b>Actualizado hasta marzo 2026.</b> El ingreso base (art. 12.1 LRT) se actualiza por RIPTE solo hasta la PMI.</div>
+        </div>
+      </div>
+
+      <div class="row-actions noprint" style="margin-bottom:22px">
+        <button class="primary" id="btnCalcularLRT" style="font-size:1.02rem;padding:11px 22px">Calcular indemnización LRT</button>
+      </div>
+
+      <div id="resLRT" class="card" style="display:none">
+        <div id="errLRT"></div>
+        <div class="row-actions noprint" style="justify-content:flex-end;margin:0 0 12px"><button class="ghost" id="btnPrintLRT">Imprimir / PDF</button></div>
+        <div class="printonly"><h2 id="printTitLRT" style="text-align:center;margin:0 0 8px">Indemnización — Ley de Riesgos del Trabajo</h2></div>
+        <div class="cards-res noprint" id="kpisLRT"></div>
+        <div id="formulaLRT" class="formula-box"></div>
+        <div id="printTotalLRT" class="printonly" style="font-size:1.05rem;margin:6px 0"></div>
+        <div id="ibDetLRT"></div>
+        <div class="src">Prestación art. 14.2.a LRT (53 × IB × 65/edad × %incap; +20 % art. 3 Ley 26773; mínimo = piso SRT). IB del art. 12.1 actualizado por RIPTE (índice oficial del GTC de Neuquén, <b>actualizado hasta marzo 2026</b>). Criterio "Contreras" (Ac. 16/23 TSJ). El interés (art. 12, incs. 2 y 3) se calcula aparte, en la materia LRT del módulo de intereses (Trotelli).</div>
+      </div>
+    </div>
+  </div><!-- /tabIndemnizacion -->
+
+  <footer class="author noprint" style="text-align:center;margin-top:22px;font-size:.82rem">
+    <b>Otto Closs</b> — Defensor Público Civil de Neuquén · Herramienta libre y de código abierto, aporte a la matrícula.
+  </footer>
+</div>
+
+<script>
+/*
+ * engine.js — Motor de cálculo del Liquidador de Intereses sobre Alimentos (Neuquén)
+ *
+ * Puro: sin DOM. Corre en Node (module.exports) y en el navegador (window.LiquidadorEngine).
+ *
+ * MÉTODO (calibrado contra el calculador oficial del Poder Judicial de Neuquén,
+ * cintereses.agjusneuquen.gob.ar — validado al centavo, ver referencias/calibracion.md):
+ *
+ *   Las tasas son MENSUALES (% por mes). Para cada segmento dentro de un mes M:
+ *       interés = capital × (tasaMensual_M / 100) × (díasDelSegmento / díasDelMes_M)
+ *   Un mes completo devenga la tasa mensual plena; un mes parcial, proporcional a
+ *   los días. El cómputo es INCLUSIVE: la cuota devenga desde su mora (día 11) y
+ *   hasta la fecha de corte inclusive (por eso el fin del cálculo = corte + 1 día).
+ *
+ * Base legal:
+ *   - Art. 552 CCyC : intereses sobre alimentos (mora desde el vencimiento; adicional judicial opcional).
+ *   - Arts. 900-901 : imputación a la deuda más antigua (satisfecho por el modelo agregado).
+ *   - Art. 903 CCyC : el pago se imputa PRIMERO a intereses, luego a capital.
+ *   - Art. 770 CCyC : capitalización (anatocismo) — apagada por defecto, opcional por hitos.
+ */
+(function (global) {
+  'use strict';
+
+  var MS_DIA = 86400000;
+  var MESES = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+
+  // ---- Utilidades de fecha (UTC) ----
+  function parseFecha(s) {
+    if (s instanceof Date) return Date.UTC(s.getUTCFullYear(), s.getUTCMonth(), s.getUTCDate());
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s).trim());
+    if (!m) throw new Error('Fecha inválida: "' + s + '" (se espera YYYY-MM-DD)');
+    return Date.UTC(+m[1], +m[2] - 1, +m[3]);
+  }
+  function diasEntre(a, b) { return Math.round((b - a) / MS_DIA); }
+  function sumarDias(ts, n) { return ts + n * MS_DIA; }
+  function fechaISO(ts) {
+    var d = new Date(ts);
+    return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0') +
+           '-' + String(d.getUTCDate()).padStart(2, '0');
+  }
+  function ym(ts) { var d = new Date(ts); return d.getUTCFullYear() + '-' + MESES[d.getUTCMonth()]; }
+  function primerDiaMesSiguiente(ts) { var d = new Date(ts); return Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1); }
+  function diasDelMes(ts) { var d = new Date(ts); return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate(); }
+
+  function tramoEn(tramos, ts) {
+    for (var i = 0; i < tramos.length; i++) {
+      var t = tramos[i];
+      if (ts >= t._desde && (t._hasta === null || ts <= t._hasta)) return t;
+    }
+    return null;
+  }
+
+  // Tasa MENSUAL (%) de la tasa base de un tramo, para el mes del segmento que empieza en ts.
+  function tasaMensualBase(tramo, ts, series) {
+    switch (tramo.modo) {
+      case 'serie':
+        var s = series && series[tramo.serie];
+        if (!s) throw new Error('Serie de tasa no cargada: ' + tramo.serie);
+        var v = s[ym(ts)];
+        if (v == null) throw new Error('Falta la tasa "' + tramo.serie + '" para ' + ym(ts));
+        return v;
+      case 'mensual_fija': return tramo.valor;        // tasa mensual constante (%)
+      case 'anual':        return tramo.valor / 12;   // tasa anual -> proporcional mensual
+      default: throw new Error('Modo de tramo desconocido: ' + tramo.modo);
+    }
+  }
+
+  // ---- Generador de cuotas mensuales (día 11 por defecto) ----
+  function generarCuotas(cfg) {
+    var dia = cfg.dia || 11;
+    var d = /^(\d{4})-(\d{2})$/.exec(cfg.desde), h = /^(\d{4})-(\d{2})$/.exec(cfg.hasta);
+    if (!d || !h) throw new Error('desde/hasta deben ser YYYY-MM');
+    var y = +d[1], m = +d[2], yh = +h[1], mh = +h[2], out = [];
+    while (y < yh || (y === yh && m <= mh)) {
+      var mm = String(m).padStart(2, '0');
+      out.push({ fecha: y + '-' + mm + '-' + String(dia).padStart(2, '0'), monto: cfg.montoMensual,
+                 etiqueta: 'Cuota ' + mm + '/' + y });
+      m++; if (m > 12) { m = 1; y++; }
+    }
+    return out;
+  }
+
+  // ---- Núcleo: liquidación ----
+  function liquidar(input) {
+    var series = input.series || {};
+
+    var tramos = (input.tramos || []).map(function (t) {
+      return { modo: t.modo || 'serie', serie: t.serie, valor: t.valor, etiqueta: t.etiqueta || '',
+               _desde: parseFecha(t.desde), _hasta: t.hasta ? parseFecha(t.hasta) : null };
+    }).sort(function (a, b) { return a._desde - b._desde; });
+
+    var cuotas = (input.cuotas || []).map(function (c) {
+      return { _fecha: parseFecha(c.fecha), monto: c.monto, etiqueta: c.etiqueta || '' };
+    }).sort(function (a, b) { return a._fecha - b._fecha; });
+
+    var pagos = (input.pagos || []).map(function (p) {
+      return { _fecha: parseFecha(p.fecha), monto: p.monto };
+    }).sort(function (a, b) { return a._fecha - b._fecha; });
+
+    var capOn = !!(input.capitalizacion && input.capitalizacion.activada);
+    var hitos = capOn ? (input.capitalizacion.hitos || []).map(parseFecha) : [];
+
+    if (cuotas.length === 0) throw new Error('No hay cuotas cargadas.');
+    var corte = parseFecha(input.fechaCorte);
+    var inicio = cuotas[0]._fecha;
+    if (corte < inicio) throw new Error('La fecha de corte es anterior a la primera cuota.');
+    var fin = sumarDias(corte, 1); // cómputo inclusive del día de corte
+
+    // Adicional judicial (art. 552 in fine) — opcional. modo 'anual' (default) o 'mensual_fija'.
+    var adic = (input.adicional && input.adicional.activada) ? {
+      modo: input.adicional.modo || 'anual', valor: input.adicional.valor,
+      tipo: input.adicional.tipo || 'TNA', etiqueta: input.adicional.etiqueta || 'Adicional judicial (art. 552)',
+      _desde: input.adicional.desde ? parseFecha(input.adicional.desde) : inicio,
+      _hasta: input.adicional.hasta ? parseFecha(input.adicional.hasta) : null
+    } : null;
+
+    // ---- Breakpoints ----
+    var bps = {};
+    function addBp(ts) { if (ts >= inicio && ts <= fin) bps[ts] = true; }       // estructurales
+    function addEv(ts) { if (ts >= inicio && ts <= corte) bps[ts] = true; }     // eventos
+    addBp(inicio); addBp(fin);
+    cuotas.forEach(function (c) { addEv(c._fecha); });
+    pagos.forEach(function (p) { addEv(p._fecha); });
+    hitos.forEach(function (h) { addEv(h); });
+    tramos.forEach(function (t) { addBp(t._desde); if (t._hasta !== null) addBp(sumarDias(t._hasta, 1)); });
+    if (adic) { addBp(adic._desde); if (adic._hasta !== null) addBp(sumarDias(adic._hasta, 1)); }
+    // Inicio de cada mes (para segmentar el devengo mes a mes)
+    var cur = primerDiaMesSiguiente(inicio);
+    while (cur < fin) { addBp(cur); cur = primerDiaMesSiguiente(cur); }
+
+    var fechas = Object.keys(bps).map(Number).sort(function (a, b) { return a - b; });
+
+    var capital = 0, interes = 0, totalCuotas = 0, totalPagos = 0, saldoAFavor = 0;
+    var filas = [];
+
+    for (var i = 0; i < fechas.length; i++) {
+      var ts = fechas[i];
+
+      // 1) Devengar sobre [prev, ts) — un solo mes y un solo tramo (garantizado por los breakpoints)
+      if (i > 0) {
+        var prev = fechas[i - 1], d = diasEntre(prev, ts);
+        if (d > 0 && capital > 0) {
+          var tr = tramoEn(tramos, prev);
+          if (!tr) throw new Error('Sin tasa definida para el mes ' + ym(prev));
+          var rBase = tasaMensualBase(tr, prev, series);
+          var rAdic = 0;
+          if (adic && prev >= adic._desde && (adic._hasta === null || prev <= adic._hasta)) {
+            rAdic = adic.modo === 'anual' ? adic.valor / 12 : adic.valor;
+          }
+          var dMes = diasDelMes(prev), factor = d / dMes;
+          var devengado = capital * ((rBase + rAdic) / 100) * factor;
+          interes += devengado;
+          var det = tr.etiqueta || (tr.modo === 'serie' ? tr.serie : (rBase + '% mensual'));
+          if (rAdic > 0) det += ' + ' + adic.etiqueta + ' (' + rAdic.toFixed(2) + '%/mes)';
+          filas.push({ tipo: 'devengamiento', desde: fechaISO(prev), hasta: fechaISO(sumarDias(ts, -1)),
+            evento: 'Interés', detalle: det, mes: ym(prev), dias: d, diasMes: dMes,
+            tasaMensualPct: rBase + rAdic, tasaBaseMensualPct: rBase, tasaAdicMensualPct: rAdic,
+            capitalBase: capital, interesSegmento: devengado, capital: capital, interes: interes });
+        }
+      }
+
+      // 2) Vencimiento de cuotas en ts
+      for (var ci = 0; ci < cuotas.length; ci++) if (cuotas[ci]._fecha === ts) {
+        capital += cuotas[ci].monto; totalCuotas += cuotas[ci].monto;
+        filas.push({ tipo: 'cuota', fecha: fechaISO(ts), evento: 'Vence cuota', detalle: cuotas[ci].etiqueta,
+          monto: cuotas[ci].monto, capital: capital, interes: interes });
+      }
+
+      // 3) Capitalización (art. 770) en ts
+      if (capOn && hitos.indexOf(ts) !== -1 && interes > 0) {
+        var capz = interes; capital += capz; interes = 0;
+        filas.push({ tipo: 'capitalizacion', fecha: fechaISO(ts), evento: 'Capitalización (art. 770)',
+          detalle: 'Interés incorporado al capital', capitalizado: capz, capital: capital, interes: interes });
+      }
+
+      // 4) Pagos en ts — imputación art. 903 (interés primero, luego capital)
+      for (var pi = 0; pi < pagos.length; pi++) if (pagos[pi]._fecha === ts) {
+        var restante = pagos[pi].monto; totalPagos += pagos[pi].monto;
+        var aInteres = Math.min(restante, interes); interes -= aInteres; restante -= aInteres;
+        var aCapital = Math.min(restante, capital); capital -= aCapital; restante -= aCapital;
+        if (restante > 1e-9) saldoAFavor += restante;
+        filas.push({ tipo: 'pago', fecha: fechaISO(ts), evento: 'Pago',
+          detalle: 'Imputado a interés y luego a capital (art. 903)', pago: pagos[pi].monto,
+          aInteres: aInteres, aCapital: aCapital, aFavor: restante > 1e-9 ? restante : 0,
+          capital: capital, interes: interes });
+      }
+    }
+
+    return {
+      capital: capital, interes: interes, total: capital + interes,
+      totalCuotas: totalCuotas, totalPagos: totalPagos, saldoAFavor: saldoAFavor,
+      fechaCorte: fechaISO(corte), filas: filas
+    };
+  }
+
+  function formatearMoneda(n) {
+    var neg = n < 0; n = Math.abs(n);
+    var s = (Math.round(n * 100) / 100).toFixed(2).split('.');
+    s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return (neg ? '-' : '') + '$ ' + s[0] + ',' + s[1];
+  }
+
+  var api = { liquidar: liquidar, generarCuotas: generarCuotas, formatearMoneda: formatearMoneda,
+              parseFecha: parseFecha, fechaISO: fechaISO, diasEntre: diasEntre, diasDelMes: diasDelMes, ym: ym };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else global.LiquidadorEngine = api;
+
+})(typeof window !== 'undefined' ? window : this);
+
+</script>
+<script>
+/*
+ * indemnizacion.js — Cálculo del capital indemnizatorio por rentas futuras
+ * (incapacidad o fallecimiento). Neuquén / Argentina — art. 1746 CCyC.
+ *
+ * Puro: sin DOM. Corre en Node (module.exports) y navegador (window.Indemnizacion).
+ *
+ * Fórmula base (renta constante no perpetua) — Vuotto, Méndez y Acciarri constante:
+ *     C = A · [ 1 − (1 + i)^(−n) ] / i           (equivale a  Σ_{t=1..n} A / (1+i)^t)
+ *   A = renta anual afectada, i = tasa (decimal), n = años (renta al fin de cada año).
+ *
+ *   Vuotto : i = 6 %, n = 65 − edad, A = ingreso anual × afectación
+ *   Méndez : i = 4 %, n = 75 − edad, A = ingreso anual × afectación × (60 / edad)
+ *   Acciarri constante : i, n editables; A = ingreso anual × afectación
+ *
+ * Acciarri variable/probable (renta que varía por tramos):
+ *     C = Σ_{t=1..n} ( ingreso_esperado_t · afectación ) / (1 + i)^t
+ *   El ingreso esperado se arrastra por tramos: E_k = E_{k-1} + prob_k·(ingreso_k − E_{k-1}),
+ *   con el primer tramo al 100 % (criterio García Alonso / planilla UNS).
+ *
+ * "afectación" es genérica: en INCAPACIDAD = % de incapacidad; en FALLECIMIENTO =
+ * porción del ingreso destinada a los causahabientes. Mismas fórmulas, distinta etiqueta.
+ *
+ * Los ingresos se cargan en VALORES REALES (sin inflación); la tasa es PURA.
+ */
+(function (global) {
+  'use strict';
+
+  function num(x) { return typeof x === 'number' ? x : (parseFloat(x) || 0); }
+
+  // Valor presente de una renta constante A, tasa i, durante n años (renta al fin de año).
+  function pvConstante(A, i, n) {
+    if (n <= 0) return 0;
+    if (i === 0) return A * n;
+    return A * (1 - Math.pow(1 + i, -n)) / i;
+  }
+
+  function desgloseConstante(A, i, n, edadIni) {
+    var filas = [];
+    for (var t = 1; t <= n; t++) {
+      var factor = (i === 0) ? 1 : 1 / Math.pow(1 + i, t);
+      filas.push({ edad: edadIni + t - 1, t: t, ingresoEsperado: A, rentaAfectada: A,
+                   factor: factor, valorPresente: A * factor });
+    }
+    return filas;
+  }
+
+  function ingresoAnualDe(p) {
+    if (p.ingresoAnual != null) return num(p.ingresoAnual);
+    return num(p.ingresoMensual) * ((p.sac !== false) ? 13 : 12); // ×13 con SAC por defecto
+  }
+
+  function armar(nombre, A, i, n, edad, ingresoAnual, afect, extra) {
+    var res = { formula: nombre, capital: pvConstante(A, i, n), rentaAnualAfectada: A,
+                ingresoAnual: ingresoAnual, afectacion: afect, i: i, n: n,
+                desglose: desgloseConstante(A, i, n, edad) };
+    for (var k in extra) if (extra.hasOwnProperty(k)) res[k] = extra[k];
+    return res;
+  }
+
+  // ---- Vuotto ----
+  function vuotto(p) {
+    var edad = num(p.edad), tasa = (p.tasa != null ? num(p.tasa) : 6), tope = (p.edadTope != null ? num(p.edadTope) : 65);
+    var ingA = ingresoAnualDe(p), afect = num(p.afectacionPct) / 100;
+    return armar('Vuotto', ingA * afect, tasa / 100, tope - edad, edad, ingA, afect, { edadTope: tope, tasa: tasa });
+  }
+
+  // ---- Méndez ----
+  function mendez(p) {
+    var edad = num(p.edad), tasa = (p.tasa != null ? num(p.tasa) : 4), tope = (p.edadTope != null ? num(p.edadTope) : 75);
+    var ingA = ingresoAnualDe(p), afect = num(p.afectacionPct) / 100;
+    var factorEdad = edad > 0 ? 60 / edad : 1;
+    return armar('Méndez', ingA * afect * factorEdad, tasa / 100, tope - edad, edad, ingA * factorEdad, afect,
+                 { edadTope: tope, tasa: tasa, factorEdad: factorEdad });
+  }
+
+  // ---- Acciarri (renta constante) ----
+  function acciarriConstante(p) {
+    var edad = num(p.edad), tasa = (p.tasa != null ? num(p.tasa) : 4), lim = (p.edadLimite != null ? num(p.edadLimite) : 75);
+    var ingA = ingresoAnualDe(p), afect = num(p.afectacionPct) / 100;
+    return armar('Acciarri (constante)', ingA * afect, tasa / 100, lim - edad, edad, ingA, afect,
+                 { edadLimite: lim, tasa: tasa });
+  }
+
+  // ---- Acciarri (renta variable / probable) ----
+  // tramos: [{ desdeEdad, ingresoAnual, prob }]  (el primero se toma al 100 %).
+  function acciarriVariable(p) {
+    var edad = num(p.edad), tasa = (p.tasa != null ? num(p.tasa) : 4), lim = (p.edadLimite != null ? num(p.edadLimite) : 75);
+    var afect = num(p.afectacionPct) / 100, i = tasa / 100, n = lim - edad;
+    var tramos = (p.tramos || []).map(function (t) {
+      return { desdeEdad: num(t.desdeEdad), ingresoAnual: num(t.ingresoAnual), prob: (t.prob != null ? num(t.prob) : 1) };
+    }).sort(function (a, b) { return a.desdeEdad - b.desdeEdad; });
+    if (!tramos.length) throw new Error('Cargá al menos un tramo de ingreso.');
+
+    // Ingreso esperado arrastrado (variación respecto del esperado anterior); 1º tramo al 100 %.
+    var Eprev = 0;
+    tramos.forEach(function (t, k) {
+      var prob = (k === 0) ? 1 : t.prob;
+      t.esperado = Eprev + prob * (t.ingresoAnual - Eprev);
+      Eprev = t.esperado;
+    });
+    function tramoEn(age) { var sel = tramos[0]; for (var k = 0; k < tramos.length; k++) if (tramos[k].desdeEdad <= age) sel = tramos[k]; return sel; }
+
+    var C = 0, desglose = [];
+    for (var t = 1; t <= n; t++) {
+      var age = edad + t - 1, tr = tramoEn(age);
+      var renta = tr.esperado * afect, factor = (i === 0) ? 1 : 1 / Math.pow(1 + i, t);
+      C += renta * factor;
+      desglose.push({ edad: age, t: t, ingresoEsperado: tr.esperado, rentaAfectada: renta, factor: factor, valorPresente: renta * factor });
+    }
+    return { formula: 'Acciarri (variable)', capital: C, afectacion: afect, i: i, n: n,
+             edadLimite: lim, tasa: tasa, tramos: tramos, desglose: desglose };
+  }
+
+  // ---- Comparativa de las tres fórmulas clásicas ----
+  function comparativa(p) { return { vuotto: vuotto(p), mendez: mendez(p), acciarri: acciarriConstante(p) }; }
+
+  // ---- Agotamiento del capital (art. 1746 CCyC) ----
+  // Demuestra que el capital, reinvertido a la tasa pura, se consume con las
+  // extracciones anuales (renta afectada) hasta llegar a ~0 al final del período.
+  function agotamiento(res) {
+    var i = res.i, cap = res.capital, filas = [];
+    (res.desglose || []).forEach(function (y) {
+      var antes = cap * (1 + i);
+      var remanente = antes - y.rentaAfectada;
+      filas.push({ edad: y.edad, antes: antes, extraccion: y.rentaAfectada, remanente: remanente });
+      cap = remanente;
+    });
+    return filas;
+  }
+
+  // ---- LRT: ingreso base por RIPTE (art. 12.1 LRT) ----
+  // salarios: [{mes:'YYYY-MM', monto}]. Cada salario se actualiza por RIPTE hasta el mes de la
+  // PMI y se promedian. IB = (1/n) Σ salario_i × (RIPTE_PMI / RIPTE_mes_i).
+  function ibPorRipte(salarios, mesPMI, ripte) {
+    if (!ripte) throw new Error('Falta la serie RIPTE.');
+    var rPMI = ripte[mesPMI];
+    if (rPMI == null) throw new Error('Sin índice RIPTE para la PMI (' + mesPMI + ').');
+    var arr = (salarios || []).filter(function (s) { return s.mes && +s.monto; });
+    if (!arr.length) throw new Error('Cargá los salarios del ingreso base.');
+    var suma = 0, detalle = [];
+    arr.forEach(function (s) {
+      var rm = ripte[s.mes];
+      if (rm == null) throw new Error('Sin índice RIPTE para ' + s.mes + '.');
+      var coef = rPMI / rm, act = (+s.monto) * coef;
+      suma += act;
+      detalle.push({ mes: s.mes, monto: +s.monto, ripteMes: rm, coef: coef, actualizado: act });
+    });
+    return { ib: suma / arr.length, n: arr.length, riptePMI: rPMI, mesPMI: mesPMI, detalle: detalle };
+  }
+
+  // ---- LRT: prestación dineraria (art. 14, ap. 2, inc. a) ----
+  //   Prestación = 53 × IB × (65/edad) × %incap ; +20% (art. 3 Ley 26773) opcional ; mín. = piso.
+  function indemnizacionLRT(p) {
+    var edad = num(p.edad), ib = num(p.ib), piso = num(p.piso || 0), adic20 = !!p.adicional20;
+    var muerte = p.supuesto === 'fallecimiento';
+    var incap = muerte ? 1 : num(p.incapacidadPct) / 100;   // fallecimiento: sin % (art. 18 → 15.2)
+    var coefEdad = edad > 0 ? 65 / edad : 0;
+    var prest14 = 53 * ib * coefEdad * incap;
+    var base = Math.max(prest14, piso);
+    var adicMonto = adic20 ? base * 0.20 : 0;
+    var pagoUnico = num(p.adicionalPagoUnico || 0);          // art. 11.4 (fallecimiento), manual/opcional
+    return { formula: muerte ? 'Indemnización LRT — fallecimiento (art. 18 → 15.2)' : 'Indemnización LRT (art. 14.2.a)',
+             muerte: muerte, coef53: 53, ib: ib, edad: edad, coefEdad: coefEdad,
+             incapacidadPct: muerte ? 100 : num(p.incapacidadPct), prestacion14: prest14, piso: piso,
+             usoPiso: piso > prest14, base: base, adicional20: adicMonto, adicionalPagoUnico: pagoUnico,
+             total: base + adicMonto + pagoUnico };
+  }
+
+  function formatearMoneda(nm) {
+    var neg = nm < 0; nm = Math.abs(nm);
+    var s = (Math.round(nm * 100) / 100).toFixed(2).split('.');
+    s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return (neg ? '-' : '') + '$ ' + s[0] + ',' + s[1];
+  }
+
+  var api = { pvConstante: pvConstante, vuotto: vuotto, mendez: mendez,
+              acciarriConstante: acciarriConstante, acciarriVariable: acciarriVariable,
+              comparativa: comparativa, agotamiento: agotamiento,
+              ibPorRipte: ibPorRipte, indemnizacionLRT: indemnizacionLRT, formatearMoneda: formatearMoneda };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else global.Indemnizacion = api;
+
+})(typeof window !== 'undefined' ? window : this);
+
+</script>
+<script>
+window.TASAS = {
+ "fuente": "Poder Judicial de Neuquén — Gabinete Técnico Contable (cintereses.agjusneuquen.gob.ar)",
+ "actualizado": "2026-07-22",
+ "unidad": "porcentaje mensual (% por mes)",
+ "definiciones": {
+  "Activa": "Descuento de documentos comerciales (Descuento de Valores Comprados)",
+  "Pasiva": "Depósito a plazo fijo 30 días",
+  "Promedio": "Promedio entre activa y pasiva",
+  "TEA_Prop": "TEA (BPN, clientes sin paquete, préstamos personales, canal sucursales, sin IVA), proporcional a cada mes",
+  "TNA": "TNA (BPN, clientes sin paquete, préstamos personales, canal sucursales, sin IVA)",
+  "TNA_BNA": "Tasa activa del Banco de la Nacion Argentina (columna \"ACTIVA\", mensual). FUENTE OFICIAL: Gabinete Tecnico Contable del Poder Judicial de Neuquen (https://ripte.agjusneuquen.gob.ar/tasas). Es la tasa del art. 12.3 LRT usada en \"Trotelli\" (Ac. 1/2025 TSJ). Valores transcriptos de la pagina del GTC; conviene un control puntual.",
+  "RIPTE": "Indice RIPTE (Remuneraciones Imponibles Promedio de los Trabajadores Estables), columna \"Monto\". FUENTE OFICIAL: GTC Poder Judicial Neuquen (https://ripte.agjusneuquen.gob.ar/riptes). Se usa para actualizar los salarios del ingreso base (art. 12.1 LRT)."
+ },
+ "series": {
+  "Activa": {
+   "2000-01": 2.0,
+   "2000-02": 2.0,
+   "2000-03": 2.0,
+   "2000-04": 2.0,
+   "2000-05": 2.0,
+   "2000-06": 2.0,
+   "2000-07": 2.0,
+   "2000-08": 2.0,
+   "2000-09": 2.0,
+   "2000-10": 2.0,
+   "2000-11": 2.0,
+   "2000-12": 2.0,
+   "2001-01": 2.0,
+   "2001-02": 2.0,
+   "2001-03": 2.0,
+   "2001-04": 2.0,
+   "2001-05": 2.0,
+   "2001-06": 2.0,
+   "2001-07": 2.0,
+   "2001-08": 2.0,
+   "2001-09": 2.0,
+   "2001-10": 2.0,
+   "2001-11": 2.0,
+   "2001-12": 2.0,
+   "2002-01": 2.04,
+   "2002-02": 2.04,
+   "2002-03": 2.15,
+   "2002-04": 2.15,
+   "2002-05": 2.15,
+   "2002-06": 2.56,
+   "2002-07": 2.56,
+   "2002-08": 2.56,
+   "2002-09": 2.56,
+   "2002-10": 7.97,
+   "2002-11": 7.97,
+   "2002-12": 7.97,
+   "2003-01": 7.32,
+   "2003-02": 7.32,
+   "2003-03": 7.39,
+   "2003-04": 7.39,
+   "2003-05": 7.39,
+   "2003-06": 3.41,
+   "2003-07": 2.89,
+   "2003-08": 2.89,
+   "2003-09": 2.36,
+   "2003-10": 2.27,
+   "2003-11": 2.2,
+   "2003-12": 2.27,
+   "2004-01": 2.27,
+   "2004-02": 2.13,
+   "2004-03": 2.27,
+   "2004-04": 1.84,
+   "2004-05": 1.7,
+   "2004-06": 1.64,
+   "2004-07": 1.7,
+   "2004-08": 1.7,
+   "2004-09": 1.64,
+   "2004-10": 1.7,
+   "2004-11": 1.64,
+   "2004-12": 1.7,
+   "2005-01": 1.7,
+   "2005-02": 1.53,
+   "2005-03": 1.7,
+   "2005-04": 1.64,
+   "2005-05": 1.7,
+   "2005-06": 1.64,
+   "2005-07": 1.7,
+   "2005-08": 1.7,
+   "2005-09": 1.64,
+   "2005-10": 1.7,
+   "2005-11": 1.64,
+   "2005-12": 1.7,
+   "2006-01": 1.7,
+   "2006-02": 1.64,
+   "2006-03": 1.7,
+   "2006-04": 1.64,
+   "2006-05": 1.7,
+   "2006-06": 1.64,
+   "2006-07": 1.7,
+   "2006-08": 1.7,
+   "2006-09": 1.64,
+   "2006-10": 1.7,
+   "2006-11": 1.64,
+   "2006-12": 1.7,
+   "2007-01": 1.7,
+   "2007-02": 1.64,
+   "2007-03": 1.7,
+   "2007-04": 1.64,
+   "2007-05": 1.7,
+   "2007-06": 1.64,
+   "2007-07": 1.7,
+   "2007-08": 1.7,
+   "2007-09": 1.64,
+   "2007-10": 1.7,
+   "2007-11": 1.64,
+   "2007-12": 1.7,
+   "2008-01": 1.7,
+   "2008-02": 1.64,
+   "2008-03": 1.7,
+   "2008-04": 1.64,
+   "2008-05": 1.7,
+   "2008-06": 1.64,
+   "2008-07": 1.7,
+   "2008-08": 1.7,
+   "2008-09": 1.64,
+   "2008-10": 1.7,
+   "2008-11": 1.64,
+   "2008-12": 1.7,
+   "2009-01": 1.7,
+   "2009-02": 1.64,
+   "2009-03": 1.61,
+   "2009-04": 1.56,
+   "2009-05": 1.61,
+   "2009-06": 1.56,
+   "2009-07": 1.61,
+   "2009-08": 1.61,
+   "2009-09": 1.56,
+   "2009-10": 1.61,
+   "2009-11": 1.56,
+   "2009-12": 1.61,
+   "2010-01": 1.61,
+   "2010-02": 1.56,
+   "2010-03": 1.61,
+   "2010-04": 1.56,
+   "2010-05": 1.61,
+   "2010-06": 1.56,
+   "2010-07": 1.61,
+   "2010-08": 1.61,
+   "2010-09": 1.56,
+   "2010-10": 1.61,
+   "2010-11": 1.56,
+   "2010-12": 1.61,
+   "2011-01": 1.61,
+   "2011-02": 1.56,
+   "2011-03": 1.61,
+   "2011-04": 1.56,
+   "2011-05": 1.61,
+   "2011-06": 1.56,
+   "2011-07": 1.61,
+   "2011-08": 1.61,
+   "2011-09": 1.56,
+   "2011-10": 1.61,
+   "2011-11": 1.56,
+   "2011-12": 1.61,
+   "2012-01": 1.78,
+   "2012-02": 1.67,
+   "2012-03": 1.78,
+   "2012-04": 1.73,
+   "2012-05": 1.78,
+   "2012-06": 1.73,
+   "2012-07": 1.78,
+   "2012-08": 1.78,
+   "2012-09": 1.73,
+   "2012-10": 1.78,
+   "2012-11": 1.73,
+   "2012-12": 1.78,
+   "2013-01": 1.78,
+   "2013-02": 1.61,
+   "2013-03": 1.78,
+   "2013-04": 1.73,
+   "2013-05": 1.78,
+   "2013-06": 1.73,
+   "2013-07": 1.78,
+   "2013-08": 1.78,
+   "2013-09": 1.73,
+   "2013-10": 1.78,
+   "2013-11": 1.73,
+   "2013-12": 1.78,
+   "2014-01": 1.78,
+   "2014-02": 2.07,
+   "2014-03": 2.63,
+   "2014-04": 2.55,
+   "2014-05": 2.63,
+   "2014-06": 2.55,
+   "2014-07": 2.63,
+   "2014-08": 2.63,
+   "2014-09": 2.55,
+   "2014-10": 2.63,
+   "2014-11": 2.55,
+   "2014-12": 2.63,
+   "2015-01": 2.63,
+   "2015-02": 2.38,
+   "2015-03": 2.63,
+   "2015-04": 2.55,
+   "2015-05": 2.63,
+   "2015-06": 2.55,
+   "2015-07": 2.63,
+   "2015-08": 2.63,
+   "2015-09": 2.55,
+   "2015-10": 2.63,
+   "2015-11": 2.55,
+   "2015-12": 2.63,
+   "2016-01": 2.67,
+   "2016-02": 2.62,
+   "2016-03": 2.8,
+   "2016-04": 2.71,
+   "2016-05": 2.8,
+   "2016-06": 2.71,
+   "2016-07": 2.8,
+   "2016-08": 2.8,
+   "2016-09": 2.71,
+   "2016-10": 2.8,
+   "2016-11": 2.71,
+   "2016-12": 2.8,
+   "2017-01": 2.8,
+   "2017-02": 2.53,
+   "2017-03": 2.8,
+   "2017-04": 2.71,
+   "2017-05": 2.8,
+   "2017-06": 2.71,
+   "2017-07": 2.8,
+   "2017-08": 2.8,
+   "2017-09": 2.71,
+   "2017-10": 2.8,
+   "2017-11": 2.71,
+   "2017-12": 2.8,
+   "2018-01": 2.8,
+   "2018-02": 2.53,
+   "2018-03": 2.8,
+   "2018-04": 2.71,
+   "2018-05": 2.8,
+   "2018-06": 2.71,
+   "2018-07": 2.8,
+   "2018-08": 2.8,
+   "2018-09": 3.29,
+   "2018-10": 3.4,
+   "2018-11": 3.29,
+   "2018-12": 3.4,
+   "2019-01": 3.4,
+   "2019-02": 3.07,
+   "2019-03": 3.4,
+   "2019-04": 3.29,
+   "2019-05": 3.4,
+   "2019-06": 3.29,
+   "2019-07": 3.4,
+   "2019-08": 5.1,
+   "2019-09": 4.93,
+   "2019-10": 5.1,
+   "2019-11": 4.93,
+   "2019-12": 5.1,
+   "2020-01": 5.1,
+   "2020-02": 2.94,
+   "2020-03": 3.14,
+   "2020-04": 3.04,
+   "2020-05": 3.14,
+   "2020-06": 3.04,
+   "2020-07": 3.14,
+   "2020-08": 3.14,
+   "2020-09": 3.04,
+   "2020-10": 3.14,
+   "2020-11": 3.04,
+   "2020-12": 3.14,
+   "2021-01": 3.14,
+   "2021-02": 2.83,
+   "2021-03": 3.14,
+   "2021-04": 3.04,
+   "2021-05": 3.14,
+   "2021-06": 3.04,
+   "2021-07": 3.14,
+   "2021-08": 3.14,
+   "2021-09": 3.04,
+   "2021-10": 3.14,
+   "2021-11": 3.04,
+   "2021-12": 3.14,
+   "2022-01": 3.4,
+   "2022-02": 3.06,
+   "2022-03": 3.48,
+   "2022-04": 3.51,
+   "2022-05": 3.73,
+   "2022-06": 3.67,
+   "2022-07": 3.99,
+   "2022-08": 4.6,
+   "2022-09": 4.85,
+   "2022-10": 5.18,
+   "2022-11": 5.01,
+   "2022-12": 5.18,
+   "2023-01": 5.18,
+   "2023-02": 4.68,
+   "2023-03": 5.27,
+   "2023-04": 5.26,
+   "2023-05": 5.98,
+   "2023-06": 6.0,
+   "2023-07": 6.2,
+   "2023-08": 7.04,
+   "2023-09": 7.56,
+   "2023-10": 8.15,
+   "2023-11": 8.55,
+   "2023-12": 8.55,
+   "2024-01": 8.55,
+   "2024-02": 8.25,
+   "2024-03": 7.97,
+   "2024-04": 7.21,
+   "2024-05": 4.42,
+   "2024-06": 3.29,
+   "2024-07": 3.29,
+   "2024-08": 3.29,
+   "2024-09": 3.29,
+   "2024-10": 3.4,
+   "2024-11": 3.29,
+   "2024-12": 3.4,
+   "2025-01": 3.4,
+   "2025-02": 3.0,
+   "2025-03": 3.23,
+   "2025-04": 3.12,
+   "2025-05": 3.23,
+   "2025-06": 3.12,
+   "2025-07": 3.23,
+   "2025-08": 3.36,
+   "2025-09": 4.02,
+   "2025-10": 4.58,
+   "2025-11": 4.93,
+   "2025-12": 5.1,
+   "2026-01": 4.16,
+   "2026-02": 3.07,
+   "2026-03": 3.4,
+   "2026-04": 3.29,
+   "2026-05": 3.4,
+   "2026-06": 3.13,
+   "2026-07": 3.14
+  },
+  "Pasiva": {
+   "2000-01": 0.58,
+   "2000-02": 0.58,
+   "2000-03": 0.58,
+   "2000-04": 0.58,
+   "2000-05": 0.58,
+   "2000-06": 0.58,
+   "2000-07": 0.58,
+   "2000-08": 0.58,
+   "2000-09": 0.58,
+   "2000-10": 0.58,
+   "2000-11": 0.58,
+   "2000-12": 0.58,
+   "2001-01": 0.58,
+   "2001-02": 0.58,
+   "2001-03": 0.58,
+   "2001-04": 0.58,
+   "2001-05": 0.58,
+   "2001-06": 0.58,
+   "2001-07": 0.58,
+   "2001-08": 0.58,
+   "2001-09": 0.58,
+   "2001-10": 0.58,
+   "2001-11": 0.58,
+   "2001-12": 0.58,
+   "2002-01": 0.58,
+   "2002-02": 0.58,
+   "2002-03": 0.58,
+   "2002-04": 0.58,
+   "2002-05": 0.58,
+   "2002-06": 0.58,
+   "2002-07": 0.58,
+   "2002-08": 0.58,
+   "2002-09": 0.58,
+   "2002-10": 0.58,
+   "2002-11": 0.58,
+   "2002-12": 0.58,
+   "2003-01": 0.58,
+   "2003-02": 0.58,
+   "2003-03": 0.58,
+   "2003-04": 1.83,
+   "2003-05": 1.15,
+   "2003-06": 0.93,
+   "2003-07": 0.75,
+   "2003-08": 0.55,
+   "2003-09": 0.46,
+   "2003-10": 0.44,
+   "2003-11": 0.39,
+   "2003-12": 0.4,
+   "2004-01": 0.37,
+   "2004-02": 0.3,
+   "2004-03": 0.32,
+   "2004-04": 0.31,
+   "2004-05": 0.32,
+   "2004-06": 0.31,
+   "2004-07": 0.32,
+   "2004-08": 0.32,
+   "2004-09": 0.31,
+   "2004-10": 0.32,
+   "2004-11": 0.31,
+   "2004-12": 0.32,
+   "2005-01": 0.32,
+   "2005-02": 0.29,
+   "2005-03": 0.32,
+   "2005-04": 0.31,
+   "2005-05": 0.32,
+   "2005-06": 0.31,
+   "2005-07": 0.32,
+   "2005-08": 0.32,
+   "2005-09": 0.31,
+   "2005-10": 0.32,
+   "2005-11": 0.31,
+   "2005-12": 0.32,
+   "2006-01": 0.32,
+   "2006-02": 0.31,
+   "2006-03": 0.32,
+   "2006-04": 0.31,
+   "2006-05": 0.32,
+   "2006-06": 0.31,
+   "2006-07": 0.35,
+   "2006-08": 0.35,
+   "2006-09": 0.35,
+   "2006-10": 0.36,
+   "2006-11": 0.35,
+   "2006-12": 0.36,
+   "2007-01": 0.36,
+   "2007-02": 0.35,
+   "2007-03": 0.47,
+   "2007-04": 0.45,
+   "2007-05": 0.47,
+   "2007-06": 0.45,
+   "2007-07": 0.47,
+   "2007-08": 0.47,
+   "2007-09": 0.45,
+   "2007-10": 0.47,
+   "2007-11": 0.45,
+   "2007-12": 0.47,
+   "2008-01": 0.47,
+   "2008-02": 0.45,
+   "2008-03": 0.47,
+   "2008-04": 0.45,
+   "2008-05": 0.47,
+   "2008-06": 0.45,
+   "2008-07": 0.47,
+   "2008-08": 0.47,
+   "2008-09": 0.45,
+   "2008-10": 0.47,
+   "2008-11": 0.45,
+   "2008-12": 0.47,
+   "2009-01": 0.47,
+   "2009-02": 0.45,
+   "2009-03": 0.47,
+   "2009-04": 0.45,
+   "2009-05": 0.47,
+   "2009-06": 0.45,
+   "2009-07": 0.47,
+   "2009-08": 0.47,
+   "2009-09": 0.45,
+   "2009-10": 0.47,
+   "2009-11": 0.45,
+   "2009-12": 0.47,
+   "2010-01": 0.47,
+   "2010-02": 0.45,
+   "2010-03": 0.47,
+   "2010-04": 0.45,
+   "2010-05": 0.47,
+   "2010-06": 0.45,
+   "2010-07": 0.47,
+   "2010-08": 0.47,
+   "2010-09": 0.45,
+   "2010-10": 0.47,
+   "2010-11": 0.45,
+   "2010-12": 0.47,
+   "2011-01": 0.47,
+   "2011-02": 0.45,
+   "2011-03": 0.47,
+   "2011-04": 0.45,
+   "2011-05": 0.47,
+   "2011-06": 0.45,
+   "2011-07": 0.47,
+   "2011-08": 0.47,
+   "2011-09": 0.45,
+   "2011-10": 0.47,
+   "2011-11": 0.45,
+   "2011-12": 0.47,
+   "2012-01": 0.47,
+   "2012-02": 0.44,
+   "2012-03": 0.47,
+   "2012-04": 0.45,
+   "2012-05": 0.47,
+   "2012-06": 0.45,
+   "2012-07": 0.47,
+   "2012-08": 0.47,
+   "2012-09": 0.45,
+   "2012-10": 0.47,
+   "2012-11": 0.45,
+   "2012-12": 0.47,
+   "2013-01": 0.47,
+   "2013-02": 0.42,
+   "2013-03": 0.47,
+   "2013-04": 0.45,
+   "2013-05": 0.47,
+   "2013-06": 0.45,
+   "2013-07": 0.47,
+   "2013-08": 0.47,
+   "2013-09": 0.45,
+   "2013-10": 0.47,
+   "2013-11": 0.45,
+   "2013-12": 0.47,
+   "2014-01": 0.47,
+   "2014-02": 0.42,
+   "2014-03": 0.47,
+   "2014-04": 0.45,
+   "2014-05": 0.47,
+   "2014-06": 0.45,
+   "2014-07": 0.47,
+   "2014-08": 0.47,
+   "2014-09": 0.45,
+   "2014-10": 0.47,
+   "2014-11": 0.45,
+   "2014-12": 0.47,
+   "2015-01": 0.47,
+   "2015-02": 0.42,
+   "2015-03": 0.47,
+   "2015-04": 0.45,
+   "2015-05": 0.47,
+   "2015-06": 0.45,
+   "2015-07": 0.47,
+   "2015-08": 0.47,
+   "2015-09": 0.45,
+   "2015-10": 0.47,
+   "2015-11": 0.45,
+   "2015-12": 0.47,
+   "2016-01": 0.47,
+   "2016-02": 0.44,
+   "2016-03": 0.47,
+   "2016-04": 0.45,
+   "2016-05": 0.47,
+   "2016-06": 0.45,
+   "2016-07": 0.47,
+   "2016-08": 0.47,
+   "2016-09": 0.45,
+   "2016-10": 0.47,
+   "2016-11": 0.45,
+   "2016-12": 0.47,
+   "2017-01": 0.47,
+   "2017-02": 0.42,
+   "2017-03": 0.47,
+   "2017-04": 0.45,
+   "2017-05": 0.46,
+   "2017-06": 0.45,
+   "2017-07": 0.46,
+   "2017-08": 0.46,
+   "2017-09": 0.45,
+   "2017-10": 0.46,
+   "2017-11": 0.45,
+   "2017-12": 0.46,
+   "2018-01": 0.46,
+   "2018-02": 0.42,
+   "2018-03": 0.46,
+   "2018-04": 0.45,
+   "2018-05": 0.46,
+   "2018-06": 1.99,
+   "2018-07": 2.09,
+   "2018-08": 2.09,
+   "2018-09": 2.53,
+   "2018-10": 2.89,
+   "2018-11": 2.59,
+   "2018-12": 2.89,
+   "2019-01": 2.68,
+   "2019-02": 2.03,
+   "2019-03": 2.26,
+   "2019-04": 2.53,
+   "2019-05": 2.26,
+   "2019-06": 2.73,
+   "2019-07": 2.82,
+   "2019-08": 3.53,
+   "2019-09": 3.62,
+   "2019-10": 3.32,
+   "2019-11": 2.88,
+   "2019-12": 2.22,
+   "2020-01": 2.08,
+   "2020-02": 1.79,
+   "2020-03": 1.84,
+   "2020-04": 2.18,
+   "2020-05": 2.26,
+   "2020-06": 2.18,
+   "2020-07": 2.26,
+   "2020-08": 2.26,
+   "2020-09": 2.18,
+   "2020-10": 2.26,
+   "2020-11": 2.35,
+   "2020-12": 2.43,
+   "2021-01": 2.43,
+   "2021-02": 2.19,
+   "2021-03": 2.43,
+   "2021-04": 2.35,
+   "2021-05": 2.43,
+   "2021-06": 2.35,
+   "2021-07": 2.43,
+   "2021-08": 2.43,
+   "2021-09": 2.35,
+   "2021-10": 2.43,
+   "2021-11": 2.35,
+   "2021-12": 2.43,
+   "2022-01": 3.31,
+   "2022-02": 3.02,
+   "2022-03": 3.53,
+   "2022-04": 3.65,
+   "2022-05": 4.01,
+   "2022-06": 4.08,
+   "2022-07": 4.5,
+   "2022-08": 5.62,
+   "2022-09": 5.94,
+   "2022-10": 6.37,
+   "2022-11": 6.16,
+   "2022-12": 6.36,
+   "2023-01": 6.37,
+   "2023-02": 5.75,
+   "2023-03": 6.49,
+   "2023-04": 6.07,
+   "2023-05": 7.97,
+   "2023-06": 7.97,
+   "2023-07": 8.24,
+   "2023-08": 9.22,
+   "2023-09": 9.7,
+   "2023-10": 10.29,
+   "2023-11": 10.93,
+   "2023-12": 10.14,
+   "2024-01": 9.04,
+   "2024-02": 9.04,
+   "2024-03": 6.92,
+   "2024-04": 5.16,
+   "2024-05": 2.99,
+   "2024-06": 2.47,
+   "2024-07": 2.57,
+   "2024-08": 2.73,
+   "2024-09": 2.81,
+   "2024-10": 2.97,
+   "2024-11": 2.72,
+   "2024-12": 2.59,
+   "2025-01": 2.54,
+   "2025-02": 2.06,
+   "2025-03": 2.21,
+   "2025-04": 2.3,
+   "2025-05": 2.55,
+   "2025-06": 2.47,
+   "2025-07": 2.44,
+   "2025-08": 2.84,
+   "2025-09": 3.13,
+   "2025-10": 2.97,
+   "2025-11": 2.19,
+   "2025-12": 1.89,
+   "2026-01": 1.87,
+   "2026-02": 1.69,
+   "2026-03": 1.87,
+   "2026-04": 1.66,
+   "2026-05": 1.44,
+   "2026-06": 1.4,
+   "2026-07": 0.0
+  },
+  "Promedio": {
+   "2000-01": 1.29,
+   "2000-02": 1.29,
+   "2000-03": 1.29,
+   "2000-04": 1.29,
+   "2000-05": 1.29,
+   "2000-06": 1.29,
+   "2000-07": 1.29,
+   "2000-08": 1.29,
+   "2000-09": 1.29,
+   "2000-10": 1.29,
+   "2000-11": 1.29,
+   "2000-12": 1.29,
+   "2001-01": 1.29,
+   "2001-02": 1.29,
+   "2001-03": 1.29,
+   "2001-04": 1.29,
+   "2001-05": 1.29,
+   "2001-06": 1.29,
+   "2001-07": 1.29,
+   "2001-08": 1.29,
+   "2001-09": 1.29,
+   "2001-10": 1.29,
+   "2001-11": 1.29,
+   "2001-12": 1.29,
+   "2002-01": 1.31,
+   "2002-02": 1.31,
+   "2002-03": 1.37,
+   "2002-04": 1.37,
+   "2002-05": 1.37,
+   "2002-06": 1.57,
+   "2002-07": 1.57,
+   "2002-08": 1.57,
+   "2002-09": 1.57,
+   "2002-10": 4.28,
+   "2002-11": 4.28,
+   "2002-12": 4.28,
+   "2003-01": 3.95,
+   "2003-02": 3.95,
+   "2003-03": 3.99,
+   "2003-04": 4.61,
+   "2003-05": 4.27,
+   "2003-06": 2.17,
+   "2003-07": 1.82,
+   "2003-08": 1.72,
+   "2003-09": 1.41,
+   "2003-10": 1.36,
+   "2003-11": 1.3,
+   "2003-12": 1.34,
+   "2004-01": 1.32,
+   "2004-02": 1.22,
+   "2004-03": 1.3,
+   "2004-04": 1.08,
+   "2004-05": 1.01,
+   "2004-06": 0.98,
+   "2004-07": 1.01,
+   "2004-08": 1.01,
+   "2004-09": 0.98,
+   "2004-10": 1.01,
+   "2004-11": 0.98,
+   "2004-12": 1.01,
+   "2005-01": 1.01,
+   "2005-02": 0.91,
+   "2005-03": 1.01,
+   "2005-04": 0.98,
+   "2005-05": 1.01,
+   "2005-06": 0.98,
+   "2005-07": 1.01,
+   "2005-08": 1.01,
+   "2005-09": 0.98,
+   "2005-10": 1.01,
+   "2005-11": 0.98,
+   "2005-12": 1.01,
+   "2006-01": 1.01,
+   "2006-02": 0.98,
+   "2006-03": 1.01,
+   "2006-04": 0.98,
+   "2006-05": 1.01,
+   "2006-06": 0.98,
+   "2006-07": 1.03,
+   "2006-08": 1.03,
+   "2006-09": 1.0,
+   "2006-10": 1.03,
+   "2006-11": 1.0,
+   "2006-12": 1.03,
+   "2007-01": 1.03,
+   "2007-02": 1.0,
+   "2007-03": 1.09,
+   "2007-04": 1.05,
+   "2007-05": 1.09,
+   "2007-06": 1.05,
+   "2007-07": 1.09,
+   "2007-08": 1.09,
+   "2007-09": 1.05,
+   "2007-10": 1.09,
+   "2007-11": 1.05,
+   "2007-12": 1.09,
+   "2008-01": 1.09,
+   "2008-02": 1.05,
+   "2008-03": 1.09,
+   "2008-04": 1.05,
+   "2008-05": 1.09,
+   "2008-06": 1.05,
+   "2008-07": 1.09,
+   "2008-08": 1.09,
+   "2008-09": 1.05,
+   "2008-10": 1.09,
+   "2008-11": 1.05,
+   "2008-12": 1.09,
+   "2009-01": 1.09,
+   "2009-02": 1.05,
+   "2009-03": 1.04,
+   "2009-04": 1.01,
+   "2009-05": 1.04,
+   "2009-06": 1.01,
+   "2009-07": 1.04,
+   "2009-08": 1.04,
+   "2009-09": 1.01,
+   "2009-10": 1.04,
+   "2009-11": 1.01,
+   "2009-12": 1.04,
+   "2010-01": 1.04,
+   "2010-02": 1.01,
+   "2010-03": 1.04,
+   "2010-04": 1.01,
+   "2010-05": 1.04,
+   "2010-06": 1.01,
+   "2010-07": 1.04,
+   "2010-08": 1.04,
+   "2010-09": 1.01,
+   "2010-10": 1.04,
+   "2010-11": 1.01,
+   "2010-12": 1.04,
+   "2011-01": 1.04,
+   "2011-02": 1.01,
+   "2011-03": 1.04,
+   "2011-04": 1.01,
+   "2011-05": 1.04,
+   "2011-06": 1.01,
+   "2011-07": 1.04,
+   "2011-08": 1.04,
+   "2011-09": 1.01,
+   "2011-10": 1.04,
+   "2011-11": 1.01,
+   "2011-12": 1.04,
+   "2012-01": 1.13,
+   "2012-02": 1.06,
+   "2012-03": 1.13,
+   "2012-04": 1.09,
+   "2012-05": 1.13,
+   "2012-06": 1.09,
+   "2012-07": 1.13,
+   "2012-08": 1.13,
+   "2012-09": 1.09,
+   "2012-10": 1.13,
+   "2012-11": 1.09,
+   "2012-12": 1.13,
+   "2013-01": 1.13,
+   "2013-02": 1.02,
+   "2013-03": 1.13,
+   "2013-04": 1.09,
+   "2013-05": 1.13,
+   "2013-06": 1.09,
+   "2013-07": 1.13,
+   "2013-08": 1.13,
+   "2013-09": 1.09,
+   "2013-10": 1.13,
+   "2013-11": 1.09,
+   "2013-12": 1.13,
+   "2014-01": 1.13,
+   "2014-02": 1.25,
+   "2014-03": 1.55,
+   "2014-04": 1.5,
+   "2014-05": 1.55,
+   "2014-06": 1.5,
+   "2014-07": 1.55,
+   "2014-08": 1.55,
+   "2014-09": 1.5,
+   "2014-10": 1.55,
+   "2014-11": 1.5,
+   "2014-12": 1.55,
+   "2015-01": 1.55,
+   "2015-02": 1.4,
+   "2015-03": 1.55,
+   "2015-04": 1.5,
+   "2015-05": 1.55,
+   "2015-06": 1.5,
+   "2015-07": 1.55,
+   "2015-08": 1.55,
+   "2015-09": 1.5,
+   "2015-10": 1.55,
+   "2015-11": 1.5,
+   "2015-12": 1.55,
+   "2016-01": 1.57,
+   "2016-02": 1.53,
+   "2016-03": 1.64,
+   "2016-04": 1.58,
+   "2016-05": 1.64,
+   "2016-06": 1.58,
+   "2016-07": 1.64,
+   "2016-08": 1.64,
+   "2016-09": 1.58,
+   "2016-10": 1.64,
+   "2016-11": 1.58,
+   "2016-12": 1.64,
+   "2017-01": 1.64,
+   "2017-02": 1.48,
+   "2017-03": 1.64,
+   "2017-04": 1.58,
+   "2017-05": 1.63,
+   "2017-06": 1.58,
+   "2017-07": 1.63,
+   "2017-08": 1.63,
+   "2017-09": 1.58,
+   "2017-10": 1.63,
+   "2017-11": 1.58,
+   "2017-12": 1.63,
+   "2018-01": 1.63,
+   "2018-02": 1.47,
+   "2018-03": 1.63,
+   "2018-04": 1.58,
+   "2018-05": 1.63,
+   "2018-06": 2.35,
+   "2018-07": 2.45,
+   "2018-08": 2.45,
+   "2018-09": 2.91,
+   "2018-10": 3.14,
+   "2018-11": 2.94,
+   "2018-12": 3.14,
+   "2019-01": 3.04,
+   "2019-02": 2.55,
+   "2019-03": 2.83,
+   "2019-04": 2.91,
+   "2019-05": 2.83,
+   "2019-06": 3.01,
+   "2019-07": 3.11,
+   "2019-08": 4.31,
+   "2019-09": 4.27,
+   "2019-10": 4.21,
+   "2019-11": 3.9,
+   "2019-12": 3.66,
+   "2020-01": 3.59,
+   "2020-02": 2.36,
+   "2020-03": 2.49,
+   "2020-04": 2.61,
+   "2020-05": 2.7,
+   "2020-06": 2.61,
+   "2020-07": 2.7,
+   "2020-08": 2.7,
+   "2020-09": 2.61,
+   "2020-10": 2.7,
+   "2020-11": 2.7,
+   "2020-12": 2.78,
+   "2021-01": 2.79,
+   "2021-02": 2.51,
+   "2021-03": 2.35,
+   "2021-04": 2.7,
+   "2021-05": 2.78,
+   "2021-06": 2.69,
+   "2021-07": 2.78,
+   "2021-08": 2.78,
+   "2021-09": 2.69,
+   "2021-10": 2.78,
+   "2021-11": 2.69,
+   "2021-12": 2.78,
+   "2022-01": 3.35,
+   "2022-02": 3.04,
+   "2022-03": 3.5,
+   "2022-04": 3.58,
+   "2022-05": 3.87,
+   "2022-06": 3.87,
+   "2022-07": 4.24,
+   "2022-08": 5.11,
+   "2022-09": 5.39,
+   "2022-10": 5.77,
+   "2022-11": 5.59,
+   "2022-12": 5.77,
+   "2023-01": 5.77,
+   "2023-02": 5.22,
+   "2023-03": 5.88,
+   "2023-04": 5.67,
+   "2023-05": 6.98,
+   "2023-06": 6.99,
+   "2023-07": 7.22,
+   "2023-08": 8.13,
+   "2023-09": 8.63,
+   "2023-10": 9.22,
+   "2023-11": 9.74,
+   "2023-12": 9.34,
+   "2024-01": 8.79,
+   "2024-02": 8.65,
+   "2024-03": 7.45,
+   "2024-04": 6.18,
+   "2024-05": 3.71,
+   "2024-06": 2.88,
+   "2024-07": 2.93,
+   "2024-08": 3.0,
+   "2024-09": 3.05,
+   "2024-10": 3.18,
+   "2024-11": 3.0,
+   "2024-12": 2.99,
+   "2025-01": 2.97,
+   "2025-02": 2.53,
+   "2025-03": 2.72,
+   "2025-04": 2.71,
+   "2025-05": 2.89,
+   "2025-06": 2.8,
+   "2025-07": 2.83,
+   "2025-08": 3.1,
+   "2025-09": 3.58,
+   "2025-10": 3.77,
+   "2025-11": 3.56,
+   "2025-12": 3.49,
+   "2026-01": 3.02,
+   "2026-02": 2.38,
+   "2026-03": 2.63,
+   "2026-04": 2.47,
+   "2026-05": 2.42,
+   "2026-06": 2.26,
+   "2026-07": 0.0
+  },
+  "TEA_Prop": {
+   "2018-01": 0.0,
+   "2018-02": 0.0,
+   "2018-03": 0.0,
+   "2018-04": 0.0,
+   "2018-05": 0.0,
+   "2018-06": 7.71,
+   "2018-07": 7.97,
+   "2019-01": 7.97,
+   "2019-02": 7.09,
+   "2019-03": 7.66,
+   "2019-04": 7.41,
+   "2019-05": 8.39,
+   "2019-06": 8.17,
+   "2019-07": 8.44,
+   "2019-08": 8.82,
+   "2019-09": 9.56,
+   "2019-10": 9.94,
+   "2019-11": 9.62,
+   "2019-12": 9.94,
+   "2020-01": 9.46,
+   "2020-02": 8.83,
+   "2020-03": 9.43,
+   "2020-04": 8.74,
+   "2020-05": 8.76,
+   "2020-06": 8.48,
+   "2020-07": 8.76,
+   "2020-08": 8.76,
+   "2020-09": 8.48,
+   "2020-10": 8.76,
+   "2020-11": 8.42,
+   "2020-12": 8.44,
+   "2021-01": 8.44,
+   "2021-02": 7.62,
+   "2021-03": 8.44,
+   "2021-04": 8.17,
+   "2021-05": 8.44,
+   "2021-06": 8.17,
+   "2021-07": 8.44,
+   "2021-08": 8.44,
+   "2021-09": 8.17,
+   "2021-10": 8.44,
+   "2021-11": 8.17,
+   "2021-12": 8.44,
+   "2022-01": 8.44,
+   "2022-02": 7.62,
+   "2022-03": 8.48,
+   "2022-04": 8.48,
+   "2022-05": 8.89,
+   "2022-06": 8.91,
+   "2022-07": 9.6,
+   "2022-08": 11.83,
+   "2022-09": 12.47,
+   "2022-10": 13.3,
+   "2022-11": 12.88,
+   "2022-12": 13.3,
+   "2023-01": 13.3,
+   "2023-02": 12.02,
+   "2023-03": 13.3,
+   "2023-04": 12.95,
+   "2023-05": 15.08,
+   "2023-06": 15.72,
+   "2023-07": 17.46,
+   "2023-08": 20.44,
+   "2023-09": 22.16,
+   "2023-10": 23.8,
+   "2023-11": 24.41,
+   "2023-12": 25.23,
+   "2024-01": 25.23,
+   "2024-02": 23.6,
+   "2024-03": 25.16,
+   "2024-04": 23.69,
+   "2024-05": 16.13,
+   "2024-06": 13.27,
+   "2024-07": 13.71,
+   "2024-08": 13.71,
+   "2024-09": 13.27,
+   "2024-10": 13.71,
+   "2024-11": 12.39,
+   "2024-12": 12.71,
+   "2025-01": 12.71,
+   "2025-02": 11.48,
+   "2025-03": 12.71,
+   "2025-04": 12.3,
+   "2025-05": 12.71,
+   "2025-06": 12.3,
+   "2025-07": 12.71,
+   "2025-08": 12.86,
+   "2025-09": 13.07,
+   "2025-10": 14.26,
+   "2025-11": 15.13,
+   "2025-12": 15.63,
+   "2026-01": 15.63,
+   "2026-02": 14.12,
+   "2026-03": 15.63,
+   "2026-04": 15.13,
+   "2026-05": 15.63,
+   "2026-06": 15.13,
+   "2026-07": 15.63
+  },
+  "TNA": {
+   "2018-01": 5.59,
+   "2018-02": 5.59,
+   "2019-01": 5.59,
+   "2019-02": 5.52,
+   "2019-03": 5.42,
+   "2019-04": 5.42,
+   "2019-05": 5.81,
+   "2019-06": 5.84,
+   "2019-07": 5.84,
+   "2019-08": 6.03,
+   "2019-09": 6.55,
+   "2019-10": 6.58,
+   "2019-11": 6.58,
+   "2019-12": 6.58,
+   "2020-01": 6.34,
+   "2020-02": 6.34,
+   "2020-03": 6.33,
+   "2020-04": 6.13,
+   "2020-05": 6.0,
+   "2020-06": 6.0,
+   "2020-07": 6.0,
+   "2020-08": 6.0,
+   "2020-09": 6.0,
+   "2020-10": 6.0,
+   "2020-11": 5.97,
+   "2020-12": 5.84,
+   "2021-01": 5.84,
+   "2021-02": 5.84,
+   "2021-03": 5.84,
+   "2021-04": 5.84,
+   "2021-05": 5.84,
+   "2021-06": 5.84,
+   "2021-07": 5.84,
+   "2021-08": 5.84,
+   "2021-09": 5.84,
+   "2021-10": 5.84,
+   "2021-11": 5.84,
+   "2021-12": 5.84,
+   "2022-01": 5.84,
+   "2022-02": 5.84,
+   "2022-03": 5.86,
+   "2022-04": 6.0,
+   "2022-05": 6.06,
+   "2022-06": 6.22,
+   "2022-07": 6.41,
+   "2022-08": 7.43,
+   "2022-09": 7.88,
+   "2022-10": 8.05,
+   "2022-11": 8.05,
+   "2022-12": 8.05,
+   "2023-01": 8.05,
+   "2023-02": 8.05,
+   "2023-03": 8.05,
+   "2023-04": 8.09,
+   "2023-05": 8.75,
+   "2023-06": 9.18,
+   "2023-07": 9.62,
+   "2023-08": 10.56,
+   "2023-09": 11.34,
+   "2023-10": 11.6,
+   "2023-11": 12.0,
+   "2023-12": 12.0,
+   "2024-01": 12.0,
+   "2024-02": 12.0,
+   "2024-03": 11.98,
+   "2024-04": 11.78,
+   "2024-05": 9.42,
+   "2024-06": 8.22,
+   "2024-07": 8.49,
+   "2024-08": 8.49,
+   "2024-09": 8.22,
+   "2024-10": 8.49,
+   "2024-11": 7.85,
+   "2024-12": 8.07,
+   "2025-01": 8.07,
+   "2025-02": 7.29,
+   "2025-03": 8.07,
+   "2025-04": 7.81,
+   "2025-05": 8.07,
+   "2025-06": 7.8,
+   "2025-07": 8.07,
+   "2025-08": 8.13,
+   "2025-09": 8.14,
+   "2025-10": 8.71,
+   "2025-11": 8.96,
+   "2025-12": 9.26,
+   "2026-01": 9.26,
+   "2026-02": 8.36,
+   "2026-03": 9.26,
+   "2026-04": 8.96,
+   "2026-05": 9.26,
+   "2026-06": 8.96,
+   "2026-07": 9.26
+  },
+  "TNA_BNA": {
+   "2021-01": 3.49,
+   "2021-02": 3.13,
+   "2021-03": 3.47,
+   "2021-04": 3.36,
+   "2021-05": 3.47,
+   "2021-06": 3.56,
+   "2021-07": 3.47,
+   "2021-08": 3.49,
+   "2021-09": 3.36,
+   "2021-10": 3.48,
+   "2021-11": 3.37,
+   "2021-12": 3.48,
+   "2022-01": 3.84,
+   "2022-02": 3.67,
+   "2022-03": 4.07,
+   "2022-04": 4.18,
+   "2022-05": 4.59,
+   "2022-06": 4.62,
+   "2022-07": 5.17,
+   "2022-08": 5.88,
+   "2022-09": 6.42,
+   "2022-10": 7.04,
+   "2022-11": 6.82,
+   "2022-12": 7.07,
+   "2023-01": 7.07,
+   "2023-02": 6.41,
+   "2023-03": 7.16,
+   "2023-04": 7.16,
+   "2023-05": 8.77,
+   "2023-06": 9.11,
+   "2023-07": 9.44,
+   "2023-08": 10.01,
+   "2023-09": 11.22,
+   "2023-10": 11.6,
+   "2023-11": 12.74,
+   "2023-12": 12.46,
+   "2024-01": 10.78,
+   "2024-02": 10.72,
+   "2024-03": 9.2,
+   "2024-04": 6.62,
+   "2024-05": 4.24,
+   "2024-06": 3.27,
+   "2024-07": 3.67,
+   "2024-08": 3.91,
+   "2024-09": 3.88,
+   "2024-10": 4.11,
+   "2024-11": 3.72,
+   "2024-12": 3.43,
+   "2025-01": 3.24,
+   "2025-02": 2.71,
+   "2025-03": 2.94,
+   "2025-04": 3.16,
+   "2025-05": 3.38,
+   "2025-06": 3.17,
+   "2025-07": 3.25,
+   "2025-08": 4.32,
+   "2025-09": 5.11,
+   "2025-10": 4.66,
+   "2025-11": 3.54,
+   "2025-12": 2.76,
+   "2026-01": 3.05,
+   "2026-02": 2.84,
+   "2026-03": 2.96,
+   "2026-04": 2.34,
+   "2026-05": 2.17,
+   "2026-06": 2.03,
+   "2026-07": 2.03
+  }
+ },
+ "ripte": {
+  "2016-01": 15822.89,
+  "2016-02": 16520.52,
+  "2016-03": 16977.26,
+  "2016-04": 17691.29,
+  "2016-05": 18042.71,
+  "2016-06": 18277.57,
+  "2016-07": 18988.44,
+  "2016-08": 19216.78,
+  "2016-09": 19666.45,
+  "2016-10": 20069.28,
+  "2016-11": 20422.65,
+  "2016-12": 20690.14,
+  "2017-01": 21048.21,
+  "2017-02": 21483.03,
+  "2017-03": 22285.48,
+  "2017-04": 22650.53,
+  "2017-05": 23029.98,
+  "2017-06": 23469.98,
+  "2017-07": 24489.17,
+  "2017-08": 24700.42,
+  "2017-09": 25136.35,
+  "2017-10": 25843.46,
+  "2017-11": 26177.33,
+  "2017-12": 26301.42,
+  "2018-01": 26929.81,
+  "2018-02": 27440.22,
+  "2018-03": 28072.31,
+  "2018-04": 28858.05,
+  "2018-05": 29338.79,
+  "2018-06": 29598.12,
+  "2018-07": 30283.84,
+  "2018-08": 30978.75,
+  "2018-09": 31523.56,
+  "2018-10": 33154.28,
+  "2018-11": 33733.8,
+  "2018-12": 34339.61,
+  "2019-01": 35362.23,
+  "2019-02": 36733.68,
+  "2019-03": 38884.43,
+  "2019-04": 39658.15,
+  "2019-05": 40911.09,
+  "2019-06": 41584.2,
+  "2019-07": 43290.96,
+  "2019-08": 44092.81,
+  "2019-09": 45485.23,
+  "2019-10": 47834.32,
+  "2019-11": 48591.6,
+  "2019-12": 49574.33,
+  "2020-01": 53070.21,
+  "2020-02": 56386.47,
+  "2020-03": 56872.86,
+  "2020-04": 56955.63,
+  "2020-05": 57057.9,
+  "2020-06": 58361.93,
+  "2020-07": 60440.53,
+  "2020-08": 60767.23,
+  "2020-09": 61909.95,
+  "2020-10": 64756.23,
+  "2020-11": 65571.77,
+  "2020-12": 66869.88,
+  "2021-01": 68100.73,
+  "2021-02": 72293.4,
+  "2021-03": 75809.13,
+  "2021-04": 80501.97,
+  "2021-05": 81464.51,
+  "2021-06": 84513.57,
+  "2021-07": 88274.02,
+  "2021-08": 90340.08,
+  "2021-09": 94157.71,
+  "2021-10": 97538.78,
+  "2021-11": 100590.14,
+  "2021-12": 102589.87,
+  "2022-01": 107358.35,
+  "2022-02": 112413.82,
+  "2022-03": 121220.45,
+  "2022-04": 128406.32,
+  "2022-05": 133595.77,
+  "2022-06": 141289.4,
+  "2022-07": 148811.85,
+  "2022-08": 155611.28,
+  "2022-09": 165421.01,
+  "2022-10": 174436.9,
+  "2022-11": 184210.25,
+  "2022-12": 194175.11,
+  "2023-01": 201580.26,
+  "2023-02": 218543.91,
+  "2023-03": 239882.73,
+  "2023-04": 263481.22,
+  "2023-05": 279820.37,
+  "2023-06": 302562.69,
+  "2023-07": 324997.28,
+  "2023-08": 344057.43,
+  "2023-09": 376594.32,
+  "2023-10": 420706.55,
+  "2023-11": 447079.57,
+  "2023-12": 484298.4,
+  "2024-01": 555269.16,
+  "2024-02": 619007.05,
+  "2024-03": 705832.58,
+  "2024-04": 819501.72,
+  "2024-05": 879483.08,
+  "2024-06": 933179.85,
+  "2024-07": 994681.38,
+  "2024-08": 1032410.48,
+  "2024-09": 1075145.08,
+  "2024-10": 1146474.18,
+  "2024-11": 1178925.33,
+  "2024-12": 1202927.89,
+  "2025-01": 1234658.4,
+  "2025-02": 1310357.8,
+  "2025-03": 1363510.33,
+  "2025-04": 1402606.61,
+  "2025-05": 1428661.3,
+  "2025-06": 1468135.75,
+  "2025-07": 1510680.81,
+  "2025-08": 1530297.32,
+  "2025-09": 1551831.75,
+  "2025-10": 1593047.33,
+  "2025-11": 1611851.61,
+  "2025-12": 1633547.0,
+  "2026-01": 1646344.54,
+  "2026-02": 1734357.18,
+  "2026-03": 1775664.12
+ }
+};
+</script>
+<script>
+(function(){
+  var E = window.LiquidadorEngine, TASAS = window.TASAS, S = TASAS.series;
+  var fmt = E.formatearMoneda;
+  var $ = function(id){return document.getElementById(id)};
+
+  // ---------- Estado ----------
+  var modoCuota = 'fija';
+  var materia = 'alimentos';   // 'alimentos' | 'civil'
+  var cuotas = [];   // {fecha, base, pct, asign, monto}
+  var pagos = [];    // {fecha, monto}
+  var PRESET = function(mat){
+    if(mat==='lrt') return [
+      {sel:'TEA_Prop', desde:'2021-01-01', hasta:'2024-03-31', valor:0, etiqueta:'TEA Sucursales (Trotelli, Ac. 1/2025 TSJ)'},
+      {sel:'TNA_BNA',  desde:'2024-04-01', hasta:'',           valor:0, etiqueta:'TNA Banco Nación (Trotelli, Ac. 1/2025 TSJ)'}
+    ];
+    return [
+      {sel:'TEA_Prop', desde:'2021-01-01', hasta:'2024-03-31', valor:0, etiqueta:'TEA Sucursales (Casas, Ac. 15/2025 TSJ)'},
+      {sel:'Activa',   desde:'2024-04-01', hasta:'',           valor:0, etiqueta:'Activa BPN (Casas, Ac. 15/2025 TSJ)'}
+    ];
+  };
+  var tramos = PRESET('alimentos');
+
+  var SERIES_OPT = [
+    ['TEA_Prop','TEA Sucursales'],['Activa','Activa BPN'],['TNA_BNA','TNA Banco Nación'],['Promedio','Promedio'],
+    ['Pasiva','Pasiva'],['TNA','TNA BPN'],['conv_anual','Convencional (anual %)'],['conv_mensual','Convencional (mensual %)']
+  ];
+
+  // ---------- Tema ----------
+  $('theme').onclick=function(){
+    var r=document.documentElement, cur=r.getAttribute('data-theme');
+    var dark = cur ? cur==='dark' : matchMedia('(prefers-color-scheme:dark)').matches;
+    r.setAttribute('data-theme', dark?'light':'dark');
+  };
+
+  // ---------- Cuotas ----------
+  function renderCuotas(){
+    if(materia==='civil'||materia==='lrt') return renderCapitales();
+    var pct = modoCuota==='pct';
+    var head = '<thead><tr><th>Período (mora)</th>'+
+      (pct?'<th>Base neta ($)</th><th>%</th><th>Asignaciones ($)</th>':'')+
+      '<th>Cuota devengada ($)</th><th></th></tr></thead>';
+    var body='<tbody>';
+    cuotas.forEach(function(c,i){
+      body+='<tr><td><input type="text" readonly class="datefield" placeholder="AAAA-MM-DD" data-i="'+i+'" data-f="fecha" value="'+(c.fecha||'')+'"></td>';
+      if(pct){
+        body+='<td class="num"><input type="number" data-i="'+i+'" data-f="base" value="'+(c.base||0)+'"></td>';
+        body+='<td class="num"><input type="number" data-i="'+i+'" data-f="pct" value="'+(c.pct||0)+'"></td>';
+        body+='<td class="num"><input type="number" data-i="'+i+'" data-f="asign" value="'+(c.asign||0)+'"></td>';
+        body+='<td class="num calc">'+fmt(montoCuota(c))+'</td>';
+      } else {
+        body+='<td class="num"><input type="number" data-i="'+i+'" data-f="monto" value="'+(c.monto||0)+'"></td>';
+      }
+      body+='<td><button class="del" data-del="'+i+'">✕</button></td></tr>';
+    });
+    body+='</tbody>';
+    $('tCuotas').innerHTML=head+body;
+    bindTable('tCuotas', cuotas, renderCuotas);
+  }
+  function montoCuota(c){ return (materia!=='civil' && modoCuota==='pct') ? (Number(c.base||0)*Number(c.pct||0)/100 + Number(c.asign||0)) : Number(c.monto||0); }
+
+  function renderCapitales(){
+    var head='<thead><tr><th>Fecha de mora</th><th>Concepto (opcional)</th><th>Monto / capital ($)</th><th></th></tr></thead>';
+    var body='<tbody>';
+    cuotas.forEach(function(c,i){
+      body+='<tr><td><input type="text" readonly class="datefield" placeholder="AAAA-MM-DD" data-i="'+i+'" data-f="fecha" value="'+(c.fecha||'')+'"></td>'+
+        '<td><input type="text" data-i="'+i+'" data-f="etiqueta" value="'+esc(c.etiqueta||'')+'" placeholder="rubro / capital" style="min-width:150px"></td>'+
+        '<td class="num"><input type="number" data-i="'+i+'" data-f="monto" value="'+(c.monto||0)+'"></td>'+
+        '<td><button class="del" data-del="'+i+'">✕</button></td></tr>';
+    });
+    if(!cuotas.length) body+='<tr><td colspan="4" style="color:var(--muted)">Agregá el capital (o los rubros) con su fecha de mora.</td></tr>';
+    body+='</tbody>';
+    $('tCuotas').innerHTML=head+body;
+    bindTable('tCuotas', cuotas, renderCuotas);
+  }
+
+  $('modoCuota').onclick=function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    modoCuota=b.dataset.m;
+    [].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});
+    $('genMontoWrap').style.display = modoCuota==='fija'?'':'none';
+    $('genBaseWrap').style.display = modoCuota==='pct'?'':'none';
+    $('genPctWrap').style.display = modoCuota==='pct'?'':'none';
+    // Conservar fechas al cambiar de modo, arrastrando el monto efectivo
+    cuotas = cuotas.map(function(c){
+      if(modoCuota==='pct') return {fecha:c.fecha, base:(c.base!=null?c.base:0), pct:(c.pct!=null?c.pct:0), asign:(c.asign!=null?c.asign:0)};
+      return {fecha:c.fecha, monto:(c.monto!=null?c.monto:(Number(c.base||0)*Number(c.pct||0)/100+Number(c.asign||0)))};
+    });
+    renderCuotas();
+  };
+  function setMateria(m){
+    materia=m; var capMode=(m==='civil'||m==='lrt');   // modelo "capital / rubros"
+    if(capMode){
+      modoCuota='fija';
+      cuotas=cuotas.map(function(c){return {fecha:c.fecha, monto:(c.monto!=null?c.monto:(Number(c.base||0)*Number(c.pct||0)/100+Number(c.asign||0))), etiqueta:c.etiqueta};});
+      $('adicOn').checked=false; $('adicBody').classList.remove('show');
+      [].forEach.call($('modoCuota').children,function(x){x.classList.toggle('on',x.dataset.m==='fija')});
+    }
+    $('modoCuotaWrap').style.display = capMode?'none':'';
+    $('genWrap').style.display = capMode?'none':'';
+    $('adic552Wrap').style.display = capMode?'none':'';
+    $('hintMora').style.display = capMode?'none':'';
+    $('lrtNota').style.display = (m==='lrt')?'':'none';
+    $('sec1titulo').textContent = capMode?'Capital / rubros':'Cuotas devengadas';
+    $('sec2titulo').textContent = capMode?'Pagos a cuenta':'Pagos del alimentante';
+    $('btnAddCuota').textContent = capMode?'+ Agregar capital / rubro':'+ Agregar mes suelto';
+    [].forEach.call($('selMateria').children,function(x){x.classList.toggle('on',x.dataset.mat===m)});
+    tramos = PRESET(m); renderTramos();   // cada materia trae su propio preset de tasas
+    renderCuotas();
+  }
+  $('selMateria').onclick=function(e){ var b=e.target.closest('button'); if(b) setMateria(b.dataset.mat); };
+
+  $('btnGen').onclick=function(){
+    var d=$('genDesde').value, h=$('genHasta').value, dia=+$('genDia').value||11;
+    if(!d||!h){alert('Completá el "Desde (mes)" y el "Hasta (fecha de corte)".');return;}
+    var nuevas;
+    try{ nuevas=E.generarCuotas({montoMensual:0, dia:dia, desde:d, hasta:h.slice(0,7)}); }
+    catch(e){ alert(e.message); return; }
+    if(/^\d{4}-\d{2}-\d{2}$/.test(h)) $('corte').value=h;   // el "hasta" fija la fecha de corte (día exacto)
+    var meses={}; nuevas.forEach(function(x){ meses[x.fecha.slice(0,7)]=1; });
+    // Reemplazar cualquier fila existente dentro del rango (evita duplicar meses)
+    cuotas = cuotas.filter(function(c){ return !(c.fecha && meses[c.fecha.slice(0,7)]); });
+    nuevas.forEach(function(x){
+      if(modoCuota==='pct') cuotas.push({fecha:x.fecha, base:+$('genBase').value||0, pct:+$('genPct').value||0, asign:0});
+      else cuotas.push({fecha:x.fecha, monto:+$('genMonto').value||0});
+    });
+    cuotas.sort(function(a,b){ return (a.fecha||'').localeCompare(b.fecha||''); });
+    renderCuotas();
+  };
+  $('btnAddCuota').onclick=function(){ cuotas.push((materia==='civil'||materia==='lrt')?{fecha:'',monto:0,etiqueta:''}:(modoCuota==='pct'?{fecha:'',base:0,pct:0,asign:0}:{fecha:'',monto:0})); renderCuotas(); };
+  $('btnClearCuotas').onclick=function(){ cuotas=[]; renderCuotas(); };
+
+  // ---------- Pagos ----------
+  function renderPagos(){
+    var h='<thead><tr><th>Fecha</th><th>Monto ($)</th><th></th></tr></thead><tbody>';
+    pagos.forEach(function(p,i){
+      h+='<tr><td><input type="text" readonly class="datefield" placeholder="AAAA-MM-DD" data-i="'+i+'" data-f="fecha" value="'+(p.fecha||'')+'"></td>'+
+         '<td class="num"><input type="number" data-i="'+i+'" data-f="monto" value="'+(p.monto||0)+'"></td>'+
+         '<td><button class="del" data-del="'+i+'">✕</button></td></tr>';
+    });
+    if(!pagos.length) h+='<tr><td colspan="3" style="color:var(--muted)">Sin pagos cargados.</td></tr>';
+    h+='</tbody>';
+    $('tPagos').innerHTML=h;
+    bindTable('tPagos', pagos, renderPagos);
+  }
+  $('btnAddPago').onclick=function(){ pagos.push({fecha:'',monto:0}); renderPagos(); };
+
+  // ---------- Tramos ----------
+  function renderTramos(){
+    var h='<thead><tr><th>Desde</th><th>Hasta</th><th>Tasa</th><th>Valor % (si convencional)</th><th>Etiqueta</th><th></th></tr></thead><tbody>';
+    tramos.forEach(function(t,i){
+      var opts=SERIES_OPT.map(function(o){return '<option value="'+o[0]+'"'+(t.sel===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('');
+      var conv = (t.sel==='conv_anual'||t.sel==='conv_mensual');
+      h+='<tr><td><input type="text" readonly class="datefield" placeholder="AAAA-MM-DD" data-i="'+i+'" data-f="desde" value="'+(t.desde||'')+'"></td>'+
+         '<td><input type="text" readonly class="datefield" placeholder="AAAA-MM-DD" data-i="'+i+'" data-f="hasta" value="'+(t.hasta||'')+'"></td>'+
+         '<td><select data-i="'+i+'" data-f="sel">'+opts+'</select></td>'+
+         '<td class="num"><input type="number" data-i="'+i+'" data-f="valor" value="'+(t.valor||0)+'"'+(conv?'':' disabled')+'></td>'+
+         '<td><input type="text" data-i="'+i+'" data-f="etiqueta" value="'+(t.etiqueta||'')+'" style="min-width:130px"></td>'+
+         '<td><button class="del" data-del="'+i+'">✕</button></td></tr>';
+    });
+    h+='</tbody>';
+    $('tTramos').innerHTML=h;
+    bindTable('tTramos', tramos, renderTramos);
+  }
+  $('btnAddTramo').onclick=function(){ tramos.push({sel:'conv_anual',desde:'',hasta:'',valor:0,etiqueta:'Convencional'}); renderTramos(); };
+  $('btnResetTramos').onclick=function(){ tramos=PRESET(materia); renderTramos(); };
+
+  // ---------- Binding genérico de tablas editables ----------
+  function bindTable(id, arr, rerender){
+    var t=$(id);
+    t.querySelectorAll('input,select').forEach(function(el){
+      el.onchange=function(){
+        var i=+el.dataset.i, f=el.dataset.f;
+        arr[i][f] = (el.type==='number')?(+el.value):el.value;
+        if(f==='sel'){ rerender(); return; } // tramos: habilita/deshabilita el valor
+        if(id==='tCuotas' && modoCuota==='pct' && (f==='base'||f==='pct'||f==='asign')){
+          var cell=el.closest('tr').querySelector('td.calc');   // recalcular sin re-render (conserva foco)
+          if(cell) cell.textContent = fmt(montoCuota(arr[i]));
+        }
+      };
+    });
+    t.querySelectorAll('[data-del]').forEach(function(b){
+      b.onclick=function(){ arr.splice(+b.dataset.del,1); rerender(); };
+    });
+  }
+
+  // ---------- Opciones toggles ----------
+  $('capOn').onchange=function(){ $('capBody').classList.toggle('show',this.checked); };
+  $('adicOn').onchange=function(){ $('adicBody').classList.toggle('show',this.checked); };
+
+  // ---------- Construir input y calcular ----------
+  function tramoEngine(t){
+    if(t.sel==='conv_anual') return {modo:'anual', valor:+t.valor, desde:t.desde, hasta:t.hasta||null, etiqueta:t.etiqueta};
+    if(t.sel==='conv_mensual') return {modo:'mensual_fija', valor:+t.valor, desde:t.desde, hasta:t.hasta||null, etiqueta:t.etiqueta};
+    return {modo:'serie', serie:t.sel, desde:t.desde, hasta:t.hasta||null, etiqueta:t.etiqueta};
+  }
+
+  $('btnCalcular').onclick=function(){
+    $('errBox').innerHTML='';
+    try{
+      var cs = cuotas.filter(function(c){return c.fecha}).map(function(c){return {fecha:c.fecha, monto:montoCuota(c), etiqueta:(c.etiqueta||c.fecha)}});
+      if(!cs.length) throw new Error('Cargá al menos una fila con fecha y monto.');
+      var input = {
+        series:S,
+        cuotas: cs,
+        pagos: pagos.filter(function(p){return p.fecha && +p.monto>0}).map(function(p){return {fecha:p.fecha, monto:+p.monto}}),
+        tramos: tramos.filter(function(t){return t.desde}).map(tramoEngine),
+        fechaCorte: $('corte').value
+      };
+      if(!input.fechaCorte) throw new Error('Indicá la fecha de corte.');
+      if($('capOn').checked){
+        var hitos=($('capHitos').value||'').split(',').map(function(s){return s.trim()}).filter(Boolean);
+        input.capitalizacion={activada:true, hitos:hitos};
+      }
+      if($('adicOn').checked){
+        input.adicional={activada:true, modo:$('adicTipo').value, valor:+$('adicValor').value||0,
+          desde:$('adicDesde').value||null, hasta:$('adicHasta').value||null};
+      }
+      var res = E.liquidar(input);
+      window.__ULT = {res:res, input:input};
+      pintar(res);
+    }catch(err){
+      $('resultado').style.display='block';
+      $('errBox').innerHTML='<div class="err">⚠ '+err.message+'</div>';
+      $('kpis').innerHTML=''; $('tSalida').innerHTML=''; $('tDetalle').innerHTML=''; $('cabRes').innerHTML='';
+    }
+  };
+
+  // ---------- Planilla por período (mensual) ----------
+  function planillaMensual(res){
+    var map={}, order=[];
+    function get(m){ if(!map[m]){map[m]={mes:m,cuota:0,pagos:0,interes:0,cap:0,intAc:0};order.push(m);} return map[m]; }
+    res.filas.forEach(function(f){
+      if(f.tipo==='devengamiento'){var r=get(f.mes); r.interes+=f.interesSegmento; r.cap=f.capital; r.intAc=f.interes;}
+      else{ var m=(f.fecha||'').slice(0,7); if(!m)return; var r=get(m);
+        if(f.tipo==='cuota') r.cuota+=f.monto;
+        if(f.tipo==='pago') r.pagos+=f.pago;
+        r.cap=f.capital; r.intAc=f.interes; }
+    });
+    return order.sort().map(function(m){return map[m];});
+  }
+  function mesLargo(m){var p=m.split('-');return ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][+p[1]-1]+'/'+p[0];}
+
+  function pintar(res){
+    $('resultado').style.display='block';
+    $('printTitulo').firstElementChild.textContent = materia==='alimentos' ? 'Liquidación de intereses sobre cuota alimentaria' : (materia==='lrt' ? 'Liquidación de intereses — accidente de trabajo (LRT)' : 'Liquidación de intereses');
+    var cab='';
+    if($('caratula').value) cab+='<b>Autos:</b> '+esc($('caratula').value)+'  ';
+    if($('expte').value) cab+='<b>Expte.:</b> '+esc($('expte').value)+'  ';
+    cab+='<b>Corte:</b> '+res.fechaCorte;
+    $('cabRes').innerHTML=cab;
+
+    $('kpis').innerHTML=
+      kpi('Capital adeudado', fmt(res.capital))+
+      kpi('Intereses', fmt(res.interes))+
+      kpi('Pagos imputados', fmt(res.totalPagos))+
+      kpi('TOTAL (capital + interés)', fmt(res.total), true)+
+      (res.saldoAFavor>0?kpi('Saldo a favor', fmt(res.saldoAFavor)):'');
+
+    // Planilla por período
+    var colCap = materia==='alimentos'?'Cuota devengada':'Capital';
+    var rows=planillaMensual(res), th='<thead><tr><th>Período</th><th>'+colCap+'</th><th>Pagos</th><th>Interés del mes</th><th>Saldo capital</th><th>Interés acumulado</th><th>Total</th></tr></thead><tbody>';
+    rows.forEach(function(r){
+      th+='<tr><td>'+mesLargo(r.mes)+'</td><td>'+fmt(r.cuota)+'</td><td>'+fmt(r.pagos)+'</td><td>'+fmt(r.interes)+'</td><td>'+fmt(r.cap)+'</td><td>'+fmt(r.intAc)+'</td><td>'+fmt(r.cap+r.intAc)+'</td></tr>';
+    });
+    th+='</tbody><tfoot><tr><td>TOTALES</td><td>'+fmt(res.totalCuotas)+'</td><td>'+fmt(res.totalPagos)+'</td><td>'+fmt(res.interes)+'</td><td>'+fmt(res.capital)+'</td><td>'+fmt(res.interes)+'</td><td>'+fmt(res.total)+'</td></tr></tfoot>';
+    $('tSalida').innerHTML=th;
+    $('printTotal').innerHTML='<b>Total adeudado al '+res.fechaCorte+': '+fmt(res.total)+'</b> — capital '+fmt(res.capital)+' + intereses '+fmt(res.interes)+(res.totalPagos>0?(' (pagos imputados '+fmt(res.totalPagos)+')'):'');
+
+    // Detalle
+    var d='<thead><tr><th>Fecha</th><th>Evento</th><th>Detalle</th><th>Días</th><th>Tasa mes %</th><th>Interés</th><th>Capital</th><th>Interés acum.</th></tr></thead><tbody>';
+    res.filas.forEach(function(f){
+      var fecha=f.tipo==='devengamiento'?(f.desde+' → '+f.hasta):(f.fecha||'');
+      d+='<tr><td>'+fecha+'</td><td>'+f.evento+'</td><td style="text-align:left;white-space:normal">'+esc(f.detalle||'')+'</td>'+
+         '<td>'+(f.dias!=null?f.dias:'')+'</td><td>'+(f.tasaMensualPct!=null?f.tasaMensualPct.toFixed(2):'')+'</td>'+
+         '<td>'+(f.interesSegmento!=null?fmt(f.interesSegmento):(f.tipo==='pago'?('-'+fmt(f.pago)):''))+'</td>'+
+         '<td>'+fmt(f.capital)+'</td><td>'+fmt(f.interes)+'</td></tr>';
+    });
+    d+='</tbody>';
+    $('tDetalle').innerHTML=d;
+    $('resultado').scrollIntoView({behavior:'smooth'});
+  }
+  function kpi(l,v,t){return '<div class="kpi'+(t?' total':'')+'"><div class="l">'+l+'</div><div class="v">'+v+'</div></div>';}
+  function esc(s){return String(s).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]});}
+
+  // ---------- Exportar ----------
+  $('btnPrint').onclick=function(){window.print();};
+  $('btnCSV').onclick=function(){
+    if(!window.__ULT)return;
+    var rows=planillaMensual(window.__ULT.res);
+    var csv='Periodo;Cuota devengada;Pagos;Interes del mes;Saldo capital;Interes acumulado;Total\n';
+    rows.forEach(function(r){csv+=[mesLargo(r.mes),r.cuota,r.pagos,r.interes.toFixed(2),r.cap.toFixed(2),r.intAc.toFixed(2),(r.cap+r.intAc).toFixed(2)].join(';')+'\n';});
+    var res=window.__ULT.res;
+    csv+=['TOTALES',res.totalCuotas,res.totalPagos,res.interes.toFixed(2),res.capital.toFixed(2),res.interes.toFixed(2),res.total.toFixed(2)].join(';')+'\n';
+    var blob=new Blob(["﻿"+csv],{type:'text/csv;charset=utf-8'}), a=document.createElement('a');
+    a.href=URL.createObjectURL(blob); a.download='liquidacion.csv'; a.click();
+  };
+
+  // ---------- Init ----------
+  $('corte').value = new Date().toISOString().slice(0,10);
+  renderPagos(); renderTramos(); setMateria('alimentos');
+})();
+</script>
+
+<script>
+/* ===== Módulo 2: Indemnización por rentas futuras ===== */
+(function(){
+  var IN = window.Indemnizacion, $=function(id){return document.getElementById(id)};
+  var fmt = IN.formatearMoneda;
+  function esc(s){return String(s==null?'':s).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+  function kpi(l,v,t){return '<div class="kpi'+(t?' total':'')+'"><div class="l">'+esc(l)+'</div><div class="v">'+v+'</div></div>';}
+
+  var supuesto='incapacidad', formulaMode='comparativa', formulaSel='acciarri';
+  var tramosVar=[{desdeEdad:35, ingreso:500000, prob:1}];
+
+  // ---- Navegación: pantalla de inicio ↔ módulos ----
+  function showView(v){
+    $('home').style.display = v==='home'?'':'none';
+    $('tabIntereses').style.display = v==='intereses'?'':'none';
+    $('tabIndemnizacion').style.display = v==='indemnizacion'?'':'none';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  $('home').addEventListener('click', function(e){ var b=e.target.closest('[data-go]'); if(b) showView(b.dataset.go); });
+  $('home').addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ var b=e.target.closest('[data-go]'); if(b){ e.preventDefault(); showView(b.dataset.go); } } });
+  [].forEach.call(document.querySelectorAll('[data-home]'), function(b){ b.onclick=function(){ showView('home'); }; });
+  window.__showView = showView;
+
+  // ---- Supuesto (incapacidad / fallecimiento) ----
+  $('selSupuesto').onclick=function(e){var b=e.target.closest('button');if(!b)return;
+    supuesto=b.dataset.s;[].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});
+    $('lblAfect').textContent = supuesto==='incapacidad'?'Incapacidad (%)':'Porción a causahabientes (%)';
+  };
+
+  // ---- Fórmula (comparativa / variable) ----
+  $('selFormula').onclick=function(e){var b=e.target.closest('button');if(!b)return;
+    formulaMode=b.dataset.f;[].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});
+    $('fParamsConst').style.display = formulaMode==='comparativa'?'':'none';
+    $('fParamsVar').style.display = formulaMode==='variable'?'':'none';
+    $('grpIngresoConst').style.display = formulaMode==='comparativa'?'':'none';
+  };
+
+  // ---- Tramos (Acciarri variable) ----
+  function renderTramosVar(){
+    var unidad = $('iForma').value==='anual'?'anual':'mensual';
+    var h='<thead><tr><th>Desde edad</th><th>Ingreso '+unidad+' ($)</th><th>Probabilidad (0–1)</th><th></th></tr></thead><tbody>';
+    tramosVar.forEach(function(t,i){
+      h+='<tr><td><input type="number" data-i="'+i+'" data-f="desdeEdad" value="'+(t.desdeEdad||0)+'"></td>'+
+         '<td class="num"><input type="number" data-i="'+i+'" data-f="ingreso" value="'+(t.ingreso||0)+'"></td>'+
+         '<td class="num"><input type="number" step="0.05" min="0" max="1" data-i="'+i+'" data-f="prob" value="'+(i===0?1:(t.prob!=null?t.prob:1))+'"'+(i===0?' disabled title="El primer tramo va al 100%"':'')+'></td>'+
+         '<td>'+(i===0?'':'<button class="del" data-del="'+i+'">✕</button>')+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('tTramosVar').innerHTML=h;
+    $('tTramosVar').querySelectorAll('input').forEach(function(el){el.onchange=function(){tramosVar[+el.dataset.i][el.dataset.f]=+el.value;};});
+    $('tTramosVar').querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){tramosVar.splice(+b.dataset.del,1);renderTramosVar();};});
+  }
+  $('btnAddTramoVar').onclick=function(){tramosVar.push({desdeEdad:(+$('iEdad').value||35)+5, ingreso:0, prob:0.5});renderTramosVar();};
+  $('iForma').onchange=renderTramosVar;
+
+  function ingresoAnual(v){ v=+v||0; if($('iForma').value==='mensual') v*=(+$('iSac').value||13); return v; }
+
+  // ---- Calcular ----
+  $('btnCalcularInd').onclick=function(){
+    $('errInd').innerHTML='';
+    try{
+      var edad=+$('iEdad').value||0, afect=+$('iAfect').value||0;
+      if(edad<=0) throw new Error('Indicá la edad inicial.');
+      var res, comp=null;
+      if(formulaMode==='comparativa'){
+        var ingA = ingresoAnual($('iIngreso').value);
+        comp={
+          vuotto:  IN.vuotto({edad:edad, ingresoAnual:ingA, afectacionPct:afect, tasa:+$('iTasaV').value, edadTope:+$('iTopeV').value}),
+          mendez:  IN.mendez({edad:edad, ingresoAnual:ingA, afectacionPct:afect, tasa:+$('iTasaM').value, edadTope:+$('iTopeM').value}),
+          acciarri:IN.acciarriConstante({edad:edad, ingresoAnual:ingA, afectacionPct:afect, tasa:+$('iTasaA').value, edadLimite:+$('iLimA').value})
+        };
+        res=comp.acciarri; res.meta={afect:afect, edad:edad, ingA:ingA};
+      } else {
+        var trs = tramosVar.map(function(t){ return {desdeEdad:+t.desdeEdad, ingresoAnual:ingresoAnual(t.ingreso), prob:+t.prob}; });
+        res = IN.acciarriVariable({edad:edad, afectacionPct:afect, tasa:+$('iTasaVar').value, edadLimite:+$('iLimVar').value, tramos:trs});
+        res.meta={afect:afect, edad:edad, ingA:null};
+      }
+      window.__IND={res:res, comp:comp};
+      pintarInd(res, comp);
+    }catch(err){ $('resInd').style.display='block'; $('errInd').innerHTML='<div class="err">⚠ '+esc(err.message)+'</div>'; $('kpisInd').innerHTML=''; $('tPlanillaInd').innerHTML=''; }
+  };
+
+  function formulaTexto(fres){
+    if(fres.formula.indexOf('variable')>=0)
+      return 'C = Σ (ingreso esperado × afectación) ÷ (1+i)ᵗ &nbsp;·&nbsp; i = '+(fres.i*100).toFixed(2)+'% &nbsp;·&nbsp; '+fres.n+' períodos anuales.';
+    var Vn = Math.pow(1+fres.i, -fres.n);
+    var t = 'C = a · (1 − Vⁿ) / i &nbsp;=&nbsp; '+fmt(fres.rentaAnualAfectada)+' × (1 − '+Vn.toFixed(6)+') ÷ '+(fres.i*100).toFixed(2)+'% &nbsp;=&nbsp; <b>'+fmt(fres.capital)+'</b>';
+    t += '<br><span style="color:var(--muted)">a = renta anual afectada &nbsp;·&nbsp; i = '+(fres.i*100).toFixed(2)+'% &nbsp;·&nbsp; n = '+fres.n+' años &nbsp;·&nbsp; Vⁿ = (1+i)⁻ⁿ = '+Vn.toFixed(6);
+    if(fres.factorEdad && Math.abs(fres.factorEdad-1)>1e-9) t += ' &nbsp;·&nbsp; a incluye factor 60/edad = '+fres.factorEdad.toFixed(4);
+    return t + '</span>';
+  }
+  function kpiSel(key,label,val,sel){ return '<div class="kpi selectable'+(sel?' total':'')+'" data-formula="'+key+'"><div class="l">'+label+(sel?' ✓':'')+'</div><div class="v">'+val+'</div></div>'; }
+  function renderKpisComp(comp){
+    $('kpisInd').innerHTML = kpiSel('vuotto','Vuotto',fmt(comp.vuotto.capital),formulaSel==='vuotto')
+      + kpiSel('mendez','Méndez',fmt(comp.mendez.capital),formulaSel==='mendez')
+      + kpiSel('acciarri','Acciarri',fmt(comp.acciarri.capital),formulaSel==='acciarri');
+    $('kpisInd').querySelectorAll('[data-formula]').forEach(function(c){
+      c.onclick=function(){ formulaSel=c.dataset.formula; renderKpisComp(comp); renderDetalle(comp[formulaSel]); };
+    });
+  }
+  function renderDetalle(fres){
+    $('formulaBox').innerHTML = '<b>Fórmula aplicada — '+fres.formula+':</b><br>'+formulaTexto(fres);
+    $('printTotalInd').innerHTML = '<b>'+fres.formula+' — Capital: '+fmt(fres.capital)+'</b>';
+    $('tituloPlanillaInd').textContent = 'Planilla año a año — '+fres.formula;
+    var th='<thead><tr><th>Edad</th><th>Año (t)</th><th>Ingreso esperado</th><th>Renta afectada</th><th>Factor</th><th>Valor presente</th></tr></thead><tbody>';
+    fres.desglose.forEach(function(f){
+      th+='<tr><td>'+f.edad+'</td><td>'+f.t+'</td><td>'+fmt(f.ingresoEsperado)+'</td><td>'+fmt(f.rentaAfectada)+'</td><td>'+f.factor.toFixed(6)+'</td><td>'+fmt(f.valorPresente)+'</td></tr>';
+    });
+    th+='</tbody><tfoot><tr><td colspan="5">CAPITAL — '+fres.formula+'</td><td>'+fmt(fres.capital)+'</td></tr></tfoot>';
+    $('tPlanillaInd').innerHTML=th;
+    var ag = IN.agotamiento(fres);
+    var ta='<thead><tr><th>Edad</th><th>Capital antes de extracción</th><th>Extracción (renta)</th><th>Remanente al fin del año</th></tr></thead><tbody>';
+    ag.forEach(function(f){ var rem=Math.abs(f.remanente)<0.005?0:f.remanente;
+      ta+='<tr><td>'+f.edad+'</td><td>'+fmt(f.antes)+'</td><td>'+fmt(f.extraccion)+'</td><td>'+fmt(rem)+'</td></tr>'; });
+    ta+='</tbody>';
+    $('tAgota').innerHTML=ta;
+  }
+  function pintarInd(res, comp){
+    $('resInd').style.display='block';
+    var esInc = supuesto==='incapacidad';
+    $('printTitInd').textContent = 'Cálculo de indemnización por '+(esInc?'incapacidad':'fallecimiento');
+    var cab='<b>'+(esInc?'Incapacidad':'Porción a causahabientes')+':</b> '+res.meta.afect+'%  ·  <b>Edad inicial:</b> '+res.meta.edad;
+    if(res.meta.ingA!=null) cab+='  ·  <b>Ingreso anual (real):</b> '+fmt(res.meta.ingA);
+    $('cabInd').innerHTML=cab;
+    if(comp){
+      $('selHintInd').style.display='';
+      renderKpisComp(comp);
+      renderDetalle(comp[formulaSel]);
+    } else {
+      $('selHintInd').style.display='none';
+      $('kpisInd').innerHTML = kpi(res.formula, fmt(res.capital), true);
+      renderDetalle(res);
+    }
+    $('resInd').scrollIntoView({behavior:'smooth'});
+  }
+
+  $('btnPrintInd').onclick=function(){window.print();};
+
+  // ===== Régimen LRT (Ley de Riesgos del Trabajo) =====
+  var ibMode='directo', salarios=[], RIPTE=window.TASAS.ripte, supuestoLRT='incapacidad';
+  $('selRegimen').onclick=function(e){var b=e.target.closest('button');if(!b)return;
+    [].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});
+    $('regCivil').style.display=b.dataset.r==='civil'?'':'none';
+    $('regLRT').style.display=b.dataset.r==='lrt'?'':'none';
+  };
+  $('selIB').onclick=function(e){var b=e.target.closest('button');if(!b)return;
+    ibMode=b.dataset.ib;[].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});
+    $('ibDirecto').style.display=ibMode==='directo'?'':'none';
+    $('ibRipte').style.display=ibMode==='ripte'?'':'none';
+  };
+  $('selSupuestoLRT').onclick=function(e){var b=e.target.closest('button');if(!b)return;
+    supuestoLRT=b.dataset.s;[].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});
+    var m=supuestoLRT==='fallecimiento';
+    $('grpIncap').style.display=m?'none':''; $('grpPagoUnico').style.display=m?'':'none';
+    $('hintLRT').innerHTML = m
+      ? 'Prestación = <b>53 × Ingreso Base × (65 / edad)</b> — fallecimiento, sin porcentaje (art. 18 → 15.2 LRT). El interés (PMI → corte) va en la solapa <b>Intereses</b>, materia LRT.'
+      : 'Prestación = <b>53 × Ingreso Base × (65 / edad) × % incapacidad</b>. Criterio <b>"Contreras"</b> (Ac. 16/23 TSJ). El interés posterior va en la solapa <b>Intereses</b>, materia LRT.';
+  };
+  function renderSalarios(){
+    var h='<thead><tr><th>Mes</th><th>Salario ($)</th><th></th></tr></thead><tbody>';
+    salarios.forEach(function(s,i){
+      h+='<tr><td><input type="text" readonly class="monthfield" placeholder="AAAA-MM" data-i="'+i+'" data-f="mes" value="'+(s.mes||'')+'"></td>'+
+         '<td class="num"><input type="number" data-i="'+i+'" data-f="monto" value="'+(s.monto||0)+'"></td>'+
+         '<td><button class="del" data-del="'+i+'">✕</button></td></tr>';
+    });
+    if(!salarios.length) h+='<tr><td colspan="3" style="color:var(--muted)">Generá o agregá los salarios previos a la PMI.</td></tr>';
+    $('tSalarios').innerHTML=h+'</tbody>';
+    $('tSalarios').querySelectorAll('input').forEach(function(el){el.onchange=function(){salarios[+el.dataset.i][el.dataset.f]=(el.type==='number')?+el.value:el.value;};});
+    $('tSalarios').querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){salarios.splice(+b.dataset.del,1);renderSalarios();};});
+  }
+  $('btnAddSalario').onclick=function(){salarios.push({mes:'',monto:0});renderSalarios();};
+  $('btnGenSalarios').onclick=function(){
+    var pmi=$('lPMI').value; if(!/^\d{4}-\d{2}$/.test(pmi)){alert('Elegí la fecha de la PMI (mes).');return;}
+    var y=+pmi.slice(0,4), m=+pmi.slice(5,7); salarios=[];
+    for(var k=12;k>=1;k--){ var mm=m-k, yy=y; while(mm<=0){mm+=12;yy--;} salarios.push({mes:yy+'-'+String(mm).padStart(2,'0'), monto:0}); }
+    renderSalarios();
+  };
+  $('btnCalcularLRT').onclick=function(){
+    $('errLRT').innerHTML='';
+    try{
+      var ib, ibDet=null;
+      if(ibMode==='ripte'){
+        var pmi=$('lPMI').value; if(!/^\d{4}-\d{2}$/.test(pmi)) throw new Error('Elegí la fecha de la PMI.');
+        ibDet=IN.ibPorRipte(salarios, pmi, RIPTE); ib=ibDet.ib;
+      } else { ib=+$('lIB').value||0; if(ib<=0) throw new Error('Cargá el ingreso base.'); }
+      var res=IN.indemnizacionLRT({supuesto:supuestoLRT, edad:+$('lEdad').value, incapacidadPct:+$('lIncap').value, ib:ib, piso:+$('lPiso').value||0, adicional20:$('lAdic').checked, adicionalPagoUnico:+$('lPagoUnico').value||0});
+      window.__LRT=res; pintarLRT(res, ibDet);
+    }catch(err){ $('resLRT').style.display='block'; $('errLRT').innerHTML='<div class="err">⚠ '+esc(err.message)+'</div>'; $('kpisLRT').innerHTML=''; $('formulaLRT').innerHTML=''; $('ibDetLRT').innerHTML=''; }
+  };
+  function pintarLRT(res, ibDet){
+    $('resLRT').style.display='block';
+    $('kpisLRT').innerHTML = kpi(res.muerte?'Prestación (art. 18/15)':'Prestación art. 14', fmt(res.base))
+      + (res.adicional20>0?kpi('+20% (art. 3)', fmt(res.adicional20)):'')
+      + (res.adicionalPagoUnico>0?kpi('Pago único (art. 11.4)', fmt(res.adicionalPagoUnico)):'')
+      + kpi('TOTAL', fmt(res.total), true);
+    $('printTitLRT').textContent = res.muerte ? 'Indemnización LRT — fallecimiento (art. 18 → 15.2)' : 'Indemnización — Ley de Riesgos del Trabajo (art. 14)';
+    $('printTotalLRT').innerHTML='<b>Total indemnización LRT: '+fmt(res.total)+'</b>';
+    var f='<b>Fórmula aplicada — '+(res.muerte?'LRT fallecimiento (art. 18 → 15.2)':'LRT art. 14.2.a')+':</b><br>'+
+      (res.muerte
+        ? '53 × IB × (65 / edad) = 53 × '+fmt(res.ib)+' × '+res.coefEdad.toFixed(4)+' (65/'+res.edad+') = <b>'+fmt(res.prestacion14)+'</b>'
+        : '53 × IB × (65 / edad) × %incap = 53 × '+fmt(res.ib)+' × '+res.coefEdad.toFixed(4)+' (65/'+res.edad+') × '+res.incapacidadPct+'% = <b>'+fmt(res.prestacion14)+'</b>');
+    if(res.piso>0) f+='<br><span style="color:var(--muted)">Piso SRT: '+fmt(res.piso)+' → '+(res.usoPiso?'<b>se aplica el piso</b>':'no se aplica (la fórmula es mayor)')+'</span>';
+    if(res.adicional20>0) f+='<br><span style="color:var(--muted)">+20 % (art. 3 Ley 26773) sobre '+fmt(res.base)+' = '+fmt(res.adicional20)+'</span>';
+    if(res.adicionalPagoUnico>0) f+='<br><span style="color:var(--muted)">+ compensación adicional pago único (art. 11.4) = '+fmt(res.adicionalPagoUnico)+'</span>';
+    $('formulaLRT').innerHTML=f;
+    if(ibDet){
+      var t='<h2 style="font-size:1rem;margin-top:16px">Ingreso base por RIPTE (índice a la PMI: '+fmt(ibDet.riptePMI)+')</h2><div class="tbl-wrap"><table><thead><tr><th>Mes</th><th>Salario</th><th>RIPTE del mes</th><th>Coef.</th><th>Actualizado</th></tr></thead><tbody>';
+      ibDet.detalle.forEach(function(d){ t+='<tr><td>'+d.mes+'</td><td>'+fmt(d.monto)+'</td><td>'+fmt(d.ripteMes)+'</td><td>'+d.coef.toFixed(6)+'</td><td>'+fmt(d.actualizado)+'</td></tr>'; });
+      t+='</tbody><tfoot><tr><td colspan="4">IB = promedio de '+ibDet.n+' meses</td><td>'+fmt(ibDet.ib)+'</td></tr></tfoot></table></div>';
+      $('ibDetLRT').innerHTML=t;
+    } else $('ibDetLRT').innerHTML='';
+    $('resLRT').scrollIntoView({behavior:'smooth'});
+  }
+  $('btnPrintLRT').onclick=function(){window.print();};
+  renderSalarios();
+
+  renderTramosVar();
+  showView('home');   // arranca en la pantalla de inicio
+})();
+</script>
+
+<script>
+/* ===== Selector de fecha (columnas mes/año + almanaque) ===== */
+(function(){
+  var pop=null, curField=null, mode='date', selY, selM;
+  var MES3=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  var DOW=['D','L','M','M','J','V','S'];
+  function p2(n){ return String(n).padStart(2,'0'); }
+  function build(){
+    pop=document.createElement('div'); pop.className='dpop'; pop.style.display='none';
+    pop.innerHTML='<div class="dp-cols"><div class="dp-col dp-months"></div><div class="dp-col dp-years"></div></div><div class="dp-grid"></div>';
+    document.body.appendChild(pop);
+    document.addEventListener('mousedown',function(e){ if(pop.style.display!=='none' && !pop.contains(e.target) && e.target!==curField) close(); });
+  }
+  function renderCols(){
+    var mc=pop.querySelector('.dp-months'), yc=pop.querySelector('.dp-years');
+    mc.innerHTML=MES3.map(function(m,i){return '<button type="button" class="dp-mo'+(i===selM?' sel':'')+'" data-m="'+i+'">'+m+'</button>';}).join('');
+    var ys=''; for(var y=2000;y<=2035;y++) ys+='<button type="button" class="dp-yr'+(y===selY?' sel':'')+'" data-y="'+y+'">'+y+'</button>';
+    yc.innerHTML=ys;
+    mc.querySelectorAll('.dp-mo').forEach(function(b){ b.onclick=function(){ selM=+b.dataset.m; if(mode==='month'){ setVal(selY+'-'+p2(selM+1)); } else { renderCols(); renderGrid(); } }; });
+    yc.querySelectorAll('.dp-yr').forEach(function(b){ b.onclick=function(){ selY=+b.dataset.y; renderCols(); if(mode==='date') renderGrid(); }; });
+    var s=mc.querySelector('.sel'); if(s) s.scrollIntoView({block:'nearest'});
+    var sy=yc.querySelector('.sel'); if(sy) sy.scrollIntoView({block:'nearest'});
+  }
+  function renderGrid(){
+    if(mode==='month'){ pop.querySelector('.dp-grid').innerHTML=''; return; }
+    var first=new Date(Date.UTC(selY,selM,1)).getUTCDay(), dim=new Date(Date.UTC(selY,selM+1,0)).getUTCDate();
+    var cur=(curField && /^\d{4}-\d{2}-\d{2}$/.test(curField.value))?curField.value:'';
+    var h='<div class="dp-dow">'+DOW.map(function(x){return '<span>'+x+'</span>';}).join('')+'</div><div class="dp-days">';
+    for(var i=0;i<first;i++) h+='<span></span>';
+    for(var d=1;d<=dim;d++){ var iso=selY+'-'+p2(selM+1)+'-'+p2(d);
+      h+='<button type="button" class="dp-day'+(iso===cur?' sel':'')+'" data-iso="'+iso+'">'+d+'</button>'; }
+    pop.querySelector('.dp-grid').innerHTML=h+'</div>';
+    pop.querySelectorAll('.dp-day').forEach(function(b){ b.onclick=function(){ setVal(b.dataset.iso); }; });
+  }
+  function setVal(v){ if(curField){ curField.value=v; curField.dispatchEvent(new Event('change',{bubbles:true})); } close(); }
+  function open(field, m){
+    if(!pop) build();
+    curField=field; mode=m; var now=new Date();
+    var re=(m==='month')?/^(\d{4})-(\d{2})/:/^(\d{4})-(\d{2})-(\d{2})/, mm=re.exec(field.value||'');
+    selY=mm?+mm[1]:now.getFullYear(); selM=mm?(+mm[2]-1):now.getMonth();
+    renderCols(); renderGrid();
+    var r=field.getBoundingClientRect(); pop.style.display='block';
+    pop.style.left=(window.scrollX+r.left)+'px'; pop.style.top=(window.scrollY+r.bottom+4)+'px';
+  }
+  function close(){ if(pop) pop.style.display='none'; curField=null; }
+  function trigger(e){ var t=e.target; if(!t||!t.classList) return;
+    if(t.classList.contains('datefield')) open(t,'date');
+    else if(t.classList.contains('monthfield')) open(t,'month'); }
+  document.addEventListener('focusin',trigger);
+  document.addEventListener('click',function(e){ if(pop&&pop.style.display!=='none') return; trigger(e); });
+})();
+</script>
+</body>
+</html>

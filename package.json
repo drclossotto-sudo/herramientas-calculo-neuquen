@@ -1,0 +1,14 @@
+{
+  "name": "liquidador-alimentos-neuquen",
+  "version": "1.0.0",
+  "description": "Liquidador de intereses sobre cuota alimentaria (Neuquén) — método calibrado contra el calculador oficial del Poder Judicial.",
+  "author": "Otto Closs — Defensor Público Civil de Neuquén",
+  "license": "MIT",
+  "scripts": {
+    "test": "node tests/engine.test.js && node tests/ui.test.js && node tests/indemnizacion.test.js",
+    "build": "node build.js"
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.3"
+  }
+}

@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Herramientas de cálculo — Neuquén</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2230; --muted:#5b6676; --line:#e2e7ee;
+    --brand:#1f5fa8; --brand-ink:#fff; --accent:#0d7d5a; --warn-bg:#fff7e6; --warn-ink:#8a5a00; --warn-line:#f0d089;
+    --th:#eef2f7; --zebra:#f8fafc; --danger:#b3261e;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0f141b; --card:#171e28; --ink:#e7ecf3; --muted:#9aa7b8; --line:#28313d;
+      --brand:#4a90d9; --accent:#3fbd8f; --warn-bg:#2c2410; --warn-ink:#e7c66a; --warn-line:#5a4a1e;
+      --th:#1e2732; --zebra:#141b24; --danger:#e5645c; }
+  }
+  :root[data-theme="dark"]{ --bg:#0f141b; --card:#171e28; --ink:#e7ecf3; --muted:#9aa7b8; --line:#28313d;
+      --brand:#4a90d9; --accent:#3fbd8f; --warn-bg:#2c2410; --warn-ink:#e7c66a; --warn-line:#5a4a1e; --th:#1e2732; --zebra:#141b24; --danger:#e5645c; }
+  :root[data-theme="light"]{ --bg:#f4f6f9; --card:#fff; --ink:#1a2230; --muted:#5b6676; --line:#e2e7ee;
+      --brand:#1f5fa8; --accent:#0d7d5a; --warn-bg:#fff7e6; --warn-ink:#8a5a00; --warn-line:#f0d089; --th:#eef2f7; --zebra:#f8fafc; --danger:#b3261e; }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:20px 16px 60px}
+  header.app{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+  header.app h1{font-size:1.5rem;margin:0 0 2px}
+  .author{color:var(--muted);font-size:.9rem}
+  .author b{color:var(--ink)}
+  .chip{display:inline-block;background:var(--accent);color:#fff;font-size:.72rem;padding:2px 8px;border-radius:999px;font-weight:600}
+  .disclaimer{background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--warn-line);border-radius:10px;padding:11px 14px;font-size:.86rem;margin-bottom:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 16px 18px;margin-bottom:16px}
+  .card h2{font-size:1.02rem;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+  .card h2 .n{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-grid;place-items:center;font-size:.8rem;font-weight:700}
+  .hint{color:var(--muted);font-size:.82rem;margin:-4px 0 12px}
+  .fuente{font-size:.76rem;color:var(--muted);font-style:italic;margin-top:6px;line-height:1.45}
+  .fuente b{font-style:normal;color:var(--ink)}
+  label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:3px}
+  input,select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%}
+  input:focus,select:focus{outline:2px solid var(--brand);outline-offset:-1px}
+  .grid{display:grid;gap:12px}
+  .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .row-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;font-weight:600}
+  button.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+  button.ghost{background:transparent}
+  button.mini{padding:4px 9px;font-size:.8rem;font-weight:600}
+  button.del{color:var(--danger);border-color:transparent;background:transparent;padding:4px 8px}
+  table{width:100%;border-collapse:collapse;font-size:.86rem}
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+  th,td{padding:7px 9px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  thead th{background:var(--th);font-size:.78rem;color:var(--muted);position:sticky;top:0}
+  tbody tr:nth-child(even){background:var(--zebra)}
+  td input,td select{padding:5px 6px;min-width:96px}
+  td.num input{text-align:right}
+  .toggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .toggle button{border:0;border-radius:0;background:var(--card);padding:7px 14px}
+  .toggle button.on{background:var(--brand);color:#fff}
+  .switch{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+  .tabs{display:flex;gap:4px;margin-bottom:18px;border-bottom:2px solid var(--line);flex-wrap:wrap}
+  .tabs .tab{border:none;background:transparent;border-bottom:3px solid transparent;border-radius:0;padding:10px 16px;color:var(--muted);font-weight:700;margin-bottom:-2px;font-size:.95rem}
+  .tabs .tab.on{color:var(--brand);border-bottom-color:var(--brand)}
+  .home-title{font-size:1.1rem;margin:6px 0 14px;color:var(--muted);font-weight:600}
+  .home-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:640px){.home-grid{grid-template-columns:1fr}}
+  .home-card{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:border-color .15s,transform .1s,box-shadow .15s}
+  .home-card:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+  .home-ico{width:40px;height:40px;border-radius:11px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:1.25rem;font-weight:700}
+  .home-name{font-size:1.12rem;font-weight:700;color:var(--ink)}
+  .home-desc{font-size:.88rem;color:var(--muted);line-height:1.45}
+  .home-list{margin:8px 0 0;padding-left:20px;font-size:.85rem;color:var(--muted);line-height:1.5}
+  .home-list li{margin-bottom:5px}
+  .home-list b{color:var(--ink);font-weight:600}
+  .home-card:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+  .modhead{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .modhead .modtitle{font-size:1.28rem;margin:0}
+  .backbtn{background:transparent;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-weight:600;color:var(--brand)}
+  .backbtn:hover{border-color:var(--brand)}
+  .datefield,.monthfield{cursor:pointer}
+  .dpop{position:absolute;z-index:1000;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 34px rgba(0,0,0,.22);padding:10px;width:286px}
+  .dp-cols{display:flex;gap:8px;margin-bottom:8px}
+  .dp-col{max-height:160px;overflow-y:auto;border:1px solid var(--line);border-radius:8px;padding:4px}
+  .dp-months{flex:0 0 86px} .dp-years{flex:1}
+  .dp-mo,.dp-yr{display:block;width:100%;text-align:left;background:transparent;border:none;border-radius:6px;padding:5px 9px;font-size:.84rem;cursor:pointer;color:var(--ink)}
+  .dp-mo:hover,.dp-yr:hover{background:var(--zebra)}
+  .dp-mo.sel,.dp-yr.sel{background:var(--brand);color:#fff}
+  .dp-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
+  .dp-dow span{text-align:center;font-size:.7rem;color:var(--muted);font-weight:700}
+  .dp-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+  .dp-day{background:transparent;border:1px solid transparent;border-radius:6px;padding:6px 0;font-size:.82rem;cursor:pointer;color:var(--ink)}
+  .dp-day:hover{border-color:var(--brand)}
+  .dp-day.sel{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .switch input{width:auto}
+  .opt-body{display:none;padding-top:6px} .opt-body.show{display:block}
+  /* Resultados */
+  #resultado{display:none}
+  .cards-res{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  @media(max-width:640px){.cards-res{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .kpi .l{font-size:.76rem;color:var(--muted)} .kpi .v{font-size:1.15rem;font-weight:700;margin-top:3px}
+  .kpi.total{background:var(--brand);color:#fff;border-color:var(--brand)} .kpi.total .l{color:#dce9f7}
+  .kpi.selectable{cursor:pointer} .kpi.selectable:hover{border-color:var(--brand)}
+  .formula-box{background:var(--zebra);border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:8px;padding:10px 12px;font-size:.87rem;line-height:1.6;margin-bottom:14px}
+  tfoot td{font-weight:700;background:var(--th);border-top:2px solid var(--brand)}
+  .err{background:#fdecea;color:var(--danger);border:1px solid var(--danger);border-radius:8px;padding:10px 12px;margin-bottom:12px}
+  .src{color:var(--muted);font-size:.78rem;margin-top:10px}
+  .themebtn{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 10px;font-size:.8rem}
+  details.detalle{margin-top:14px} details.detalle summary{cursor:pointer;font-weight:600;color:var(--brand)}
+  .printonly{display:none}
+  @media print{
+    body{background:#fff;color:#000} .wrap{max-width:100%} .noprint{display:none!important}
+    .card{border:none;padding:0;margin-bottom:14px} .tbl-wrap{border:none}
+    thead th{position:static;background:#eee} tfoot td{background:#eee}
+    .printonly{display:block!important}
+    #resultado{display:block!important} #resInd{display:block!important} #resLRT{display:block!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="app noprint">
+    <div>
+      <h1>Herramientas de cálculo <span style="color:var(--muted);font-weight:400">— Neuquén</span></h1>
+      <div class="author"><b id="autor">Otto Closs</b> · <span id="rol">Defensor Público Civil de Neuquén</span> · <span class="chip">Aporte abierto a la matrícula</span></div>
+    </div>
+    <button class="themebtn noprint" id="theme">◐ Tema</button>
+  </header>
+
+  <div class="disclaimer noprint">
+    <b>Herramienta auxiliar de cálculo.</b> El resultado es orientativo: cada profesional debe <b>verificar la planilla</b> que presenta y es responsable de ella. No constituye asesoramiento ni liquidación oficial. Método calibrado contra el calculador oficial del Poder Judicial de Neuquén; tasas del Banco de la Provincia del Neuquén (Gabinete Técnico Contable).
+  </div>
+
+  <div class="fuente noprint" style="margin:-10px 0 18px;padding:9px 13px;background:var(--zebra);border-radius:9px">
+    <b>Bases de datos actualizadas:</b> tasas de interés (BPN y Banco Nación) hasta <b>julio 2026</b> · índice <b>RIPTE</b> hasta <b>marzo 2026</b>. Fuente: Gabinete Técnico Contable del Poder Judicial de Neuquén.
+  </div>
+
+  <div id="home" class="noprint">
+    <h2 class="home-title">¿Qué querés calcular?</h2>
+    <div class="home-grid">
+      <div class="home-card" data-go="intereses" role="button" tabindex="0">
+        <div class="home-ico">$</div>
+        <div class="home-name">Calculador de intereses</div>
+        <ul class="home-list">
+          <li>Intereses en <b>alimentos</b> (cuota alimentaria)</li>
+          <li>Intereses en <b>civil / daños y perjuicios</b></li>
+          <li>Intereses en <b>accidentes de trabajo / enfermedad profesional (LRT)</b></li>
+          <li>Presets oficiales de tasas: "Casas" (alimentos y civil) y "Trotelli" (LRT)</li>
+          <li>Pagos parciales (art. 903), capitalización (art. 770) y adicional (art. 552)</li>
+          <li>Planilla desglosada y PDF para adjuntar al expediente</li>
+        </ul>
+      </div>
+      <div class="home-card" data-go="indemnizacion" role="button" tabindex="0">
+        <div class="home-ico">§</div>
+        <div class="home-name">Cálculo de indemnización</div>
+        <ul class="home-list">
+          <li>Indemnización <b>civil por incapacidad</b> (Vuotto, Méndez y Acciarri)</li>
+          <li>Indemnización <b>civil por fallecimiento</b></li>
+          <li>Indemnización <b>LRT por incapacidad</b> (art. 14 — Ley de Riesgos)</li>
+          <li>Indemnización <b>LRT por fallecimiento</b> (art. 18 → 15.2)</li>
+          <li><b>Ingreso base por RIPTE</b> (art. 12) y tabla de <b>agotamiento del capital</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="tabIntereses" style="display:none">
+  <div class="modhead noprint"><button class="backbtn" data-home>← Inicio</button><h2 class="modtitle">Calculador de intereses</h2></div>
+  <div class="switch noprint" style="margin-bottom:14px">
+    <span style="font-weight:600">Materia:</span>
+    <div class="toggle" id="selMateria">
+      <button data-mat="alimentos" class="on">Alimentos</button>
+      <button data-mat="civil">Civil / Daños</button>
+      <button data-mat="lrt">Accidentes (LRT)</button>
+    </div>
+  </div>
+
+  <div id="lrtNota" class="disclaimer noprint" style="display:none;font-size:.82rem">
+    <b>Accidentes de trabajo / enfermedad profesional (LRT) — "Trotelli", Ac. 1/2025 TSJ:</b> tramos <b>TEA Sucursales</b> (hasta 31/03/2024) → <b>TNA Banco Nación</b> (desde 01/04/2024). La serie de TNA BNA proviene de la <b>fuente oficial</b>: Gabinete Técnico Contable del Poder Judicial de Neuquén (ripte.agjusneuquen.gob.ar/tasas). Igual conviene un control puntual antes de presentar.
+  </div>
+
+  <!-- 1. CUOTAS / CAPITAL -->
+  <div class="card noprint">
+    <h2><span class="n">1</span> <span id="sec1titulo">Cuotas devengadas</span></h2>
+    <div class="switch" id="modoCuotaWrap">
+      <span style="font-size:.82rem;color:var(--muted)">Tipo de cuota:</span>
+      <div class="toggle" id="modoCuota">
+        <button data-m="fija" class="on">Suma fija</button>
+        <button data-m="pct">% sobre base neta</button>
+      </div>
+    </div>
+    <div id="genWrap">
+      <div class="hint">Agregá <b>uno o más períodos</b>. Si la cuota fija cambió en el tiempo, cargá un período por cada monto (ej. ene–jun a $50.000, jul–dic a $65.000). El <b>"Hasta" es la fecha de corte exacta</b> (elegís el día, ej. 27/07/2026): genera cuotas hasta ese mes y calcula el interés hasta ese día. En modo porcentaje, después completá la <b>base neta de cada mes</b>.</div>
+      <div class="grid g4">
+        <div id="genMontoWrap"><label>Cuota mensual ($)</label><input id="genMonto" type="number" value="100000"></div>
+        <div id="genBaseWrap" style="display:none"><label>Base neta ($) — editable por mes</label><input id="genBase" type="number" value="0"></div>
+        <div id="genPctWrap" style="display:none"><label>Porcentaje (%)</label><input id="genPct" type="number" value="20"></div>
+        <div><label>Día de vencimiento</label><input id="genDia" type="number" value="11" min="1" max="31"></div>
+        <div><label>Desde (mes)</label><input id="genDesde" type="text" readonly class="monthfield" placeholder="AAAA-MM" value="2023-01"></div>
+        <div><label>Hasta (fecha de corte)</label><input id="genHasta" type="text" readonly class="datefield" placeholder="AAAA-MM-DD" value="2023-06-30"></div>
+      </div>
+      <div class="row-actions"><button class="primary" id="btnGen">Agregar período</button></div>
+    </div>
+    <div class="row-actions">
+      <button class="ghost" id="btnAddCuota">+ Agregar mes suelto</button>
+      <button class="ghost" id="btnClearCuotas">Vaciar todo</button>
+    </div>
+    <div class="tbl-wrap" style="margin-top:12px"><table id="tCuotas"></table></div>
+    <div class="hint" style="margin-top:8px" id="hintMora">Cada cuota devenga intereses desde su <b>mora</b> (día 11 por defecto, editable por fila). Agregar un período que solape meses ya cargados los reemplaza.</div>
+    <div class="fuente" id="fuenteSec1"><b>Criterio:</b> cómputo y mora según el modelo de planilla del Poder Judicial de Neuquén; intereses sobre alimentos = art. 552 CCyC. Imputación de pagos = arts. 900-903 CCyC. Capitalización = art. 770 CCyC.</div>
+  </div>
+
+  <!-- 2. PAGOS -->
+  <div class="card noprint">
+    <h2><span class="n">2</span> <span id="sec2titulo">Pagos del alimentante</span></h2>
+    <div class="hint">Pagos totales o parciales, con su fecha. Se imputan primero a intereses y luego a capital (art. 903 CCyC), a la deuda más antigua primero.</div>
+    <div class="tbl-wrap"><table id="tPagos"></table></div>
+    <div class="row-actions"><button class="ghost" id="btnAddPago">+ Agregar pago</button></div>
+  </div>
+
+  <!-- 3. TASAS -->
+  <div class="card noprint">
+    <h2><span class="n">3</span> Tasas de interés por tramos</h2>
+    <div class="hint">Preset <b>"Casas"</b> (Ac. 15/2025 TSJ Neuquén): TEA Sucursales hasta 31/03/2024, Activa BPN desde 01/04/2024. Podés editar los tramos o agregar una tasa convencional.</div>
+    <div class="tbl-wrap"><table id="tTramos"></table></div>
+    <div class="row-actions">
+      <button class="ghost" id="btnAddTramo">+ Agregar tramo</button>
+      <button class="ghost" id="btnResetTramos">Restaurar preset "Casas" (Ac. 15/2025)</button>
+    </div>
+    <div class="fuente"><b>Fuente de las tasas:</b> Poder Judicial de Neuquén — Gabinete Técnico Contable. Tasas BPN (TEA Sucursales, Activa, etc.): cintereses.agjusneuquen.gob.ar · TNA Banco Nación: ripte.agjusneuquen.gob.ar/tasas. <b>Series actualizadas hasta julio 2026.</b><br><b>Criterio (fallos):</b> alimentos y civil/daños = "Casas" (Ac. 15/2025 TSJ Neuquén) · accidentes de trabajo (LRT) = "Trotelli" (Ac. Plenario 1/2025 TSJ Neuquén).</div>
+  </div>
+
+  <!-- 4. OPCIONES -->
+  <div class="card noprint">
+    <h2><span class="n">4</span> Opciones</h2>
+    <div class="grid g3">
+      <div><label>Fecha de corte</label><input id="corte" type="text" readonly class="datefield" placeholder="AAAA-MM-DD"></div>
+      <div><label>Carátula (opcional)</label><input id="caratula" type="text" placeholder="Autos / partes"></div>
+      <div><label>Expediente (opcional)</label><input id="expte" type="text" placeholder="Nº"></div>
+    </div>
+
+    <div style="margin-top:14px">
+      <div class="switch"><input type="checkbox" id="capOn"><label for="capOn" style="margin:0;color:var(--ink)">Capitalizar intereses (anatocismo, art. 770 CCyC)</label></div>
+      <div class="opt-body" id="capBody">
+        <label>Fechas de capitalización (hitos), separadas por coma — ej. notificación de demanda, liquidación aprobada</label>
+        <input id="capHitos" type="text" placeholder="2023-06-15, 2024-03-01">
+      </div>
+    </div>
+
+    <div style="margin-top:10px" id="adic552Wrap">
+      <div class="switch"><input type="checkbox" id="adicOn"><label for="adicOn" style="margin:0;color:var(--ink)">Adicionar interés reforzado dispuesto judicialmente (art. 552 in fine)</label></div>
+      <div class="opt-body" id="adicBody">
+        <div class="grid g4">
+          <div><label>Tipo</label><select id="adicTipo"><option value="anual">Tasa anual (TNA/TEA)</option><option value="mensual_fija">Tasa mensual</option></select></div>
+          <div><label>Valor (%)</label><input id="adicValor" type="number" value="0"></div>
+          <div><label>Desde (opcional)</label><input id="adicDesde" type="text" readonly class="datefield" placeholder="AAAA-MM-DD"></div>
+          <div><label>Hasta (opcional)</label><input id="adicHasta" type="text" readonly class="datefield" placeholder="AAAA-MM-DD"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row-actions noprint" style="margin-bottom:22px">
+    <button class="primary" id="btnCalcular" style="font-size:1.02rem;padding:11px 22px">Calcular liquidación</button>
+  </div>
+
+  <!-- RESULTADO -->
+  <div id="resultado" class="card">
+    <div id="errBox"></div>
+    <div class="row-actions noprint" style="justify-content:flex-end;margin:0 0 12px">
+      <button class="ghost" id="btnCSV">Exportar CSV</button>
+      <button class="ghost" id="btnPrint">Imprimir / PDF</button>
+    </div>
+    <div id="printTitulo" class="printonly"><h2 style="text-align:center;margin:0 0 8px">Liquidación de intereses sobre cuota alimentaria</h2></div>
+    <div id="cabRes" style="margin-bottom:10px"></div>
+    <div class="cards-res noprint" id="kpis"></div>
+
+    <h2 style="font-size:1rem">Planilla por período</h2>
+    <div class="tbl-wrap"><table id="tSalida"></table></div>
+    <div id="printTotal" class="printonly" style="margin-top:12px;font-size:1rem"></div>
+
+    <details class="detalle noprint">
+      <summary>Ver detalle del cálculo (devengamientos día por día)</summary>
+      <div class="tbl-wrap" style="margin-top:10px"><table id="tDetalle"></table></div>
+    </details>
+
+    <div class="src">
+      Fuente de tasas: Poder Judicial de Neuquén — Gabinete Técnico Contable (cintereses.agjusneuquen.gob.ar), <b>actualizadas hasta julio 2026</b>. Método calibrado al centavo contra el calculador oficial. Fórmula: interés del mes = capital × tasa mensual × (días del segmento ÷ días del mes); interés simple, sin capitalizar salvo hito del art. 770.
+    </div>
+  </div>
+
+  </div><!-- /tabIntereses -->
+
+  <div id="tabIndemnizacion" style="display:none">
+    <div class="modhead noprint"><button class="backbtn" data-home>← Inicio</button><h2 class="modtitle">Cálculo de indemnización</h2></div>
+
+    <div class="switch noprint" style="margin-bottom:14px">
+      <span style="font-weight:600">Régimen:</span>
+      <div class="toggle" id="selRegimen">
+        <button data-r="civil" class="on">Civil (fórmulas)</button>
+        <button data-r="lrt">LRT (Ley de Riesgos)</button>
+      </div>
+    </div>
+
+    <div id="regCivil">
+    <div class="switch noprint" style="margin-bottom:14px">
+      <span style="font-weight:600">Supuesto:</span>
+      <div class="toggle" id="selSupuesto">
+        <button data-s="incapacidad" class="on">Incapacidad</button>
+        <button data-s="fallecimiento">Fallecimiento</button>
+      </div>
+    </div>
+
+    <div class="card noprint">
+      <h2><span class="n">A</span> Datos base</h2>
+      <div class="grid g4">
+        <div><label>Edad inicial</label><input id="iEdad" type="number" value="35" min="0" max="110"></div>
+        <div><label id="lblAfect">Incapacidad (%)</label><input id="iAfect" type="number" value="60"></div>
+        <div><label>Forma de carga</label><select id="iForma"><option value="mensual">Mensual</option><option value="anual">Anual</option></select></div>
+        <div><label>Conversión anual</label><select id="iSac"><option value="13">×13 (con SAC)</option><option value="12">×12 (sin SAC)</option></select></div>
+      </div>
+      <div id="grpIngresoConst" class="grid g3" style="margin-top:10px">
+        <div><label>Ingreso (constante)</label><input id="iIngreso" type="number" value="500000"></div>
+      </div>
+      <div class="hint" style="margin-top:8px">Ingresos en <b>valores reales</b> del momento inicial (sin inflación); la tasa es <b>pura</b>. En modo Acciarri variable, los ingresos se cargan por tramos.</div>
+    </div>
+
+    <div class="card noprint">
+      <h2><span class="n">B</span> Fórmula</h2>
+      <div class="switch">
+        <div class="toggle" id="selFormula">
+          <button data-f="comparativa" class="on">Vuotto / Méndez / Acciarri</button>
+          <button data-f="variable">Acciarri variable</button>
+        </div>
+      </div>
+      <div id="fParamsConst" class="grid g3">
+        <div><label>Tasa Vuotto (%)</label><input id="iTasaV" type="number" value="6"></div>
+        <div><label>Tope Vuotto</label><input id="iTopeV" type="number" value="65"></div>
+        <div><label>Tasa Méndez (%)</label><input id="iTasaM" type="number" value="4"></div>
+        <div><label>Tope Méndez</label><input id="iTopeM" type="number" value="75"></div>
+        <div><label>Tasa Acciarri (%)</label><input id="iTasaA" type="number" value="4"></div>
+        <div><label>Edad límite Acciarri (no incluida)</label><input id="iLimA" type="number" value="75"></div>
+      </div>
+      <div class="fuente"><b>Fuentes (fallos):</b> Vuotto (CNAT, "Vuotto c/ AEG Telefunken", 1978) · Méndez (CNAT Sala III, "Méndez c/ Mylba", 2008) · Acciarri (art. 1746 CCyC; método de la calculadora de Editorial García Alonso).</div>
+      <div id="fParamsVar" style="display:none">
+        <div class="grid g3">
+          <div><label>Tasa pura (%)</label><input id="iTasaVar" type="number" value="4"></div>
+          <div><label>Edad límite (no incluida)</label><input id="iLimVar" type="number" value="75"></div>
+        </div>
+        <div class="hint" style="margin-top:8px">El <b>1º tramo va al 100%</b>. En los siguientes, la probabilidad (0 a 1) se aplica sobre la variación respecto del ingreso esperado anterior.</div>
+        <div class="tbl-wrap"><table id="tTramosVar"></table></div>
+        <div class="row-actions"><button class="ghost" id="btnAddTramoVar">+ Agregar tramo</button></div>
+      </div>
+    </div>
+
+    <div class="row-actions noprint" style="margin-bottom:22px">
+      <button class="primary" id="btnCalcularInd" style="font-size:1.02rem;padding:11px 22px">Calcular indemnización</button>
+    </div>
+
+    <div id="resInd" class="card" style="display:none">
+      <div id="errInd"></div>
+      <div class="row-actions noprint" style="justify-content:flex-end;margin:0 0 12px">
+        <button class="ghost" id="btnPrintInd">Imprimir / PDF</button>
+      </div>
+      <div class="printonly"><h2 id="printTitInd" style="text-align:center;margin:0 0 8px">Cálculo de indemnización</h2></div>
+      <div id="cabInd" style="margin-bottom:10px"></div>
+      <div class="cards-res noprint" id="kpisInd"></div>
+      <div id="selHintInd" class="hint noprint" style="display:none">Tocá una fórmula para ver su planilla, su agotamiento y la fórmula aplicada.</div>
+      <div id="formulaBox" class="formula-box"></div>
+      <div id="printTotalInd" class="printonly" style="font-size:1rem;margin:6px 0"></div>
+      <h2 style="font-size:1rem" id="tituloPlanillaInd">Planilla año a año</h2>
+      <div class="tbl-wrap"><table id="tPlanillaInd"></table></div>
+      <h2 style="font-size:1rem;margin-top:18px">Agotamiento del capital (art. 1746 CCyC)</h2>
+      <div class="hint">El capital, reinvertido a la tasa pura, se consume con las extracciones anuales (renta afectada) hasta agotarse al final del período.</div>
+      <div class="tbl-wrap"><table id="tAgota"></table></div>
+      <div class="src">Fórmulas de rentas futuras (art. 1746 CCyC). No utiliza base de tasas ni índices actualizables (los ingresos van en valores reales y la tasa pura la fija el profesional). Vuotto (i 6%, n = 65−edad) · Méndez (i 4%, n = 75−edad, × 60/edad) · Acciarri (valor presente de renta constante o variable). No incluye intereses, actualización, daño moral ni otros rubros.</div>
+    </div>
+    </div><!-- /regCivil -->
+
+    <div id="regLRT" style="display:none">
+      <div class="card noprint">
+        <h2><span class="n">A</span> Indemnización LRT — datos</h2>
+        <div class="switch">
+          <span style="font-size:.82rem;color:var(--muted)">Supuesto:</span>
+          <div class="toggle" id="selSupuestoLRT">
+            <button data-s="incapacidad" class="on">Incapacidad</button>
+            <button data-s="fallecimiento">Fallecimiento</button>
+          </div>
+        </div>
+        <div class="hint" id="hintLRT">Prestación = <b>53 × Ingreso Base × (65 / edad) × % incapacidad</b>. Criterio <b>"Contreras"</b> (Ac. 16/23 TSJ). El interés posterior (PMI → corte) se calcula en la solapa <b>Intereses</b>, materia <b>LRT</b>.</div>
+        <div class="grid g4">
+          <div><label>Edad a la PMI</label><input id="lEdad" type="number" value="40"></div>
+          <div id="grpIncap"><label>% de incapacidad</label><input id="lIncap" type="number" value="50"></div>
+          <div id="grpPagoUnico" style="display:none"><label>Comp. adic. pago único (art. 11.4) $</label><input id="lPagoUnico" type="number" value="0"></div>
+          <div><label>Piso mínimo SRT ($)</label><input id="lPiso" type="number" value="0"></div>
+          <div><label>Adicional</label><label style="display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--ink);margin-top:6px"><input type="checkbox" id="lAdic" style="width:auto"> +20 % (art. 3 Ley 26773)</label></div>
+        </div>
+        <div class="fuente"><b>Fuentes:</b> art. 14, ap. 2, inc. a, Ley 24557 (LRT); coeficiente 53 (DNU 1694/09); adicional 20 % (art. 3 Ley 26773); piso mínimo por Resoluciones/Notas de la SRT. <b>Criterio (fallo):</b> "Contreras" (Ac. 16/23 TSJ Neuquén).</div>
+      </div>
+
+      <div class="card noprint">
+        <h2><span class="n">B</span> Ingreso base (IB)</h2>
+        <div class="switch">
+          <div class="toggle" id="selIB">
+            <button data-ib="directo" class="on">IB directo</button>
+            <button data-ib="ripte">Calcular por RIPTE</button>
+          </div>
+        </div>
+        <div id="ibDirecto" class="grid g3">
+          <div><label>Ingreso base ($) — ya actualizado</label><input id="lIB" type="number" value="0"></div>
+        </div>
+        <div id="ibRipte" style="display:none">
+          <div class="grid g3"><div><label>Fecha de la PMI (mes)</label><input id="lPMI" type="text" readonly class="monthfield" placeholder="AAAA-MM"></div></div>
+          <div class="hint">Cargá los salarios de los 12 meses previos a la PMI: se actualizan por RIPTE hasta la PMI y se promedian (índice del GTC de Neuquén).</div>
+          <div class="row-actions"><button class="ghost" id="btnGenSalarios">Generar 12 meses previos a la PMI</button><button class="ghost" id="btnAddSalario">+ Agregar mes</button></div>
+          <div class="tbl-wrap" style="margin-top:8px"><table id="tSalarios"></table></div>
+          <div class="fuente"><b>Índice RIPTE:</b> Gabinete Técnico Contable del Poder Judicial de Neuquén (ripte.agjusneuquen.gob.ar/riptes). <b>Actualizado hasta marzo 2026.</b> El ingreso base (art. 12.1 LRT) se actualiza por RIPTE solo hasta la PMI.</div>
+        </div>
+      </div>
+
+      <div class="row-actions noprint" style="margin-bottom:22px">
+        <button class="primary" id="btnCalcularLRT" style="font-size:1.02rem;padding:11px 22px">Calcular indemnización LRT</button>
+      </div>
+
+      <div id="resLRT" class="card" style="display:none">
+        <div id="errLRT"></div>
+        <div class="row-actions noprint" style="justify-content:flex-end;margin:0 0 12px"><button class="ghost" id="btnPrintLRT">Imprimir / PDF</button></div>
+        <div class="printonly"><h2 id="printTitLRT" style="text-align:center;margin:0 0 8px">Indemnización — Ley de Riesgos del Trabajo</h2></div>
+        <div class="cards-res noprint" id="kpisLRT"></div>
+        <div id="formulaLRT" class="formula-box"></div>
+        <div id="printTotalLRT" class="printonly" style="font-size:1.05rem;margin:6px 0"></div>
+        <div id="ibDetLRT"></div>
+        <div class="src">Prestación art. 14.2.a LRT (53 × IB × 65/edad × %incap; +20 % art. 3 Ley 26773; mínimo = piso SRT). IB del art. 12.1 actualizado por RIPTE (índice oficial del GTC de Neuquén, <b>actualizado hasta marzo 2026</b>). Criterio "Contreras" (Ac. 16/23 TSJ). El interés (art. 12, incs. 2 y 3) se calcula aparte, en la materia LRT del módulo de intereses (Trotelli).</div>
+      </div>
+    </div>
+  </div><!-- /tabIndemnizacion -->
+
+  <footer class="author noprint" style="text-align:center;margin-top:22px;font-size:.82rem">
+    <b>Otto Closs</b> — Defensor Público Civil de Neuquén · Herramienta libre y de código abierto, aporte a la matrícula.
+  </footer>
+</div>
+
+<script src="src/engine.js"></script>
+<script src="src/indemnizacion.js"></script>
+<script src="data/tasas.js"></script>
+<script>
+(function(){
+  var E = window.LiquidadorEngine, TASAS = window.TASAS, S = TASAS.series;
+  var fmt = E.formatearMoneda;
+  var $ = function(id){return document.getElementById(id)};
+
+  // ---------- Estado ----------
+  var modoCuota = 'fija';
+  var materia = 'alimentos';   // 'alimentos' | 'civil'
+  var cuotas = [];   // {fecha, base, pct, asign, monto}
+  var pagos = [];    // {fecha, monto}
+  var PRESET = function(mat){
+    if(mat==='lrt') return [
+      {sel:'TEA_Prop', desde:'2021-01-01', hasta:'2024-03-31', valor:0, etiqueta:'TEA Sucursales (Trotelli, Ac. 1/2025 TSJ)'},
+      {sel:'TNA_BNA',  desde:'2024-04-01', hasta:'',           valor:0, etiqueta:'TNA Banco Nación (Trotelli, Ac. 1/2025 TSJ)'}
+    ];
+    return [
+      {sel:'TEA_Prop', desde:'2021-01-01', hasta:'2024-03-31', valor:0, etiqueta:'TEA Sucursales (Casas, Ac. 15/2025 TSJ)'},
+      {sel:'Activa',   desde:'2024-04-01', hasta:'',           valor:0, etiqueta:'Activa BPN (Casas, Ac. 15/2025 TSJ)'}
+    ];
+  };
+  var tramos = PRESET('alimentos');
+
+  var SERIES_OPT = [
+    ['TEA_Prop','TEA Sucursales'],['Activa','Activa BPN'],['TNA_BNA','TNA Banco Nación'],['Promedio','Promedio'],
+    ['Pasiva','Pasiva'],['TNA','TNA BPN'],['conv_anual','Convencional (anual %)'],['conv_mensual','Convencional (mensual %)']
+  ];
+
+  // ---------- Tema ----------
+  $('theme').onclick=function(){
+    var r=document.documentElement, cur=r.getAttribute('data-theme');
+    var dark = cur ? cur==='dark' : matchMedia('(prefers-color-scheme:dark)').matches;
+    r.setAttribute('data-theme', dark?'light':'dark');
+  };
+
+  // ---------- Cuotas ----------
+  function renderCuotas(){
+    if(materia==='civil'||materia==='lrt') return renderCapitales();
+    var pct = modoCuota==='pct';
+    var head = '<thead><tr><th>Período (mora)</th>'+
+      (pct?'<th>Base neta ($)</th><th>%</th><th>Asignaciones ($)</th>':'')+
+      '<th>Cuota devengada ($)</th><th></th></tr></thead>';
+    var body='<tbody>';
+    cuotas.forEach(function(c,i){
+      body+='<tr><td><input type="text" readonly class="datefield" placeholder="AAAA-MM-DD" data-i="'+i+'" data-f="fecha" value="'+(c.fecha||'')+'"></td>';
+      if(pct){
+        body+='<td class="num"><input type="number" data-i="'+i+'" data-f="base" value="'+(c.base||0)+'"></td>';
+        body+='<td class="num"><input type="number" data-i="'+i+'" data-f="pct" value="'+(c.pct||0)+'"></td>';
+        body+='<td class="num"><input type="number" data-i="'+i+'" data-f="asign" value="'+(c.asign||0)+'"></td>';
+        body+='<td class="num calc">'+fmt(montoCuota(c))+'</td>';
+      } else {
+        body+='<td class="num"><input type="number" data-i="'+i+'" data-f="monto" value="'+(c.monto||0)+'"></td>';
+      }
+      body+='<td><button class="del" data-del="'+i+'">✕</button></td></tr>';
+    });
+    body+='</tbody>';
+    $('tCuotas').innerHTML=head+body;
+    bindTable('tCuotas', cuotas, renderCuotas);
+  }
+  function montoCuota(c){ return (materia!=='civil' && modoCuota==='pct') ? (Number(c.base||0)*Number(c.pct||0)/100 + Number(c.asign||0)) : Number(c.monto||0); }
+
+  function renderCapitales(){
+    var head='<thead><tr><th>Fecha de mora</th><th>Concepto (opcional)</th><th>Monto / capital ($)</th><th></th></tr></thead>';
+    var body='<tbody>';
+    cuotas.forEach(function(c,i){
+      body+='<tr><td><input type="text" readonly class="datefield" placeholder="AAAA-MM-DD" data-i="'+i+'" data-f="fecha" value="'+(c.fecha||'')+'"></td>'+
+        '<td><input type="text" data-i="'+i+'" data-f="etiqueta" value="'+esc(c.etiqueta||'')+'" placeholder="rubro / capital" style="min-width:150px"></td>'+
+        '<td class="num"><input type="number" data-i="'+i+'" data-f="monto" value="'+(c.monto||0)+'"></td>'+
+        '<td><button class="del" data-del="'+i+'">✕</button></td></tr>';
+    });
+    if(!cuotas.length) body+='<tr><td colspan="4" style="color:var(--muted)">Agregá el capital (o los rubros) con su fecha de mora.</td></tr>';
+    body+='</tbody>';
+    $('tCuotas').innerHTML=head+body;
+    bindTable('tCuotas', cuotas, renderCuotas);
+  }
+
+  $('modoCuota').onclick=function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    modoCuota=b.dataset.m;
+    [].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});
+    $('genMontoWrap').style.display = modoCuota==='fija'?'':'none';
+    $('genBaseWrap').style.display = modoCuota==='pct'?'':'none';
+    $('genPctWrap').style.display = modoCuota==='pct'?'':'none';
+    // Conservar fechas al cambiar de modo, arrastrando el monto efectivo
+    cuotas = cuotas.map(function(c){
+      if(modoCuota==='pct') return {fecha:c.fecha, base:(c.base!=null?c.base:0), pct:(c.pct!=null?c.pct:0), asign:(c.asign!=null?c.asign:0)};
+      return {fecha:c.fecha, monto:(c.monto!=null?c.monto:(Number(c.base||0)*Number(c.pct||0)/100+Number(c.asign||0)))};
+    });
+    renderCuotas();
+  };
+  function setMateria(m){
+    materia=m; var capMode=(m==='civil'||m==='lrt');   // modelo "capital / rubros"
+    if(capMode){
+      modoCuota='fija';
+      cuotas=cuotas.map(function(c){return {fecha:c.fecha, monto:(c.monto!=null?c.monto:(Number(c.base||0)*Number(c.pct||0)/100+Number(c.asign||0))), etiqueta:c.etiqueta};});
+      $('adicOn').checked=false; $('adicBody').classList.remove('show');
+      [].forEach.call($('modoCuota').children,function(x){x.classList.toggle('on',x.dataset.m==='fija')});
+    }
+    $('modoCuotaWrap').style.display = capMode?'none':'';
+    $('genWrap').style.display = capMode?'none':'';
+    $('adic552Wrap').style.display = capMode?'none':'';
+    $('hintMora').style.display = capMode?'none':'';
+    $('lrtNota').style.display = (m==='lrt')?'':'none';
+    $('sec1titulo').textContent = capMode?'Capital / rubros':'Cuotas devengadas';
+    $('sec2titulo').textContent = capMode?'Pagos a cuenta':'Pagos del alimentante';
+    $('btnAddCuota').textContent = capMode?'+ Agregar capital / rubro':'+ Agregar mes suelto';
+    [].forEach.call($('selMateria').children,function(x){x.classList.toggle('on',x.dataset.mat===m)});
+    tramos = PRESET(m); renderTramos();   // cada materia trae su propio preset de tasas
+    renderCuotas();
+  }
+  $('selMateria').onclick=function(e){ var b=e.target.closest('button'); if(b) setMateria(b.dataset.mat); };
+
+  $('btnGen').onclick=function(){
+    var d=$('genDesde').value, h=$('genHasta').value, dia=+$('genDia').value||11;
+    if(!d||!h){alert('Completá el "Desde (mes)" y el "Hasta (fecha de corte)".');return;}
+    var nuevas;
+    try{ nuevas=E.generarCuotas({montoMensual:0, dia:dia, desde:d, hasta:h.slice(0,7)}); }
+    catch(e){ alert(e.message); return; }
+    if(/^\d{4}-\d{2}-\d{2}$/.test(h)) $('corte').value=h;   // el "hasta" fija la fecha de corte (día exacto)
+    var meses={}; nuevas.forEach(function(x){ meses[x.fecha.slice(0,7)]=1; });
+    // Reemplazar cualquier fila existente dentro del rango (evita duplicar meses)
+    cuotas = cuotas.filter(function(c){ return !(c.fecha && meses[c.fecha.slice(0,7)]); });
+    nuevas.forEach(function(x){
+      if(modoCuota==='pct') cuotas.push({fecha:x.fecha, base:+$('genBase').value||0, pct:+$('genPct').value||0, asign:0});
+      else cuotas.push({fecha:x.fecha, monto:+$('genMonto').value||0});
+    });
+    cuotas.sort(function(a,b){ return (a.fecha||'').localeCompare(b.fecha||''); });
+    renderCuotas();
+  };
+  $('btnAddCuota').onclick=function(){ cuotas.push((materia==='civil'||materia==='lrt')?{fecha:'',monto:0,etiqueta:''}:(modoCuota==='pct'?{fecha:'',base:0,pct:0,asign:0}:{fecha:'',monto:0})); renderCuotas(); };
+  $('btnClearCuotas').onclick=function(){ cuotas=[]; renderCuotas(); };
+
+  // ---------- Pagos ----------
+  function renderPagos(){
+    var h='<thead><tr><th>Fecha</th><th>Monto ($)</th><th></th></tr></thead><tbody>';
+    pagos.forEach(function(p,i){
+      h+='<tr><td><input type="text" readonly class="datefield" placeholder="AAAA-MM-DD" data-i="'+i+'" data-f="fecha" value="'+(p.fecha||'')+'"></td>'+
+         '<td class="num"><input type="number" data-i="'+i+'" data-f="monto" value="'+(p.monto||0)+'"></td>'+
+         '<td><button class="del" data-del="'+i+'">✕</button></td></tr>';
+    });
+    if(!pagos.length) h+='<tr><td colspan="3" style="color:var(--muted)">Sin pagos cargados.</td></tr>';
+    h+='</tbody>';
+    $('tPagos').innerHTML=h;
+    bindTable('tPagos', pagos, renderPagos);
+  }
+  $('btnAddPago').onclick=function(){ pagos.push({fecha:'',monto:0}); renderPagos(); };
+
+  // ---------- Tramos ----------
+  function renderTramos(){
+    var h='<thead><tr><th>Desde</th><th>Hasta</th><th>Tasa</th><th>Valor % (si convencional)</th><th>Etiqueta</th><th></th></tr></thead><tbody>';
+    tramos.forEach(function(t,i){
+      var opts=SERIES_OPT.map(function(o){return '<option value="'+o[0]+'"'+(t.sel===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('');
+      var conv = (t.sel==='conv_anual'||t.sel==='conv_mensual');
+      h+='<tr><td><input type="text" readonly class="datefield" placeholder="AAAA-MM-DD" data-i="'+i+'" data-f="desde" value="'+(t.desde||'')+'"></td>'+
+         '<td><input type="text" readonly class="datefield" placeholder="AAAA-MM-DD" data-i="'+i+'" data-f="hasta" value="'+(t.hasta||'')+'"></td>'+
+         '<td><select data-i="'+i+'" data-f="sel">'+opts+'</select></td>'+
+         '<td class="num"><input type="number" data-i="'+i+'" data-f="valor" value="'+(t.valor||0)+'"'+(conv?'':' disabled')+'></td>'+
+         '<td><input type="text" data-i="'+i+'" data-f="etiqueta" value="'+(t.etiqueta||'')+'" style="min-width:130px"></td>'+
+         '<td><button class="del" data-del="'+i+'">✕</button></td></tr>';
+    });
+    h+='</tbody>';
+    $('tTramos').innerHTML=h;
+    bindTable('tTramos', tramos, renderTramos);
+  }
+  $('btnAddTramo').onclick=function(){ tramos.push({sel:'conv_anual',desde:'',hasta:'',valor:0,etiqueta:'Convencional'}); renderTramos(); };
+  $('btnResetTramos').onclick=function(){ tramos=PRESET(materia); renderTramos(); };
+
+  // ---------- Binding genérico de tablas editables ----------
+  function bindTable(id, arr, rerender){
+    var t=$(id);
+    t.querySelectorAll('input,select').forEach(function(el){
+      el.onchange=function(){
+        var i=+el.dataset.i, f=el.dataset.f;
+        arr[i][f] = (el.type==='number')?(+el.value):el.value;
+        if(f==='sel'){ rerender(); return; } // tramos: habilita/deshabilita el valor
+        if(id==='tCuotas' && modoCuota==='pct' && (f==='base'||f==='pct'||f==='asign')){
+          var cell=el.closest('tr').querySelector('td.calc');   // recalcular sin re-render (conserva foco)
+          if(cell) cell.textContent = fmt(montoCuota(arr[i]));
+        }
+      };
+    });
+    t.querySelectorAll('[data-del]').forEach(function(b){
+      b.onclick=function(){ arr.splice(+b.dataset.del,1); rerender(); };
+    });
+  }
+
+  // ---------- Opciones toggles ----------
+  $('capOn').onchange=function(){ $('capBody').classList.toggle('show',this.checked); };
+  $('adicOn').onchange=function(){ $('adicBody').classList.toggle('show',this.checked); };
+
+  // ---------- Construir input y calcular ----------
+  function tramoEngine(t){
+    if(t.sel==='conv_anual') return {modo:'anual', valor:+t.valor, desde:t.desde, hasta:t.hasta||null, etiqueta:t.etiqueta};
+    if(t.sel==='conv_mensual') return {modo:'mensual_fija', valor:+t.valor, desde:t.desde, hasta:t.hasta||null, etiqueta:t.etiqueta};
+    return {modo:'serie', serie:t.sel, desde:t.desde, hasta:t.hasta||null, etiqueta:t.etiqueta};
+  }
+
+  $('btnCalcular').onclick=function(){
+    $('errBox').innerHTML='';
+    try{
+      var cs = cuotas.filter(function(c){return c.fecha}).map(function(c){return {fecha:c.fecha, monto:montoCuota(c), etiqueta:(c.etiqueta||c.fecha)}});
+      if(!cs.length) throw new Error('Cargá al menos una fila con fecha y monto.');
+      var input = {
+        series:S,
+        cuotas: cs,
+        pagos: pagos.filter(function(p){return p.fecha && +p.monto>0}).map(function(p){return {fecha:p.fecha, monto:+p.monto}}),
+        tramos: tramos.filter(function(t){return t.desde}).map(tramoEngine),
+        fechaCorte: $('corte').value
+      };
+      if(!input.fechaCorte) throw new Error('Indicá la fecha de corte.');
+      if($('capOn').checked){
+        var hitos=($('capHitos').value||'').split(',').map(function(s){return s.trim()}).filter(Boolean);
+        input.capitalizacion={activada:true, hitos:hitos};
+      }
+      if($('adicOn').checked){
+        input.adicional={activada:true, modo:$('adicTipo').value, valor:+$('adicValor').value||0,
+          desde:$('adicDesde').value||null, hasta:$('adicHasta').value||null};
+      }
+      var res = E.liquidar(input);
+      window.__ULT = {res:res, input:input};
+      pintar(res);
+    }catch(err){
+      $('resultado').style.display='block';
+      $('errBox').innerHTML='<div class="err">⚠ '+err.message+'</div>';
+      $('kpis').innerHTML=''; $('tSalida').innerHTML=''; $('tDetalle').innerHTML=''; $('cabRes').innerHTML='';
+    }
+  };
+
+  // ---------- Planilla por período (mensual) ----------
+  function planillaMensual(res){
+    var map={}, order=[];
+    function get(m){ if(!map[m]){map[m]={mes:m,cuota:0,pagos:0,interes:0,cap:0,intAc:0};order.push(m);} return map[m]; }
+    res.filas.forEach(function(f){
+      if(f.tipo==='devengamiento'){var r=get(f.mes); r.interes+=f.interesSegmento; r.cap=f.capital; r.intAc=f.interes;}
+      else{ var m=(f.fecha||'').slice(0,7); if(!m)return; var r=get(m);
+        if(f.tipo==='cuota') r.cuota+=f.monto;
+        if(f.tipo==='pago') r.pagos+=f.pago;
+        r.cap=f.capital; r.intAc=f.interes; }
+    });
+    return order.sort().map(function(m){return map[m];});
+  }
+  function mesLargo(m){var p=m.split('-');return ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][+p[1]-1]+'/'+p[0];}
+
+  function pintar(res){
+    $('resultado').style.display='block';
+    $('printTitulo').firstElementChild.textContent = materia==='alimentos' ? 'Liquidación de intereses sobre cuota alimentaria' : (materia==='lrt' ? 'Liquidación de intereses — accidente de trabajo (LRT)' : 'Liquidación de intereses');
+    var cab='';
+    if($('caratula').value) cab+='<b>Autos:</b> '+esc($('caratula').value)+'  ';
+    if($('expte').value) cab+='<b>Expte.:</b> '+esc($('expte').value)+'  ';
+    cab+='<b>Corte:</b> '+res.fechaCorte;
+    $('cabRes').innerHTML=cab;
+
+    $('kpis').innerHTML=
+      kpi('Capital adeudado', fmt(res.capital))+
+      kpi('Intereses', fmt(res.interes))+
+      kpi('Pagos imputados', fmt(res.totalPagos))+
+      kpi('TOTAL (capital + interés)', fmt(res.total), true)+
+      (res.saldoAFavor>0?kpi('Saldo a favor', fmt(res.saldoAFavor)):'');
+
+    // Planilla por período
+    var colCap = materia==='alimentos'?'Cuota devengada':'Capital';
+    var rows=planillaMensual(res), th='<thead><tr><th>Período</th><th>'+colCap+'</th><th>Pagos</th><th>Interés del mes</th><th>Saldo capital</th><th>Interés acumulado</th><th>Total</th></tr></thead><tbody>';
+    rows.forEach(function(r){
+      th+='<tr><td>'+mesLargo(r.mes)+'</td><td>'+fmt(r.cuota)+'</td><td>'+fmt(r.pagos)+'</td><td>'+fmt(r.interes)+'</td><td>'+fmt(r.cap)+'</td><td>'+fmt(r.intAc)+'</td><td>'+fmt(r.cap+r.intAc)+'</td></tr>';
+    });
+    th+='</tbody><tfoot><tr><td>TOTALES</td><td>'+fmt(res.totalCuotas)+'</td><td>'+fmt(res.totalPagos)+'</td><td>'+fmt(res.interes)+'</td><td>'+fmt(res.capital)+'</td><td>'+fmt(res.interes)+'</td><td>'+fmt(res.total)+'</td></tr></tfoot>';
+    $('tSalida').innerHTML=th;
+    $('printTotal').innerHTML='<b>Total adeudado al '+res.fechaCorte+': '+fmt(res.total)+'</b> — capital '+fmt(res.capital)+' + intereses '+fmt(res.interes)+(res.totalPagos>0?(' (pagos imputados '+fmt(res.totalPagos)+')'):'');
+
+    // Detalle
+    var d='<thead><tr><th>Fecha</th><th>Evento</th><th>Detalle</th><th>Días</th><th>Tasa mes %</th><th>Interés</th><th>Capital</th><th>Interés acum.</th></tr></thead><tbody>';
+    res.filas.forEach(function(f){
+      var fecha=f.tipo==='devengamiento'?(f.desde+' → '+f.hasta):(f.fecha||'');
+      d+='<tr><td>'+fecha+'</td><td>'+f.evento+'</td><td style="text-align:left;white-space:normal">'+esc(f.detalle||'')+'</td>'+
+         '<td>'+(f.dias!=null?f.dias:'')+'</td><td>'+(f.tasaMensualPct!=null?f.tasaMensualPct.toFixed(2):'')+'</td>'+
+         '<td>'+(f.interesSegmento!=null?fmt(f.interesSegmento):(f.tipo==='pago'?('-'+fmt(f.pago)):''))+'</td>'+
+         '<td>'+fmt(f.capital)+'</td><td>'+fmt(f.interes)+'</td></tr>';
+    });
+    d+='</tbody>';
+    $('tDetalle').innerHTML=d;
+    $('resultado').scrollIntoView({behavior:'smooth'});
+  }
+  function kpi(l,v,t){return '<div class="kpi'+(t?' total':'')+'"><div class="l">'+l+'</div><div class="v">'+v+'</div></div>';}
+  function esc(s){return String(s).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]});}
+
+  // ---------- Exportar ----------
+  $('btnPrint').onclick=function(){window.print();};
+  $('btnCSV').onclick=function(){
+    if(!window.__ULT)return;
+    var rows=planillaMensual(window.__ULT.res);
+    var csv='Periodo;Cuota devengada;Pagos;Interes del mes;Saldo capital;Interes acumulado;Total\n';
+    rows.forEach(function(r){csv+=[mesLargo(r.mes),r.cuota,r.pagos,r.interes.toFixed(2),r.cap.toFixed(2),r.intAc.toFixed(2),(r.cap+r.intAc).toFixed(2)].join(';')+'\n';});
+    var res=window.__ULT.res;
+    csv+=['TOTALES',res.totalCuotas,res.totalPagos,res.interes.toFixed(2),res.capital.toFixed(2),res.interes.toFixed(2),res.total.toFixed(2)].join(';')+'\n';
+    var blob=new Blob(["﻿"+csv],{type:'text/csv;charset=utf-8'}), a=document.createElement('a');
+    a.href=URL.createObjectURL(blob); a.download='liquidacion.csv'; a.click();
+  };
+
+  // ---------- Init ----------
+  $('corte').value = new Date().toISOString().slice(0,10);
+  renderPagos(); renderTramos(); setMateria('alimentos');
+})();
+</script>
+
+<script>
+/* ===== Módulo 2: Indemnización por rentas futuras ===== */
+(function(){
+  var IN = window.Indemnizacion, $=function(id){return document.getElementById(id)};
+  var fmt = IN.formatearMoneda;
+  function esc(s){return String(s==null?'':s).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+  function kpi(l,v,t){return '<div class="kpi'+(t?' total':'')+'"><div class="l">'+esc(l)+'</div><div class="v">'+v+'</div></div>';}
+
+  var supuesto='incapacidad', formulaMode='comparativa', formulaSel='acciarri';
+  var tramosVar=[{desdeEdad:35, ingreso:500000, prob:1}];
+
+  // ---- Navegación: pantalla de inicio ↔ módulos ----
+  function showView(v){
+    $('home').style.display = v==='home'?'':'none';
+    $('tabIntereses').style.display = v==='intereses'?'':'none';
+    $('tabIndemnizacion').style.display = v==='indemnizacion'?'':'none';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  $('home').addEventListener('click', function(e){ var b=e.target.closest('[data-go]'); if(b) showView(b.dataset.go); });
+  $('home').addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ var b=e.target.closest('[data-go]'); if(b){ e.preventDefault(); showView(b.dataset.go); } } });
+  [].forEach.call(document.querySelectorAll('[data-home]'), function(b){ b.onclick=function(){ showView('home'); }; });
+  window.__showView = showView;
+
+  // ---- Supuesto (incapacidad / fallecimiento) ----
+  $('selSupuesto').onclick=function(e){var b=e.target.closest('button');if(!b)return;
+    supuesto=b.dataset.s;[].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});
+    $('lblAfect').textContent = supuesto==='incapacidad'?'Incapacidad (%)':'Porción a causahabientes (%)';
+  };
+
+  // ---- Fórmula (comparativa / variable) ----
+  $('selFormula').onclick=function(e){var b=e.target.closest('button');if(!b)return;
+    formulaMode=b.dataset.f;[].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});
+    $('fParamsConst').style.display = formulaMode==='comparativa'?'':'none';
+    $('fParamsVar').style.display = formulaMode==='variable'?'':'none';
+    $('grpIngresoConst').style.display = formulaMode==='comparativa'?'':'none';
+  };
+
+  // ---- Tramos (Acciarri variable) ----
+  function renderTramosVar(){
+    var unidad = $('iForma').value==='anual'?'anual':'mensual';
+    var h='<thead><tr><th>Desde edad</th><th>Ingreso '+unidad+' ($)</th><th>Probabilidad (0–1)</th><th></th></tr></thead><tbody>';
+    tramosVar.forEach(function(t,i){
+      h+='<tr><td><input type="number" data-i="'+i+'" data-f="desdeEdad" value="'+(t.desdeEdad||0)+'"></td>'+
+         '<td class="num"><input type="number" data-i="'+i+'" data-f="ingreso" value="'+(t.ingreso||0)+'"></td>'+
+         '<td class="num"><input type="number" step="0.05" min="0" max="1" data-i="'+i+'" data-f="prob" value="'+(i===0?1:(t.prob!=null?t.prob:1))+'"'+(i===0?' disabled title="El primer tramo va al 100%"':'')+'></td>'+
+         '<td>'+(i===0?'':'<button class="del" data-del="'+i+'">✕</button>')+'</td></tr>';
+    });
+    h+='</tbody>';
+    $('tTramosVar').innerHTML=h;
+    $('tTramosVar').querySelectorAll('input').forEach(function(el){el.onchange=function(){tramosVar[+el.dataset.i][el.dataset.f]=+el.value;};});
+    $('tTramosVar').querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){tramosVar.splice(+b.dataset.del,1);renderTramosVar();};});
+  }
+  $('btnAddTramoVar').onclick=function(){tramosVar.push({desdeEdad:(+$('iEdad').value||35)+5, ingreso:0, prob:0.5});renderTramosVar();};
+  $('iForma').onchange=renderTramosVar;
+
+  function ingresoAnual(v){ v=+v||0; if($('iForma').value==='mensual') v*=(+$('iSac').value||13); return v; }
+
+  // ---- Calcular ----
+  $('btnCalcularInd').onclick=function(){
+    $('errInd').innerHTML='';
+    try{
+      var edad=+$('iEdad').value||0, afect=+$('iAfect').value||0;
+      if(edad<=0) throw new Error('Indicá la edad inicial.');
+      var res, comp=null;
+      if(formulaMode==='comparativa'){
+        var ingA = ingresoAnual($('iIngreso').value);
+        comp={
+          vuotto:  IN.vuotto({edad:edad, ingresoAnual:ingA, afectacionPct:afect, tasa:+$('iTasaV').value, edadTope:+$('iTopeV').value}),
+          mendez:  IN.mendez({edad:edad, ingresoAnual:ingA, afectacionPct:afect, tasa:+$('iTasaM').value, edadTope:+$('iTopeM').value}),
+          acciarri:IN.acciarriConstante({edad:edad, ingresoAnual:ingA, afectacionPct:afect, tasa:+$('iTasaA').value, edadLimite:+$('iLimA').value})
+        };
+        res=comp.acciarri; res.meta={afect:afect, edad:edad, ingA:ingA};
+      } else {
+        var trs = tramosVar.map(function(t){ return {desdeEdad:+t.desdeEdad, ingresoAnual:ingresoAnual(t.ingreso), prob:+t.prob}; });
+        res = IN.acciarriVariable({edad:edad, afectacionPct:afect, tasa:+$('iTasaVar').value, edadLimite:+$('iLimVar').value, tramos:trs});
+        res.meta={afect:afect, edad:edad, ingA:null};
+      }
+      window.__IND={res:res, comp:comp};
+      pintarInd(res, comp);
+    }catch(err){ $('resInd').style.display='block'; $('errInd').innerHTML='<div class="err">⚠ '+esc(err.message)+'</div>'; $('kpisInd').innerHTML=''; $('tPlanillaInd').innerHTML=''; }
+  };
+
+  function formulaTexto(fres){
+    if(fres.formula.indexOf('variable')>=0)
+      return 'C = Σ (ingreso esperado × afectación) ÷ (1+i)ᵗ &nbsp;·&nbsp; i = '+(fres.i*100).toFixed(2)+'% &nbsp;·&nbsp; '+fres.n+' períodos anuales.';
+    var Vn = Math.pow(1+fres.i, -fres.n);
+    var t = 'C = a · (1 − Vⁿ) / i &nbsp;=&nbsp; '+fmt(fres.rentaAnualAfectada)+' × (1 − '+Vn.toFixed(6)+') ÷ '+(fres.i*100).toFixed(2)+'% &nbsp;=&nbsp; <b>'+fmt(fres.capital)+'</b>';
+    t += '<br><span style="color:var(--muted)">a = renta anual afectada &nbsp;·&nbsp; i = '+(fres.i*100).toFixed(2)+'% &nbsp;·&nbsp; n = '+fres.n+' años &nbsp;·&nbsp; Vⁿ = (1+i)⁻ⁿ = '+Vn.toFixed(6);
+    if(fres.factorEdad && Math.abs(fres.factorEdad-1)>1e-9) t += ' &nbsp;·&nbsp; a incluye factor 60/edad = '+fres.factorEdad.toFixed(4);
+    return t + '</span>';
+  }
+  function kpiSel(key,label,val,sel){ return '<div class="kpi selectable'+(sel?' total':'')+'" data-formula="'+key+'"><div class="l">'+label+(sel?' ✓':'')+'</div><div class="v">'+val+'</div></div>'; }
+  function renderKpisComp(comp){
+    $('kpisInd').innerHTML = kpiSel('vuotto','Vuotto',fmt(comp.vuotto.capital),formulaSel==='vuotto')
+      + kpiSel('mendez','Méndez',fmt(comp.mendez.capital),formulaSel==='mendez')
+      + kpiSel('acciarri','Acciarri',fmt(comp.acciarri.capital),formulaSel==='acciarri');
+    $('kpisInd').querySelectorAll('[data-formula]').forEach(function(c){
+      c.onclick=function(){ formulaSel=c.dataset.formula; renderKpisComp(comp); renderDetalle(comp[formulaSel]); };
+    });
+  }
+  function renderDetalle(fres){
+    $('formulaBox').innerHTML = '<b>Fórmula aplicada — '+fres.formula+':</b><br>'+formulaTexto(fres);
+    $('printTotalInd').innerHTML = '<b>'+fres.formula+' — Capital: '+fmt(fres.capital)+'</b>';
+    $('tituloPlanillaInd').textContent = 'Planilla año a año — '+fres.formula;
+    var th='<thead><tr><th>Edad</th><th>Año (t)</th><th>Ingreso esperado</th><th>Renta afectada</th><th>Factor</th><th>Valor presente</th></tr></thead><tbody>';
+    fres.desglose.forEach(function(f){
+      th+='<tr><td>'+f.edad+'</td><td>'+f.t+'</td><td>'+fmt(f.ingresoEsperado)+'</td><td>'+fmt(f.rentaAfectada)+'</td><td>'+f.factor.toFixed(6)+'</td><td>'+fmt(f.valorPresente)+'</td></tr>';
+    });
+    th+='</tbody><tfoot><tr><td colspan="5">CAPITAL — '+fres.formula+'</td><td>'+fmt(fres.capital)+'</td></tr></tfoot>';
+    $('tPlanillaInd').innerHTML=th;
+    var ag = IN.agotamiento(fres);
+    var ta='<thead><tr><th>Edad</th><th>Capital antes de extracción</th><th>Extracción (renta)</th><th>Remanente al fin del año</th></tr></thead><tbody>';
+    ag.forEach(function(f){ var rem=Math.abs(f.remanente)<0.005?0:f.remanente;
+      ta+='<tr><td>'+f.edad+'</td><td>'+fmt(f.antes)+'</td><td>'+fmt(f.extraccion)+'</td><td>'+fmt(rem)+'</td></tr>'; });
+    ta+='</tbody>';
+    $('tAgota').innerHTML=ta;
+  }
+  function pintarInd(res, comp){
+    $('resInd').style.display='block';
+    var esInc = supuesto==='incapacidad';
+    $('printTitInd').textContent = 'Cálculo de indemnización por '+(esInc?'incapacidad':'fallecimiento');
+    var cab='<b>'+(esInc?'Incapacidad':'Porción a causahabientes')+':</b> '+res.meta.afect+'%  ·  <b>Edad inicial:</b> '+res.meta.edad;
+    if(res.meta.ingA!=null) cab+='  ·  <b>Ingreso anual (real):</b> '+fmt(res.meta.ingA);
+    $('cabInd').innerHTML=cab;
+    if(comp){
+      $('selHintInd').style.display='';
+      renderKpisComp(comp);
+      renderDetalle(comp[formulaSel]);
+    } else {
+      $('selHintInd').style.display='none';
+      $('kpisInd').innerHTML = kpi(res.formula, fmt(res.capital), true);
+      renderDetalle(res);
+    }
+    $('resInd').scrollIntoView({behavior:'smooth'});
+  }
+
+  $('btnPrintInd').onclick=function(){window.print();};
+
+  // ===== Régimen LRT (Ley de Riesgos del Trabajo) =====
+  var ibMode='directo', salarios=[], RIPTE=window.TASAS.ripte, supuestoLRT='incapacidad';
+  $('selRegimen').onclick=function(e){var b=e.target.closest('button');if(!b)return;
+    [].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});
+    $('regCivil').style.display=b.dataset.r==='civil'?'':'none';
+    $('regLRT').style.display=b.dataset.r==='lrt'?'':'none';
+  };
+  $('selIB').onclick=function(e){var b=e.target.closest('button');if(!b)return;
+    ibMode=b.dataset.ib;[].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});
+    $('ibDirecto').style.display=ibMode==='directo'?'':'none';
+    $('ibRipte').style.display=ibMode==='ripte'?'':'none';
+  };
+  $('selSupuestoLRT').onclick=function(e){var b=e.target.closest('button');if(!b)return;
+    supuestoLRT=b.dataset.s;[].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});
+    var m=supuestoLRT==='fallecimiento';
+    $('grpIncap').style.display=m?'none':''; $('grpPagoUnico').style.display=m?'':'none';
+    $('hintLRT').innerHTML = m
+      ? 'Prestación = <b>53 × Ingreso Base × (65 / edad)</b> — fallecimiento, sin porcentaje (art. 18 → 15.2 LRT). El interés (PMI → corte) va en la solapa <b>Intereses</b>, materia LRT.'
+      : 'Prestación = <b>53 × Ingreso Base × (65 / edad) × % incapacidad</b>. Criterio <b>"Contreras"</b> (Ac. 16/23 TSJ). El interés posterior va en la solapa <b>Intereses</b>, materia LRT.';
+  };
+  function renderSalarios(){
+    var h='<thead><tr><th>Mes</th><th>Salario ($)</th><th></th></tr></thead><tbody>';
+    salarios.forEach(function(s,i){
+      h+='<tr><td><input type="text" readonly class="monthfield" placeholder="AAAA-MM" data-i="'+i+'" data-f="mes" value="'+(s.mes||'')+'"></td>'+
+         '<td class="num"><input type="number" data-i="'+i+'" data-f="monto" value="'+(s.monto||0)+'"></td>'+
+         '<td><button class="del" data-del="'+i+'">✕</button></td></tr>';
+    });
+    if(!salarios.length) h+='<tr><td colspan="3" style="color:var(--muted)">Generá o agregá los salarios previos a la PMI.</td></tr>';
+    $('tSalarios').innerHTML=h+'</tbody>';
+    $('tSalarios').querySelectorAll('input').forEach(function(el){el.onchange=function(){salarios[+el.dataset.i][el.dataset.f]=(el.type==='number')?+el.value:el.value;};});
+    $('tSalarios').querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){salarios.splice(+b.dataset.del,1);renderSalarios();};});
+  }
+  $('btnAddSalario').onclick=function(){salarios.push({mes:'',monto:0});renderSalarios();};
+  $('btnGenSalarios').onclick=function(){
+    var pmi=$('lPMI').value; if(!/^\d{4}-\d{2}$/.test(pmi)){alert('Elegí la fecha de la PMI (mes).');return;}
+    var y=+pmi.slice(0,4), m=+pmi.slice(5,7); salarios=[];
+    for(var k=12;k>=1;k--){ var mm=m-k, yy=y; while(mm<=0){mm+=12;yy--;} salarios.push({mes:yy+'-'+String(mm).padStart(2,'0'), monto:0}); }
+    renderSalarios();
+  };
+  $('btnCalcularLRT').onclick=function(){
+    $('errLRT').innerHTML='';
+    try{
+      var ib, ibDet=null;
+      if(ibMode==='ripte'){
+        var pmi=$('lPMI').value; if(!/^\d{4}-\d{2}$/.test(pmi)) throw new Error('Elegí la fecha de la PMI.');
+        ibDet=IN.ibPorRipte(salarios, pmi, RIPTE); ib=ibDet.ib;
+      } else { ib=+$('lIB').value||0; if(ib<=0) throw new Error('Cargá el ingreso base.'); }
+      var res=IN.indemnizacionLRT({supuesto:supuestoLRT, edad:+$('lEdad').value, incapacidadPct:+$('lIncap').value, ib:ib, piso:+$('lPiso').value||0, adicional20:$('lAdic').checked, adicionalPagoUnico:+$('lPagoUnico').value||0});
+      window.__LRT=res; pintarLRT(res, ibDet);
+    }catch(err){ $('resLRT').style.display='block'; $('errLRT').innerHTML='<div class="err">⚠ '+esc(err.message)+'</div>'; $('kpisLRT').innerHTML=''; $('formulaLRT').innerHTML=''; $('ibDetLRT').innerHTML=''; }
+  };
+  function pintarLRT(res, ibDet){
+    $('resLRT').style.display='block';
+    $('kpisLRT').innerHTML = kpi(res.muerte?'Prestación (art. 18/15)':'Prestación art. 14', fmt(res.base))
+      + (res.adicional20>0?kpi('+20% (art. 3)', fmt(res.adicional20)):'')
+      + (res.adicionalPagoUnico>0?kpi('Pago único (art. 11.4)', fmt(res.adicionalPagoUnico)):'')
+      + kpi('TOTAL', fmt(res.total), true);
+    $('printTitLRT').textContent = res.muerte ? 'Indemnización LRT — fallecimiento (art. 18 → 15.2)' : 'Indemnización — Ley de Riesgos del Trabajo (art. 14)';
+    $('printTotalLRT').innerHTML='<b>Total indemnización LRT: '+fmt(res.total)+'</b>';
+    var f='<b>Fórmula aplicada — '+(res.muerte?'LRT fallecimiento (art. 18 → 15.2)':'LRT art. 14.2.a')+':</b><br>'+
+      (res.muerte
+        ? '53 × IB × (65 / edad) = 53 × '+fmt(res.ib)+' × '+res.coefEdad.toFixed(4)+' (65/'+res.edad+') = <b>'+fmt(res.prestacion14)+'</b>'
+        : '53 × IB × (65 / edad) × %incap = 53 × '+fmt(res.ib)+' × '+res.coefEdad.toFixed(4)+' (65/'+res.edad+') × '+res.incapacidadPct+'% = <b>'+fmt(res.prestacion14)+'</b>');
+    if(res.piso>0) f+='<br><span style="color:var(--muted)">Piso SRT: '+fmt(res.piso)+' → '+(res.usoPiso?'<b>se aplica el piso</b>':'no se aplica (la fórmula es mayor)')+'</span>';
+    if(res.adicional20>0) f+='<br><span style="color:var(--muted)">+20 % (art. 3 Ley 26773) sobre '+fmt(res.base)+' = '+fmt(res.adicional20)+'</span>';
+    if(res.adicionalPagoUnico>0) f+='<br><span style="color:var(--muted)">+ compensación adicional pago único (art. 11.4) = '+fmt(res.adicionalPagoUnico)+'</span>';
+    $('formulaLRT').innerHTML=f;
+    if(ibDet){
+      var t='<h2 style="font-size:1rem;margin-top:16px">Ingreso base por RIPTE (índice a la PMI: '+fmt(ibDet.riptePMI)+')</h2><div class="tbl-wrap"><table><thead><tr><th>Mes</th><th>Salario</th><th>RIPTE del mes</th><th>Coef.</th><th>Actualizado</th></tr></thead><tbody>';
+      ibDet.detalle.forEach(function(d){ t+='<tr><td>'+d.mes+'</td><td>'+fmt(d.monto)+'</td><td>'+fmt(d.ripteMes)+'</td><td>'+d.coef.toFixed(6)+'</td><td>'+fmt(d.actualizado)+'</td></tr>'; });
+      t+='</tbody><tfoot><tr><td colspan="4">IB = promedio de '+ibDet.n+' meses</td><td>'+fmt(ibDet.ib)+'</td></tr></tfoot></table></div>';
+      $('ibDetLRT').innerHTML=t;
+    } else $('ibDetLRT').innerHTML='';
+    $('resLRT').scrollIntoView({behavior:'smooth'});
+  }
+  $('btnPrintLRT').onclick=function(){window.print();};
+  renderSalarios();
+
+  renderTramosVar();
+  showView('home');   // arranca en la pantalla de inicio
+})();
+</script>
+
+<script>
+/* ===== Selector de fecha (columnas mes/año + almanaque) ===== */
+(function(){
+  var pop=null, curField=null, mode='date', selY, selM;
+  var MES3=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  var DOW=['D','L','M','M','J','V','S'];
+  function p2(n){ return String(n).padStart(2,'0'); }
+  function build(){
+    pop=document.createElement('div'); pop.className='dpop'; pop.style.display='none';
+    pop.innerHTML='<div class="dp-cols"><div class="dp-col dp-months"></div><div class="dp-col dp-years"></div></div><div class="dp-grid"></div>';
+    document.body.appendChild(pop);
+    document.addEventListener('mousedown',function(e){ if(pop.style.display!=='none' && !pop.contains(e.target) && e.target!==curField) close(); });
+  }
+  function renderCols(){
+    var mc=pop.querySelector('.dp-months'), yc=pop.querySelector('.dp-years');
+    mc.innerHTML=MES3.map(function(m,i){return '<button type="button" class="dp-mo'+(i===selM?' sel':'')+'" data-m="'+i+'">'+m+'</button>';}).join('');
+    var ys=''; for(var y=2000;y<=2035;y++) ys+='<button type="button" class="dp-yr'+(y===selY?' sel':'')+'" data-y="'+y+'">'+y+'</button>';
+    yc.innerHTML=ys;
+    mc.querySelectorAll('.dp-mo').forEach(function(b){ b.onclick=function(){ selM=+b.dataset.m; if(mode==='month'){ setVal(selY+'-'+p2(selM+1)); } else { renderCols(); renderGrid(); } }; });
+    yc.querySelectorAll('.dp-yr').forEach(function(b){ b.onclick=function(){ selY=+b.dataset.y; renderCols(); if(mode==='date') renderGrid(); }; });
+    var s=mc.querySelector('.sel'); if(s) s.scrollIntoView({block:'nearest'});
+    var sy=yc.querySelector('.sel'); if(sy) sy.scrollIntoView({block:'nearest'});
+  }
+  function renderGrid(){
+    if(mode==='month'){ pop.querySelector('.dp-grid').innerHTML=''; return; }
+    var first=new Date(Date.UTC(selY,selM,1)).getUTCDay(), dim=new Date(Date.UTC(selY,selM+1,0)).getUTCDate();
+    var cur=(curField && /^\d{4}-\d{2}-\d{2}$/.test(curField.value))?curField.value:'';
+    var h='<div class="dp-dow">'+DOW.map(function(x){return '<span>'+x+'</span>';}).join('')+'</div><div class="dp-days">';
+    for(var i=0;i<first;i++) h+='<span></span>';
+    for(var d=1;d<=dim;d++){ var iso=selY+'-'+p2(selM+1)+'-'+p2(d);
+      h+='<button type="button" class="dp-day'+(iso===cur?' sel':'')+'" data-iso="'+iso+'">'+d+'</button>'; }
+    pop.querySelector('.dp-grid').innerHTML=h+'</div>';
+    pop.querySelectorAll('.dp-day').forEach(function(b){ b.onclick=function(){ setVal(b.dataset.iso); }; });
+  }
+  function setVal(v){ if(curField){ curField.value=v; curField.dispatchEvent(new Event('change',{bubbles:true})); } close(); }
+  function open(field, m){
+    if(!pop) build();
+    curField=field; mode=m; var now=new Date();
+    var re=(m==='month')?/^(\d{4})-(\d{2})/:/^(\d{4})-(\d{2})-(\d{2})/, mm=re.exec(field.value||'');
+    selY=mm?+mm[1]:now.getFullYear(); selM=mm?(+mm[2]-1):now.getMonth();
+    renderCols(); renderGrid();
+    var r=field.getBoundingClientRect(); pop.style.display='block';
+    pop.style.left=(window.scrollX+r.left)+'px'; pop.style.top=(window.scrollY+r.bottom+4)+'px';
+  }
+  function close(){ if(pop) pop.style.display='none'; curField=null; }
+  function trigger(e){ var t=e.target; if(!t||!t.classList) return;
+    if(t.classList.contains('datefield')) open(t,'date');
+    else if(t.classList.contains('monthfield')) open(t,'month'); }
+  document.addEventListener('focusin',trigger);
+  document.addEventListener('click',function(e){ if(pop&&pop.style.display!=='none') return; trigger(e); });
+})();
+</script>
+</body>
+</html>
