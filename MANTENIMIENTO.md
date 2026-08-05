@@ -1,7 +1,9 @@
 # Mantenimiento — qué verificar mes a mes
 
-La app usa tres bases de datos que hay que mantener al día. Todas se publican en
-el **Gabinete Técnico Contable (GTC) del Poder Judicial de Neuquén**.
+La app usa cuatro bases de datos que hay que mantener al día. Las **tasas** se
+publican en el **Gabinete Técnico Contable (GTC) del Poder Judicial de Neuquén**.
+El **índice RIPTE** es un índice **nacional** (Seguridad Social de la Nación); el
+GTC solo lo republica, así que su fuente original NO es el Gabinete.
 
 > El RIPTE y las tasas se publican con **rezago** (2–3 meses), así que es normal
 > que el último mes disponible esté algo atrás respecto del mes en curso.
