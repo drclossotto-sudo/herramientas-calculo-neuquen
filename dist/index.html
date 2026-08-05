@@ -390,7 +390,7 @@
             <button data-s="fallecimiento">Fallecimiento</button>
           </div>
         </div>
-        <div class="hint" id="hintLRT">Prestación = <b>53 × Ingreso Base × (65 / edad) × % incapacidad</b>. Criterio <b>"Contreras"</b> (Ac. 16/23 TSJ). El interés posterior (PMI → corte) se calcula en la solapa <b>Intereses</b>, materia <b>LRT</b>.</div>
+        <div class="hint" id="hintLRT">Prestación = <b>53 × Ingreso Base × (65 / edad) × % incapacidad</b>. Criterio <b>"Méndez"</b> (Ac. Pleno 14/24 TSJ Neuquén, que restablece <b>"Retamales"</b> Ac. 30/21). El interés posterior (PMI → corte) se calcula en la solapa <b>Intereses</b>, materia <b>LRT</b>.</div>
         <div class="grid g4">
           <div><label>Edad a la PMI</label><input id="lEdad" type="number" value="40"></div>
           <div id="grpIncap"><label>% de incapacidad</label><input id="lIncap" type="number" value="50"></div>
@@ -398,7 +398,7 @@
           <div><label>Piso mínimo SRT ($)</label><input id="lPiso" type="number" value="0"></div>
           <div><label>Adicional</label><label style="display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--ink);margin-top:6px"><input type="checkbox" id="lAdic" style="width:auto"> +20 % (art. 3 Ley 26773)</label></div>
         </div>
-        <div class="fuente"><b>Fuentes:</b> art. 14, ap. 2, inc. a, Ley 24557 (LRT); coeficiente 53 (DNU 1694/09); adicional 20 % (art. 3 Ley 26773); piso mínimo por Resoluciones/Notas de la SRT. <b>Criterio (fallo):</b> "Contreras" (Ac. 16/23 TSJ Neuquén).</div>
+        <div class="fuente"><b>Fuentes:</b> art. 14, ap. 2, inc. a, Ley 24557 (LRT); coeficiente 53 (DNU 1694/09); adicional 20 % (art. 3 Ley 26773); piso mínimo por Resoluciones/Notas de la SRT. <b>Criterio (fallo):</b> "Méndez" (Ac. Pleno 14/24 TSJ Neuquén), que dejó sin efecto "Contreras" (Ac. 16/23) y restableció "Retamales" (Ac. 30/21).</div>
       </div>
 
       <div class="card noprint">
@@ -433,7 +433,7 @@
         <div id="formulaLRT" class="formula-box"></div>
         <div id="printTotalLRT" class="printonly" style="font-size:1.05rem;margin:6px 0"></div>
         <div id="ibDetLRT"></div>
-        <div class="src">Prestación art. 14.2.a LRT (53 × IB × 65/edad × %incap; +20 % art. 3 Ley 26773; mínimo = piso SRT). IB del art. 12.1 actualizado por RIPTE (índice nacional de la Seguridad Social; valores tomados del GTC de Neuquén, <b>actualizado hasta marzo 2026</b>). Criterio "Contreras" (Ac. 16/23 TSJ). El interés (art. 12, incs. 2 y 3) se calcula aparte, en la materia LRT del módulo de intereses (Trotelli).</div>
+        <div class="src">Prestación art. 14.2.a LRT (53 × IB × 65/edad × %incap; +20 % art. 3 Ley 26773; mínimo = piso SRT). IB del art. 12.1 actualizado por RIPTE <b>solo hasta la PMI</b> (índice nacional de la Seguridad Social; valores tomados del GTC de Neuquén, <b>actualizado hasta marzo 2026</b>). Criterio "Méndez" (Ac. Pleno 14/24 TSJ Neuquén, que restablece "Retamales" Ac. 30/21). El interés (art. 12, incs. 2 y 3) se calcula aparte, en la materia LRT del módulo de intereses (Trotelli).</div>
       </div>
     </div>
   </div><!-- /tabIndemnizacion -->
@@ -2672,7 +2672,7 @@ window.TASAS = {
     $('grpIncap').style.display=m?'none':''; $('grpPagoUnico').style.display=m?'':'none';
     $('hintLRT').innerHTML = m
       ? 'Prestación = <b>53 × Ingreso Base × (65 / edad)</b> — fallecimiento, sin porcentaje (art. 18 → 15.2 LRT). El interés (PMI → corte) va en la solapa <b>Intereses</b>, materia LRT.'
-      : 'Prestación = <b>53 × Ingreso Base × (65 / edad) × % incapacidad</b>. Criterio <b>"Contreras"</b> (Ac. 16/23 TSJ). El interés posterior va en la solapa <b>Intereses</b>, materia LRT.';
+      : 'Prestación = <b>53 × Ingreso Base × (65 / edad) × % incapacidad</b>. Criterio <b>"Méndez"</b> (Ac. Pleno 14/24 TSJ Neuquén, que restablece <b>"Retamales"</b> Ac. 30/21). El interés posterior va en la solapa <b>Intereses</b>, materia LRT.';
   };
   function renderSalarios(){
     var h='<thead><tr><th>Mes</th><th>Salario ($)</th><th></th></tr></thead><tbody>';
