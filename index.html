@@ -179,7 +179,7 @@
   </div>
 
   <div id="lrtNota" class="disclaimer noprint" style="display:none;font-size:.82rem">
-    <b>Accidentes de trabajo / enfermedad profesional (LRT) — "Trotelli", Ac. 1/2025 TSJ:</b> tramos <b>TEA Sucursales</b> (hasta 31/03/2024) → <b>TNA Banco Nación</b> (desde 01/04/2024). La serie de TNA BNA proviene de la <b>fuente oficial</b>: Gabinete Técnico Contable del Poder Judicial de Neuquén (ripte.agjusneuquen.gob.ar/tasas). Igual conviene un control puntual antes de presentar.
+    <b>Accidentes de trabajo / enfermedad profesional (LRT) — "Trotelli", Ac. 1/2025 TSJ:</b> tramos <b>TNA Banco Nación</b> (previo a 2021, sugerida y editable) → <b>TEA Sucursales</b> (01/01/2021–31/03/2024) → <b>TNA Banco Nación</b> (desde 01/04/2024). La serie de TNA BNA proviene de la <b>fuente oficial</b>: Gabinete Técnico Contable del Poder Judicial de Neuquén (ripte.agjusneuquen.gob.ar/tasas). Igual conviene un control puntual antes de presentar.
   </div>
 
   <!-- 1. CUOTAS / CAPITAL -->
@@ -459,6 +459,7 @@
   var pagos = [];    // {fecha, monto}
   var PRESET = function(mat){
     if(mat==='lrt') return [
+      {sel:'TNA_BNA',  desde:'2015-01-01', hasta:'2020-12-31', valor:0, etiqueta:'TNA Banco Nación (previo a 2021 — tasa legal art. 12.3 LRT; editable, p. ej. a Activa/descuento BPN)'},
       {sel:'TEA_Prop', desde:'2021-01-01', hasta:'2024-03-31', valor:0, etiqueta:'TEA Sucursales (Trotelli, Ac. 1/2025 TSJ)'},
       {sel:'TNA_BNA',  desde:'2024-04-01', hasta:'',           valor:0, etiqueta:'TNA Banco Nación (Trotelli, Ac. 1/2025 TSJ)'}
     ];

@@ -38,6 +38,16 @@ var oldDebt = E.liquidar({ series: SERIES,
 ok('cuota 2020-01 → corte 2026 liquida sin "Sin tasa definida"', oldDebt.capital === 100000 && oldDebt.total > 100000);
 ok('el primer devengamiento arranca en 2020-01 (no en 2021)', oldDebt.filas.some(function(f){ return f.mes === '2020-01'; }));
 
+console.log('\nUI Test 1d — regresión LRT: TNA_BNA sugerida previo a 2021');
+var oldLRT = E.liquidar({ series: SERIES,
+  cuotas: [{fecha:'2020-01-11', monto:100000}],
+  tramos: [{modo:'serie',serie:'TNA_BNA', desde:'2015-01-01',hasta:'2020-12-31'},
+           {modo:'serie',serie:'TEA_Prop',desde:'2021-01-01',hasta:'2024-03-31'},
+           {modo:'serie',serie:'TNA_BNA', desde:'2024-04-01',hasta:null}],
+  fechaCorte: '2026-07-29' });
+ok('LRT: cuota 2020-01 con TNA_BNA previo liquida sin error', oldLRT.capital === 100000 && oldLRT.total > 100000);
+ok('LRT: el mes 2020-01 usa la tasa TNA_BNA cargada (4,17)', oldLRT.filas.some(function(f){ return f.mes === '2020-01' && f.tasaBaseMensualPct === SERIES.TNA_BNA['2020-01']; }));
+
 console.log('\nUI Test 1b — selector de fecha (columnas mes/año + almanaque)');
 ok('campos de fecha son datefield readonly', d.getElementById('corte').classList.contains('datefield') && d.getElementById('corte').readOnly);
 ok('el "Hasta" del generador es día exacto (datefield)', d.getElementById('genHasta').classList.contains('datefield'));

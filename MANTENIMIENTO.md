@@ -24,9 +24,13 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
 
 - **Qué es:** columna "ACTIVA" de "Tasas Banco Nacion" (mensual, %).
 - **Para qué se usa:** intereses en **accidentes de trabajo / enfermedad
-  profesional (LRT)** — tramo desde 01/04/2024 del preset "Trotelli".
+  profesional (LRT)** — tramo desde 01/04/2024 y tramo **previo a 2021**
+  (sugerido, editable) del preset "Trotelli".
 - **Dónde verificarla:** https://ripte.agjusneuquen.gob.ar/tasas
 - **En el proyecto:** `data/tasas.json` → `series.TNA_BNA`.
+- **Serie histórica:** desde **enero 2015** (el GTC la publica desde 2000; se
+  cargó 2015→ para igualar el piso del RIPTE). Validada por doble lectura del GTC
+  y empalme exacto en el solapamiento 2021.
 - **Actualizada hasta:** julio 2026.
 
 ## 3. Índice RIPTE
