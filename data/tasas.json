@@ -9,7 +9,7 @@
   "TEA_Prop": "TEA (BPN, clientes sin paquete, préstamos personales, canal sucursales, sin IVA), proporcional a cada mes",
   "TNA": "TNA (BPN, clientes sin paquete, préstamos personales, canal sucursales, sin IVA)",
   "TNA_BNA": "Tasa activa del Banco de la Nacion Argentina (columna \"ACTIVA\", mensual). FUENTE OFICIAL: Gabinete Tecnico Contable del Poder Judicial de Neuquen (https://ripte.agjusneuquen.gob.ar/tasas). Es la tasa del art. 12.3 LRT usada en \"Trotelli\" (Ac. 1/2025 TSJ). Valores transcriptos de la pagina del GTC; conviene un control puntual.",
-  "RIPTE": "Indice RIPTE (Remuneraciones Imponibles Promedio de los Trabajadores Estables), columna \"Monto\". FUENTE OFICIAL: GTC Poder Judicial Neuquen (https://ripte.agjusneuquen.gob.ar/riptes). Se usa para actualizar los salarios del ingreso base (art. 12.1 LRT)."
+  "RIPTE": "Indice RIPTE (Remuneraciones Imponibles Promedio de los Trabajadores Estables), columna \"Monto en $\". Indice NACIONAL de la Secretaria de Seguridad Social. Tramo 2016-01 en adelante: GTC Poder Judicial Neuquen (https://ripte.agjusneuquen.gob.ar/riptes). Tramo 2015: informe oficial de la Secretaria de Seguridad Social (MTEySS, ene-2020, inf-ripte_202001.pdf), verificado por coincidencia exacta con el GTC en el solapamiento 2016. Se usa para actualizar los salarios del ingreso base (art. 12.1 LRT)."
  },
  "series": {
   "Activa": {
@@ -1241,6 +1241,18 @@
   }
  },
  "ripte": {
+  "2015-01": 11997.96,
+  "2015-02": 12410.76,
+  "2015-03": 12869.99,
+  "2015-04": 13077.29,
+  "2015-05": 13556.91,
+  "2015-06": 14104.4,
+  "2015-07": 14535.78,
+  "2015-08": 14598.39,
+  "2015-09": 14983.39,
+  "2015-10": 15202.43,
+  "2015-11": 15526.15,
+  "2015-12": 15800.97,
   "2016-01": 15822.89,
   "2016-02": 16520.52,
   "2016-03": 16977.26,

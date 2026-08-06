@@ -36,6 +36,11 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
 - **Para qué se usa:** ingreso base (IB) en la **indemnización LRT** (art. 12.1).
 - **Dónde verificarlo:** https://ripte.agjusneuquen.gob.ar/riptes
 - **En el proyecto:** `data/tasas.json` → `ripte`.
+- **Serie histórica:** desde **enero 2015**. El tramo 2016→ proviene del GTC; el
+  tramo 2015 se tomó del **informe oficial de la Secretaría de Seguridad Social**
+  (MTEySS, ene-2020, `inf-ripte_202001.pdf`), y se validó porque el solapamiento
+  2016 coincide **exactamente** con el GTC. Para accidentes previos a 2015 el
+  índice hay que cargarlo a mano (el informe oficial llega hasta julio 1994).
 - **Actualizado hasta:** marzo 2026.
 
 ## 4. TEA "Sucursales" (BPN)
