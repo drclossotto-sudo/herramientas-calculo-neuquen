@@ -26,7 +26,17 @@ ok('inicio visible al cargar', d.getElementById('home').style.display !== 'none'
 ok('módulos ocultos al inicio', d.getElementById('tabIntereses').style.display === 'none' && d.getElementById('tabIndemnizacion').style.display === 'none');
 d.querySelector('#home [data-go="intereses"]').click();
 ok('entra al módulo intereses', d.getElementById('tabIntereses').style.display !== 'none' && d.getElementById('home').style.display === 'none');
-ok('preset de tramos con 2 filas', d.querySelectorAll('#tTramos tbody tr').length === 2);
+ok('preset Casas con 3 filas (previo 2021 + TEA + Activa)', d.querySelectorAll('#tTramos tbody tr').length === 3);
+
+console.log('\nUI Test 1c — regresión: deuda anterior a 2021 (preset Casas cubre el tramo previo)');
+var oldDebt = E.liquidar({ series: SERIES,
+  cuotas: [{fecha:'2020-01-11', monto:100000}],
+  tramos: [{modo:'serie',serie:'Activa',  desde:'2000-01-01',hasta:'2020-12-31'},
+           {modo:'serie',serie:'TEA_Prop',desde:'2021-01-01',hasta:'2024-03-31'},
+           {modo:'serie',serie:'Activa',  desde:'2024-04-01',hasta:null}],
+  fechaCorte: '2026-07-29' });
+ok('cuota 2020-01 → corte 2026 liquida sin "Sin tasa definida"', oldDebt.capital === 100000 && oldDebt.total > 100000);
+ok('el primer devengamiento arranca en 2020-01 (no en 2021)', oldDebt.filas.some(function(f){ return f.mes === '2020-01'; }));
 
 console.log('\nUI Test 1b — selector de fecha (columnas mes/año + almanaque)');
 ok('campos de fecha son datefield readonly', d.getElementById('corte').classList.contains('datefield') && d.getElementById('corte').readOnly);

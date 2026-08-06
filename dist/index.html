@@ -224,7 +224,7 @@
   <!-- 3. TASAS -->
   <div class="card noprint">
     <h2><span class="n">3</span> Tasas de interés por tramos</h2>
-    <div class="hint">Preset <b>"Casas"</b> (Ac. 15/2025 TSJ Neuquén): TEA Sucursales hasta 31/03/2024, Activa BPN desde 01/04/2024. Podés editar los tramos o agregar una tasa convencional.</div>
+    <div class="hint">Preset <b>"Casas"</b> (Ac. 15/2025 TSJ Neuquén): descuento de documentos BPN hasta 31/12/2020, TEA Sucursales del 01/01/2021 al 31/03/2024, Activa BPN desde 01/04/2024. Podés editar los tramos o agregar una tasa convencional.</div>
     <div class="tbl-wrap"><table id="tTramos"></table></div>
     <div class="row-actions">
       <button class="ghost" id="btnAddTramo">+ Agregar tramo</button>
@@ -2241,6 +2241,7 @@ window.TASAS = {
       {sel:'TNA_BNA',  desde:'2024-04-01', hasta:'',           valor:0, etiqueta:'TNA Banco Nación (Trotelli, Ac. 1/2025 TSJ)'}
     ];
     return [
+      {sel:'Activa',   desde:'2000-01-01', hasta:'2020-12-31', valor:0, etiqueta:'Descuento documentos BPN (previo a 2021 — Di Luca / Casas Ac. 15/2025 TSJ)'},
       {sel:'TEA_Prop', desde:'2021-01-01', hasta:'2024-03-31', valor:0, etiqueta:'TEA Sucursales (Casas, Ac. 15/2025 TSJ)'},
       {sel:'Activa',   desde:'2024-04-01', hasta:'',           valor:0, etiqueta:'Activa BPN (Casas, Ac. 15/2025 TSJ)'}
     ];
