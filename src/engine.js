@@ -57,7 +57,12 @@
         var s = series && series[tramo.serie];
         if (!s) throw new Error('Serie de tasa no cargada: ' + tramo.serie);
         var v = s[ym(ts)];
-        if (v == null) throw new Error('Falta la tasa "' + tramo.serie + '" para ' + ym(ts));
+        if (v == null) {
+          var _ks = Object.keys(s).sort();
+          throw new Error('No hay datos de la tasa "' + tramo.serie + '" para ' + ym(ts) +
+            ' (esta serie sólo tiene datos de ' + _ks[0] + ' a ' + _ks[_ks.length - 1] +
+            '). Elegí otra tasa o ajustá el tramo.');
+        }
         return v;
       case 'mensual_fija': return tramo.valor;        // tasa mensual constante (%)
       case 'anual':        return tramo.valor / 12;   // tasa anual -> proporcional mensual
@@ -141,7 +146,8 @@
         var prev = fechas[i - 1], d = diasEntre(prev, ts);
         if (d > 0 && capital > 0) {
           var tr = tramoEn(tramos, prev);
-          if (!tr) throw new Error('Sin tasa definida para el mes ' + ym(prev));
+          if (!tr) throw new Error('Sin tasa definida para el mes ' + ym(prev) +
+            ': ningún tramo cubre ese período. Agregá o extendé un tramo que lo incluya.');
           var rBase = tasaMensualBase(tr, prev, series);
           var rAdic = 0;
           if (adic && prev >= adic._desde && (adic._hasta === null || prev <= adic._hasta)) {

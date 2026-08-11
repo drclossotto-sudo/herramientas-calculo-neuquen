@@ -18,7 +18,7 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
 - **Dónde verificarla:** https://cintereses.agjusneuquen.gob.ar
   (listado de tasas / "Tipo Tasa: Activa").
 - **En el proyecto:** `data/tasas.json` → `series.Activa`.
-- **Actualizada hasta:** julio 2026.
+- **Actualizada hasta:** agosto 2026.
 
 ## 2. Tasa ACTIVA del Banco de la Nación Argentina (TNA BNA)
 
@@ -58,7 +58,7 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
 - **Dónde verificarla:** https://cintereses.agjusneuquen.gob.ar
   (listado de tasas / "T.E.A. Prop.").
 - **En el proyecto:** `data/tasas.json` → `series.TEA_Prop`.
-- **Actualizada hasta:** julio 2026.
+- **Actualizada hasta:** agosto 2026.
 
 ---
 

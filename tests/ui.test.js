@@ -48,6 +48,17 @@ var oldLRT = E.liquidar({ series: SERIES,
 ok('LRT: cuota 2020-01 con TNA_BNA previo liquida sin error', oldLRT.capital === 100000 && oldLRT.total > 100000);
 ok('LRT: el mes 2020-01 usa la tasa TNA_BNA cargada (4,17)', oldLRT.filas.some(function(f){ return f.mes === '2020-01' && f.tasaBaseMensualPct === SERIES.TNA_BNA['2020-01']; }));
 
+console.log('\nUI Test 1e — reporte de inconsistencia: tasa seleccionada sin datos para el período');
+var errMsg = '';
+try {
+  E.liquidar({ series: SERIES,
+    cuotas: [{fecha:'2016-05-11', monto:100000}],
+    tramos: [{modo:'serie', serie:'TEA_Prop', desde:'2000-01-01', hasta:null}],  // TEA_Prop no existe en 2016
+    fechaCorte: '2016-08-01' });
+} catch(e){ errMsg = e.message; }
+ok('elegir TEA_Prop en 2016 (sin datos) → lanza error claro', /No hay datos de la tasa "TEA_Prop"/.test(errMsg));
+ok('el mensaje informa el rango disponible de la serie', /sólo tiene datos de .+ a .+/.test(errMsg));
+
 console.log('\nUI Test 1b — selector de fecha (columnas mes/año + almanaque)');
 ok('campos de fecha son datefield readonly', d.getElementById('corte').classList.contains('datefield') && d.getElementById('corte').readOnly);
 ok('el "Hasta" del generador es día exacto (datefield)', d.getElementById('genHasta').classList.contains('datefield'));
