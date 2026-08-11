@@ -124,7 +124,7 @@
 
   <header class="app noprint">
     <div>
-      <h1>Herramientas de cálculo <span style="color:var(--muted);font-weight:400">— Neuquén</span> <span class="beta">Beta · Revisión</span></h1>
+      <h1>Herramientas de cálculo <span style="color:var(--muted);font-weight:400">— Neuquén</span></h1>
       <div class="author"><b id="autor">Otto Closs</b> · <span id="rol">Defensor Público Civil de Neuquén</span> · <span class="chip">Aporte abierto a la matrícula</span></div>
     </div>
     <button class="themebtn noprint" id="theme">◐ Tema</button>
@@ -135,7 +135,7 @@
   </div>
 
   <div class="fuente noprint" style="margin:-10px 0 18px;padding:9px 13px;background:var(--zebra);border-radius:9px">
-    <b>Bases de datos actualizadas:</b> tasas de interés (BPN y Banco Nación) hasta <b>julio 2026</b> · índice <b>RIPTE</b> hasta <b>marzo 2026</b>. Fuentes: tasas — Gabinete Técnico Contable del Poder Judicial de Neuquén; RIPTE — índice nacional (Seguridad Social de la Nación).
+    <b>Bases de datos actualizadas:</b> tasas de interés BPN hasta <b>julio 2026</b> y Banco Nación hasta <b>agosto 2026</b> · índice <b>RIPTE</b> hasta <b>mayo 2026</b>. Fuentes: tasas — Gabinete Técnico Contable del Poder Judicial de Neuquén; RIPTE — índice nacional (Seguridad Social de la Nación).
   </div>
 
   <div id="home" class="noprint">
@@ -230,7 +230,7 @@
       <button class="ghost" id="btnAddTramo">+ Agregar tramo</button>
       <button class="ghost" id="btnResetTramos">Restaurar preset "Casas" (Ac. 15/2025)</button>
     </div>
-    <div class="fuente"><b>Fuente de las tasas:</b> Poder Judicial de Neuquén — Gabinete Técnico Contable. Tasas BPN (TEA Sucursales, Activa, etc.): cintereses.agjusneuquen.gob.ar · TNA Banco Nación: ripte.agjusneuquen.gob.ar/tasas. <b>Series actualizadas hasta julio 2026.</b><br><b>Criterio (fallos):</b> alimentos y civil/daños = "Casas" (Ac. 15/2025 TSJ Neuquén) · accidentes de trabajo (LRT) = "Trotelli" (Ac. Plenario 1/2025 TSJ Neuquén).</div>
+    <div class="fuente"><b>Fuente de las tasas:</b> Poder Judicial de Neuquén — Gabinete Técnico Contable. Tasas BPN (TEA Sucursales, Activa, etc.): cintereses.agjusneuquen.gob.ar · TNA Banco Nación: ripte.agjusneuquen.gob.ar/tasas. <b>Series actualizadas: BPN hasta julio 2026, Banco Nación hasta agosto 2026.</b><br><b>Criterio (fallos):</b> alimentos y civil/daños = "Casas" (Ac. 15/2025 TSJ Neuquén) · accidentes de trabajo (LRT) = "Trotelli" (Ac. Plenario 1/2025 TSJ Neuquén).</div>
   </div>
 
   <!-- 4. OPCIONES -->
@@ -288,7 +288,7 @@
     </details>
 
     <div class="src">
-      Fuente de tasas: Poder Judicial de Neuquén — Gabinete Técnico Contable (cintereses.agjusneuquen.gob.ar), <b>actualizadas hasta julio 2026</b>. Método calibrado al centavo contra el calculador oficial. Fórmula: interés del mes = capital × tasa mensual × (días del segmento ÷ días del mes); interés simple, sin capitalizar salvo hito del art. 770.
+      Fuente de tasas: Poder Judicial de Neuquén — Gabinete Técnico Contable (cintereses.agjusneuquen.gob.ar), <b>actualizadas hasta julio 2026</b> (tasa Banco Nación, hasta agosto 2026). Método calibrado al centavo contra el calculador oficial. Fórmula: interés del mes = capital × tasa mensual × (días del segmento ÷ días del mes); interés simple, sin capitalizar salvo hito del art. 770.
     </div>
   </div>
 
@@ -417,7 +417,7 @@
           <div class="hint">Cargá los salarios de los 12 meses previos a la PMI: se actualizan por RIPTE hasta la PMI y se promedian (índice del GTC de Neuquén).</div>
           <div class="row-actions"><button class="ghost" id="btnGenSalarios">Generar 12 meses previos a la PMI</button><button class="ghost" id="btnAddSalario">+ Agregar mes</button></div>
           <div class="tbl-wrap" style="margin-top:8px"><table id="tSalarios"></table></div>
-          <div class="fuente"><b>Índice RIPTE:</b> índice nacional (Seguridad Social de la Nación); valores tomados del Gabinete Técnico Contable del Poder Judicial de Neuquén (ripte.agjusneuquen.gob.ar/riptes) y, para 2015, del informe oficial de la Secretaría de Seguridad Social. <b>Serie desde enero 2015, actualizada hasta marzo 2026.</b> El ingreso base (art. 12.1 LRT) se actualiza por RIPTE solo hasta la PMI.</div>
+          <div class="fuente"><b>Índice RIPTE:</b> índice nacional (Seguridad Social de la Nación); valores tomados del Gabinete Técnico Contable del Poder Judicial de Neuquén (ripte.agjusneuquen.gob.ar/riptes) y, para 2015, del informe oficial de la Secretaría de Seguridad Social. <b>Serie desde enero 2015, actualizada hasta mayo 2026.</b> El ingreso base (art. 12.1 LRT) se actualiza por RIPTE solo hasta la PMI.</div>
         </div>
       </div>
 
@@ -433,7 +433,7 @@
         <div id="formulaLRT" class="formula-box"></div>
         <div id="printTotalLRT" class="printonly" style="font-size:1.05rem;margin:6px 0"></div>
         <div id="ibDetLRT"></div>
-        <div class="src">Prestación art. 14.2.a LRT (53 × IB × 65/edad × %incap; +20 % art. 3 Ley 26773; mínimo = piso SRT). IB del art. 12.1 actualizado por RIPTE <b>solo hasta la PMI</b> (índice nacional de la Seguridad Social; valores tomados del GTC de Neuquén, <b>actualizado hasta marzo 2026</b>). Criterio "Méndez" (Ac. Pleno 14/24 TSJ Neuquén). El interés (art. 12, incs. 2 y 3) se calcula aparte, en la materia LRT del módulo de intereses (Trotelli).</div>
+        <div class="src">Prestación art. 14.2.a LRT (53 × IB × 65/edad × %incap; +20 % art. 3 Ley 26773; mínimo = piso SRT). IB del art. 12.1 actualizado por RIPTE <b>solo hasta la PMI</b> (índice nacional de la Seguridad Social; valores tomados del GTC de Neuquén, <b>actualizado hasta mayo 2026</b>). Criterio "Méndez" (Ac. Pleno 14/24 TSJ Neuquén). El interés (art. 12, incs. 2 y 3) se calcula aparte, en la materia LRT del módulo de intereses (Trotelli).</div>
       </div>
     </div>
   </div><!-- /tabIndemnizacion -->

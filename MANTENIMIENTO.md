@@ -31,7 +31,7 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
 - **Serie histórica:** desde **enero 2015** (el GTC la publica desde 2000; se
   cargó 2015→ para igualar el piso del RIPTE). Validada por doble lectura del GTC
   y empalme exacto en el solapamiento 2021.
-- **Actualizada hasta:** julio 2026.
+- **Actualizada hasta:** agosto 2026.
 
 ## 3. Índice RIPTE
 
@@ -45,7 +45,7 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
   (MTEySS, ene-2020, `inf-ripte_202001.pdf`), y se validó porque el solapamiento
   2016 coincide **exactamente** con el GTC. Para accidentes previos a 2015 el
   índice hay que cargarlo a mano (el informe oficial llega hasta julio 1994).
-- **Actualizado hasta:** marzo 2026.
+- **Actualizado hasta:** mayo 2026.
 
 ## 4. TEA "Sucursales" (BPN)
 
