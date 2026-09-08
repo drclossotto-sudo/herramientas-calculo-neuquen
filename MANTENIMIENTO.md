@@ -18,7 +18,7 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
 - **Dónde verificarla:** https://cintereses.agjusneuquen.gob.ar
   (listado de tasas / "Tipo Tasa: Activa").
 - **En el proyecto:** `data/tasas.json` → `series.Activa`.
-- **Actualizada hasta:** agosto 2026.
+- **Actualizada hasta:** septiembre 2026.
 
 ## 2. Tasa ACTIVA del Banco de la Nación Argentina (TNA BNA)
 
@@ -31,21 +31,24 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
 - **Serie histórica:** desde **enero 2015** (el GTC la publica desde 2000; se
   cargó 2015→ para igualar el piso del RIPTE). Validada por doble lectura del GTC
   y empalme exacto en el solapamiento 2021.
-- **Actualizada hasta:** agosto 2026.
+- **Actualizada hasta:** septiembre 2026.
 
 ## 3. Índice RIPTE
 
 - **Qué es:** columna "Monto" (Remuneraciones Imponibles Promedio de los
   Trabajadores Estables).
 - **Para qué se usa:** ingreso base (IB) en la **indemnización LRT** (art. 12.1).
-- **Dónde verificarlo:** https://ripte.agjusneuquen.gob.ar/riptes
+- **Dónde verificarlo:** https://ripte.agjusneuquen.gob.ar/riptes (GTC). Si el GTC
+  va atrasado, la **fuente nacional** (más actualizada) es
+  https://www.argentina.gob.ar/trabajo/seguridadsocial/ripte
 - **En el proyecto:** `data/tasas.json` → `ripte`.
 - **Serie histórica:** desde **enero 2015**. El tramo 2016→ proviene del GTC; el
   tramo 2015 se tomó del **informe oficial de la Secretaría de Seguridad Social**
   (MTEySS, ene-2020, `inf-ripte_202001.pdf`), y se validó porque el solapamiento
   2016 coincide **exactamente** con el GTC. Para accidentes previos a 2015 el
   índice hay que cargarlo a mano (el informe oficial llega hasta julio 1994).
-- **Actualizado hasta:** mayo 2026.
+- **Actualizado hasta:** junio 2026 (tomado de la fuente nacional; el GTC aún
+  publicaba hasta mayo).
 
 ## 4. TEA "Sucursales" (BPN)
 
@@ -58,7 +61,7 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
 - **Dónde verificarla:** https://cintereses.agjusneuquen.gob.ar
   (listado de tasas / "T.E.A. Prop.").
 - **En el proyecto:** `data/tasas.json` → `series.TEA_Prop`.
-- **Actualizada hasta:** agosto 2026.
+- **Actualizada hasta:** septiembre 2026.
 
 ---
 
