@@ -85,7 +85,8 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
 3. Publicar:  `git add -A && git commit -m "Actualizo tasas/RIPTE hasta <mes>" && git push`
 4. GitHub Pages se actualiza solo en ~1 minuto.
 5. Actualizar también los textos "actualizada hasta …" en `index.html` (nota
-   global bajo el disclaimer y los pies de resultado) y volver a `node build.js`.
+   global bajo el disclaimer y los pies de resultado) **y la fecha de "Última
+   actualización"** en la nota global, y volver a `node build.js`.
 
 > Sugerencia: pedir ayuda para transcribir los meses nuevos desde las páginas del
 > GTC evita errores de tipeo (los valores no tienen descarga directa).
