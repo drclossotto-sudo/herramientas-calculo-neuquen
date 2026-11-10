@@ -18,7 +18,7 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
 - **Dónde verificarla:** https://cintereses.agjusneuquen.gob.ar
   (listado de tasas / "Tipo Tasa: Activa").
 - **En el proyecto:** `data/tasas.json` → `series.Activa`.
-- **Actualizada hasta:** octubre 2026.
+- **Actualizada hasta:** noviembre 2026.
 
 ## 2. Tasa ACTIVA del Banco de la Nación Argentina (TNA BNA)
 
@@ -31,7 +31,7 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
 - **Serie histórica:** desde **enero 2015** (el GTC la publica desde 2000; se
   cargó 2015→ para igualar el piso del RIPTE). Validada por doble lectura del GTC
   y empalme exacto en el solapamiento 2021.
-- **Actualizada hasta:** octubre 2026.
+- **Actualizada hasta:** noviembre 2026.
 
 ## 3. Índice RIPTE
 
@@ -61,7 +61,7 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
 - **Dónde verificarla:** https://cintereses.agjusneuquen.gob.ar
   (listado de tasas / "T.E.A. Prop.").
 - **En el proyecto:** `data/tasas.json` → `series.TEA_Prop`.
-- **Actualizada hasta:** octubre 2026.
+- **Actualizada hasta:** noviembre 2026.
 
 ---
 
@@ -76,7 +76,11 @@ GTC solo lo republica, así que su fuente original NO es el Gabinete.
 
 ## Cómo aplicar la actualización
 
-1. Agregar los meses nuevos en `data/tasas.json` (en la serie que corresponda).
+1. Agregar los meses nuevos en `data/tasas.json` (en la serie que corresponda) y
+   **volver a leer y sobrescribir los dos últimos meses ya cargados**: el GTC
+   publica el mes en curso como **provisorio** y lo corrige al mes siguiente
+   (pasó con Banco Nación en ago/sep/oct 2026 y con Activa, TEA y TNA del BPN en
+   oct 2026). No alcanza con agregar al final.
 2. Regenerar el archivo distribuible:  `node build.js`
 3. Publicar:  `git add -A && git commit -m "Actualizo tasas/RIPTE hasta <mes>" && git push`
 4. GitHub Pages se actualiza solo en ~1 minuto.
